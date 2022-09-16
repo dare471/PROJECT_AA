@@ -1,0 +1,41 @@
+.map_list_wrapper {
+	block-size: 100%;
+	inline-size: 100%;
+
+	background: transparent;
+	border: none;
+}
+.map_list {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	inline-size: 100%;
+	block-size: 100%;
+
+	border-bottom: 1px solid var(--color-third);
+	cursor: pointer;
+
+	position: relative;
+	padding: 10.7px;
+}
+
+.map_list_content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	inline-size: 100%;
+}
+
+.map_list_text {
+	font-size: var(--font-size-xl);
+	color: var(--color-third);
+}
+
+.map_list_text {
+}
+
+.map_list_eye {
+	inline-size: 20px;
+	block-size: 20px;
+}

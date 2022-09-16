@@ -1,0 +1,24 @@
+:root {
+	/* color */
+	--color-primary: rgb(222, 222, 222);
+	--color-secondary: rgb(71, 255, 221);
+	--color-third: black;
+	--color-active: pink;
+
+	/* font-size */
+	--font-size-xl: 15px;
+	--font-size-md: 16px;
+	--font-size-lg: 18px;
+
+	/* max-width */
+	--max-width: 1450px;
+
+	/* background-color */
+	--background-color: rgb(92, 137, 165);
+	--background-color-secondary: rgb(45, 155, 234);
+
+	/* height */
+	--height-header: 100px;
+	--height-footer: 50px;
+	--height-map-sidebar: 500px;
+}

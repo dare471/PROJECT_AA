@@ -1,0 +1,12 @@
+@import './styles/styles.scss';
+
+#root {
+	block-size: 100%;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: var(--color-primary);
+
+	block-size: 100%;
+}
