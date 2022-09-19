@@ -1,72 +1,27 @@
-import { FC, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { FlatIndexLocationWithAlign, VirtuosoHandle } from 'react-virtuoso'
-import { MapList } from '@/features/lists/map'
+import { MapCollapse } from '@/features/collapse/map'
 import { illustrateChecker } from '@/features/map/lib'
 import { Button, Input } from '@/shared/ui'
 import { ICompletedPosition, IInitIndex, IMapSidebarProps } from './types'
 import './styles.scss'
 
 export const MapSidebar: FC<IMapSidebarProps> = ({
-	districtPolygons,
 	areaPolygons,
+	districtPolygons,
 	polygons,
 	illustratePolygons,
-	position,
 	activePolygon,
-	setPosition
+	setDistrictPolygons
 }) => {
-	const [completedPosition, setCompletedPosition] = useState<ICompletedPosition>({ x: null, y: null })
-	const [initIndex, setInitIndex] = useState<IInitIndex>({
-		index: 'LAST',
-		align: 'center',
-		behavior: 'smooth'
-	})
-	const virtuoso = useRef<VirtuosoHandle>(null)
 	const [searchParams, setSearchParams] = useSearchParams()
-	const listItems = useMemo(() => {
-		if (areaPolygons) {
-			const result = areaPolygons.map((area: any) => {
-				if (districtPolygons) {
-					const equal = districtPolygons.filter((district: any) => area.properties.GID_1 === district.properties.GID_1)
-
-					return { ...area, children: equal }
-				}
-				return area
-			})
-
-			return result
-		}
-
-		return null
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [areaPolygons, districtPolygons, polygons])
-
-	useEffect(() => {
-		console.log()
-	}, [completedPosition])
 
 	const handleChange = (e: any) => {
 		const target = e.target
 		const name = target.name
 		const value = target.value
-		if (name === 'x') {
-			setCompletedPosition(prev => ({ ...prev, x: value }))
-		} else if (name === 'y') {
-			setCompletedPosition(prev => ({ ...prev, y: value }))
+		if (name === 'iin') {
 		}
-	}
-
-	const handleClickInput = () => {
-		setPosition(prev => {
-			if (completedPosition.x && prev.x !== completedPosition.x) {
-				return { ...prev, x: completedPosition.x }
-			} else if (completedPosition.y && prev.y !== completedPosition.y) {
-				return { ...prev, y: completedPosition.y }
-			}
-
-			return prev
-		})
 	}
 
 	const handleClickIllustrate = (e: any) => {
@@ -132,54 +87,24 @@ export const MapSidebar: FC<IMapSidebarProps> = ({
 			</header>
 			<section className='map_sidebar_content'>
 				<div className='map_sidebar_item sidebar_1'>
-					<div className='map_sidebar_inputs'>
-						<Input
-							placeholder='Enter X Position'
-							type='number'
-							className='map_sidebar_input map_sidebar_input_1'
-							name='x'
-							value={completedPosition.x || ''}
-							onChange={handleChange}
-						/>
-						<Input
-							placeholder='Enter Y Position'
-							type='number'
-							className='map_sidebar_input map_sidebar_input_2'
-							name='y'
-							value={completedPosition.y || ''}
-							onChange={handleChange}
-						/>
-					</div>
 					<Input
+						className='map_sidebar_input map_sidebar_input_2'
 						placeholder='Enter IIN'
 						type='text'
-						className='map_sidebar_input map_sidebar_input_2'
+						name='iin'
 						onChange={handleChange}
 					/>
-					<Button className='map_sidebar_input map_sidebar_button' onClick={handleClickInput}>
-						Complete Position
-					</Button>
+					<Button className='map_sidebar_input map_sidebar_button'>Complete Position</Button>
 				</div>
 				<div className='map_sidebar_item sidebar_2'>
 					<ul className='map_ul' role='menu'>
-						{listItems && (
-							<MapList
-								data={listItems}
-								illustratePolygons={illustratePolygons}
-								activePolygon={activePolygon}
-								initIndex={initIndex}
-								setInitIndex={setInitIndex}
-							/>
+						{currentPlygons && (
+							<>
+								{currentPolygons.map((item: any, index: number) => (
+									<MapCollapse key={`${item}-${index}`} data={item} setDistrictPolygons={setDistrictPolygons} />
+								))}
+							</>
 						)}
-						<div
-							className='map_ul_up'
-							onClick={() => setInitIndex(prev => ({ ...prev, index: 0 }))}
-							onKeyUp={() => setInitIndex(prev => ({ ...prev, index: 0 }))}
-							role='button'
-							tabIndex={0}
-						>
-							UP
-						</div>
 					</ul>
 				</div>
 			</section>

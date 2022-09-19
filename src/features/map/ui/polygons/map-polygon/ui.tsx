@@ -5,11 +5,7 @@ import { illustrateChecker } from '@/features/map/lib'
 import { polygonNormalizer } from '@/shared/api/polygon'
 import { IMapPolygonsProps } from './types'
 
-export const MapPolygons: FC<IMapPolygonsProps> = ({
-	polygons,
-	illustratePolygons,
-	activePolygon
-}) => {
+export const MapPolygons: FC<IMapPolygonsProps> = ({ polygons, illustratePolygons, activePolygon }) => {
 	const [searchParams, setSearchParams] = useSearchParams()
 	const illustrate = illustrateChecker(illustratePolygons, 'nothing')
 
@@ -25,7 +21,7 @@ export const MapPolygons: FC<IMapPolygonsProps> = ({
 				)
 				.map((polygon, index) => (
 					<Polygon
-						key={index + polygon.type}
+						key={`${index}-${polygon}`}
 						positions={polygonNormalizer(polygon)}
 						eventHandlers={{
 							click() {

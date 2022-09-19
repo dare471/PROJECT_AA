@@ -1,16 +1,16 @@
 .page_wrapper {
 	display: flex;
 	flex-direction: column;
-	block-size: calc(100% + var(--height-footer));
+	min-block-size: 100%;
 }
 
-.header_wrapper {
+.page_header {
 }
 
-.content_wrapper {
+.page_content {
 	flex: 1 0 auto;
 }
 
-.footer_wrapper {
+.page_footer {
 	flex-shrink: 0;
 }

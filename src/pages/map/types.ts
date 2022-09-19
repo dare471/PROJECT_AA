@@ -1,7 +1,7 @@
+export type TCurrentIllustrate = 'area' | 'district' | 'polygon' | null
+
 export interface IIllustratePolygons {
-	area: boolean
-	district: boolean
-	polygon: boolean
+	current: TCurrentIllustrate
 }
 
 export type TIllustrateKeys = 'area' | 'district' | 'polygon' | 'nothing'

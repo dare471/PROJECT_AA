@@ -5,16 +5,16 @@ export interface IPolygon {
 export type TPolygons = IPolygon[] | null
 
 //Better approach for store all Polygons etc
-export interface IAll {
-	id: string
-	type: 'country' | 'area' | 'district' | 'polygon'
-	name: string
-	geometry: {
-		figure: string
-		coordinates: number[][]
-	}
-	children: IAll[] | null
-}
+// export interface IAll {
+// 	id: string
+// 	type: 'country' | 'area' | 'district' | 'polygon'
+// 	name: string
+// 	geometry: {
+// 		figure: string
+// 		coordinates: number[][]
+// 	}
+// 	children: IAll[] | null
+// }
 
 // export type TAlls = IAll[] | null
 

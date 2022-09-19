@@ -18,18 +18,14 @@ export const MapActivePolygon: FC<IMapActivePolygonProps> = ({
 
 	useEffect(() => {
 		if (searchParams.has(illustrate) && polygons) {
-			const activeIndex = polygons.findIndex(
-				item => item.properties.GID_2 === illustrateValue
-			)
+			const activeIndex = polygons.data.findIndex(item => item.properties.ID === illustrateValue)
 			if (activeIndex !== -1) {
 				setActivePolygon(prev =>
 					!prev ||
-					(polygons[activeIndex].properties?.TYPE_1
-						? activePolygon?.properties.GID_1 !==
-						  polygons[activeIndex].properties.GID_1
-						: activePolygon?.properties.GID_2 !==
-						  polygons[activeIndex].properties.GID_2)
-						? { ...polygons[activeIndex] }
+					(polygons.data[activeIndex].properties?.TYPE_1
+						? activePolygon?.properties.ID !== polygons.data[activeIndex].properties.ID
+						: activePolygon?.properties.ID !== polygons.data[activeIndex].properties.ID)
+						? { ...polygons.data[activeIndex] }
 						: prev
 				)
 			}
@@ -40,10 +36,7 @@ export const MapActivePolygon: FC<IMapActivePolygonProps> = ({
 	return (
 		<>
 			{activePolygon && (
-				<Polygon
-					positions={polygonNormalizer(activePolygon)}
-					pathOptions={{ color: 'black' }}
-				></Polygon>
+				<Polygon positions={polygonNormalizer(activePolygon)} pathOptions={{ color: 'black' }}></Polygon>
 			)}
 		</>
 	)

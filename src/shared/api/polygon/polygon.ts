@@ -1,36 +1,42 @@
-import { instance } from './base';
-import { areaPolygonsMock, districtPolygonsMock } from './mock';
-import { Normalizer3857, areaNormalizer } from './normalizer';
+import { TPolygons } from './types'
+import { instance } from './base'
+import { JsonNormalizer, Normalizer3857 } from './normalizer'
 
+// import { areaPolygonsMock, districtPolygonsMock } from './mock'
 
-export const getAreaPolygon = async (id?: string) => {
-	// console.log(process.env.API_URL)
-	// const res = await instance({
-	// 	method: 'GET',
-	// 	url: `api/fef`
-	// })
-
-	// return Normalizer3857(areaNormalizer(res.data))
-
-	return areaPolygonsMock.features
-}
-
-export const getDistrictPolygon = async (id?: string) => {
-	// const res = await instance({
-	// 	method: 'GET',
-	// 	url: `/ff?id=${id}`
-	// })
-	// return res.data
-
-	return districtPolygonsMock.features
-}
-
-export const getPolygons = async () => {
+export const getAreaPolygon = async (id?: string): Promise<TPolygons> => {
+	console.log(process.env.API_URL)
 	const res = await instance({
 		method: 'GET',
-		url: `api/client_p/791710000`
+		url: `api/region`
 	})
-	console.log(res.data)
 
-	return Normalizer3857(areaNormalizer(res.data))
+	return Normalizer3857(JsonNormalizer(res.data))
+
+	//* Use For Test *//
+	// return areaPolygonsMock.features
+}
+
+export const getDistrictPolygon = async (id: string): Promise<TPolygons> => {
+	const res = await instance({
+		method: 'GET',
+		url: `api/district/${id}`
+	})
+	console.log(res)
+	return Normalizer3857(JsonNormalizer(res.data))
+
+	//* Use For Test *//
+	// return districtPolygonsMock.features
+}
+
+export const getPolygons = async (id: string): Promise<TPolygons> => {
+	const res = await instance({
+		method: 'GET',
+		url: `api/client_p/${id}`
+	})
+
+	return Normalizer3857(JsonNormalizer(res.data))
+
+	//* Use For Test *//
+	// return polygonsMock
 }

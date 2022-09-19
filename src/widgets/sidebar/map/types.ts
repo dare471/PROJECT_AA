@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from 'react'
-import { IPosition } from '@/pages/map'
 import { IIllustratePolygons } from '@/pages/map/types'
 import { IPolygon, TPolygons } from '@/shared/api'
 
@@ -8,9 +7,8 @@ export interface IMapSidebarProps {
 	areaPolygons: TPolygons
 	polygons: TPolygons
 	illustratePolygons: IIllustratePolygons
-	position: IPosition
 	activePolygon: IPolygon | null
-	setPosition: Dispatch<SetStateAction<IPosition>>
+	setDistrictPolygons: Dispatch<SetStateAction<TPolygons>>
 }
 
 export interface ICompletedPosition {

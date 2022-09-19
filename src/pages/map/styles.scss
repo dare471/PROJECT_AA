@@ -3,19 +3,17 @@
 }
 
 .map_article {
-	display: flex;
-	min-inline-size: 0;
-
 	overflow: hidden;
 }
 
 .map_page {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr 4fr;
 	inline-size: 100%;
-	min-inline-size: 0;
-	max-block-size: calc(100vh - var(--height-header));
 
-	overflow-y: hidden;
+	block-size: calc(100vh - var(--height-header));
+	min-block-size: 20rem;
+	max-block-size: 100%;
 }
 
 .map_item {
@@ -23,11 +21,11 @@
 
 	&.map_item_1 {
 		position: relative;
-		min-inline-size: 15%;
+		max-inline-size: 100%;
 	}
 
 	&.map_item_2 {
-		min-inline-size: 80%;
+		max-inline-size: 100%;
 	}
 }
 
@@ -41,4 +39,10 @@
 
 	padding: 20px 5px;
 	transition: 1s all linear;
+}
+
+@media (max-width: 1024px) {
+	.map_page {
+		grid-template-columns: 0 1fr;
+	}
 }

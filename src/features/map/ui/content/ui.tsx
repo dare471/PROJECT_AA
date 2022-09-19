@@ -1,4 +1,3 @@
-import { LatLng, LatLngExpression } from 'leaflet'
 import { FC, useEffect } from 'react'
 import { Polygon, useMap } from 'react-leaflet'
 import { useSearchParams } from 'react-router-dom'
@@ -35,22 +34,21 @@ export const MapContent: FC<IMapContentProps> = ({
 					activePolygon={activePolygon}
 				></MapPolygons>
 			)}
-			{illustrateChecker(illustratePolygons, 'district') &&
-				districtPolygons && (
-					<MapPolygons
-						illustratePolygons={illustratePolygons}
-						polygons={districtPolygons}
-						activePolygon={activePolygon}
-					></MapPolygons>
-				)}
+			{illustrateChecker(illustratePolygons, 'district') && districtPolygons && (
+				<MapPolygons
+					illustratePolygons={illustratePolygons}
+					polygons={districtPolygons.data}
+					activePolygon={activePolygon}
+				></MapPolygons>
+			)}
 			{illustrateChecker(illustratePolygons, 'polygon') && polygons && (
 				<>
 					{polygons
 						.filter((item: any) => searchParams.get(illustrate) !== item.ID)
 						.map((polygon: any, index: number) => (
 							<Polygon
-								key={index + polygon}
-								positions={polygon?.COORDINATES ? polygon.COORDINATES : []}
+								key={`${index}-${polygon}`}
+								positions={polygon?.GEOMETRY_RINGS ? polygon.GEOMETRY_RINGS : []}
 								eventHandlers={{
 									click() {
 										console.log(polygon.KADASTR)

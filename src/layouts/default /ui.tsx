@@ -3,19 +3,16 @@ import { Footer } from '@/widgets/footer'
 import { Header } from '@/widgets/header'
 import './styles.scss'
 
-export const DefaultLayout: FC<PropsWithChildren> = ({
-	children,
-	...props
-}) => {
+export const DefaultLayout: FC<PropsWithChildren> = ({ children, ...props }) => {
 	return (
 		<div className='page_wrapper'>
-			<div className='header_wrapper'>
+			<div className='page_header'>
 				<Header />
 			</div>
-			<div className='content_wrapper' {...props}>
+			<div className='page_content' {...props}>
 				{children}
 			</div>
-			<div className='footer_wrapper'>
+			<div className='page_footer'>
 				<Footer />
 			</div>
 		</div>
