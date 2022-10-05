@@ -1,0 +1,12 @@
+.map_ul {
+	inline-size: 100%;
+	block-size: 100%;
+
+	position: relative;
+
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+
+	padding-inline-end: 15px;
+	padding-block-end: 10px;
+}

@@ -4,6 +4,10 @@
 	box-sizing: border-box;
 }
 
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
 html,
 body,
 div,
@@ -106,9 +110,20 @@ input {
 	border-radius: 0;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	/* display: none; <- Crashes Chrome on hover */
+	-webkit-appearance: none;
+	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type='number'] {
+	-moz-appearance: textfield; /* Firefox */
+}
+
 // scrollbar
 ::-webkit-scrollbar {
-	inline-size: 8px;
+	inline-size: 5px;
 	block-size: 8px;
 	background-color: transparent;
 
@@ -118,11 +133,11 @@ input {
 	}
 
 	&-thumb {
-		background-color: #3b3b3b;
+		background-color: #5d5d5d;
 		border-radius: 5px;
 	}
 
 	&-corner {
-		background-color: #ffffff;
+		background-color: #000000;
 	}
 }

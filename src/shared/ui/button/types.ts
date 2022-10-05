@@ -1,3 +1,4 @@
 export interface IButtonProps {
-  [key: string]: any
+	[key: string]: any
+	className?: string
 }

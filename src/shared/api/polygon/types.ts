@@ -1,13 +1,22 @@
-export interface IPolygon {
+export interface IPolygonData {
 	[key: string]: any
 }
 
-export type TPolygons = IPolygon[] | null
+export interface IPolygon {
+	success: boolean
+	data: IPolygonData
+}
+
+export type TPolygon = IPolygon | null
+
+export interface IClientInfo {
+	[key: string]: any
+}
 
 //Better approach for store all Polygons etc
 // export interface IAll {
 // 	id: string
-// 	type: 'country' | 'area' | 'district' | 'polygon'
+// 	type: 'country' | 'region' | 'district' | 'polygon'
 // 	name: string
 // 	geometry: {
 // 		figure: string

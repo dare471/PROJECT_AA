@@ -1,9 +1,12 @@
 import { ReactNode, Suspense } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import { Load } from '@/shared/ui'
 
-export const withRouter = (component: () => ReactNode) => () =>
+export const withRouter = (Component: any) => () =>
 	(
 		<BrowserRouter>
-			<Suspense fallback={<div>loading...</div>}>{component()}</Suspense>
+			<Suspense fallback={<Load />}>
+				<Component />
+			</Suspense>
 		</BrowserRouter>
 	)

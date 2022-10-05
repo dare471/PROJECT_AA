@@ -1,1 +1,1 @@
-export { MapContent } from './ui'
+import { MapContent } from './ui'

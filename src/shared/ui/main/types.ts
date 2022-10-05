@@ -1,4 +1,4 @@
 export interface IMain {
 	[key: string]: any
-	className: string
+	className?: string
 }

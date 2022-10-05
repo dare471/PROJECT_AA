@@ -1,35 +1,32 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import { useSearchParams } from 'react-router-dom'
-import { DefaultLayout } from '@/layouts/default '
+import { useLocation } from 'react-router'
 import { ROUTE_TO_MAP } from '@/shared/lib'
-import { Button } from '@/shared/ui'
+import { Button, Main } from '@/shared/ui'
 import { Section } from '@/shared/ui/section'
 import './styles.scss'
 
 export const HomePage = () => {
 	const navigate = useNavigate()
-	const [searchParams] = useSearchParams()
+	const location = useLocation()
+
+	useEffect(() => {
+		console.log(location)
+	}, [])
 
 	const handleClick = () => {
-		searchParams.set('illustrate', 'area')
-		navigate({ pathname: ROUTE_TO_MAP(), search: `${searchParams}` })
+		navigate(ROUTE_TO_MAP())
 	}
 
 	return (
-		<DefaultLayout>
-			<main>
-				<Section>
-					<div>
-						<span>Home</span>
-						<Button
-							style={{ backgroundColor: 'red', fontSize: 15, padding: 10 }}
-							onClick={handleClick}
-						>
-							Go To Map
-						</Button>
-					</div>
-				</Section>
-			</main>
-		</DefaultLayout>
+		<Main>
+			<Section>
+				<div>
+					<Button className='home_button' onClick={handleClick}>
+						Go To Map
+					</Button>
+				</div>
+			</Section>
+		</Main>
 	)
 }

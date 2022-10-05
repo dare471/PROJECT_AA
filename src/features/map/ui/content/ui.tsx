@@ -1,23 +1,9 @@
 import { FC, useEffect } from 'react'
-import { Polygon, useMap } from 'react-leaflet'
-import { useSearchParams } from 'react-router-dom'
+import { useMap } from 'react-leaflet'
 import { IMapContentProps } from './types'
-import { illustrateChecker } from '../../lib/illustrate-checker'
-import { MapPolygons } from '../polygons'
-import { MapActivePolygon } from '../polygons/active-polygon/ui'
-import './styles.scss'
+import { MapPolygons } from '../polygon'
 
-export const MapContent: FC<IMapContentProps> = ({
-	position,
-	illustratePolygons,
-	areaPolygons,
-	districtPolygons,
-	polygons,
-	activePolygon,
-	setActivePolygon
-}) => {
-	const [searchParams] = useSearchParams()
-	const illustrate = illustrateChecker(illustratePolygons, 'nothing')
+export const MapContent: FC<IMapContentProps> = ({ position, currentPolygon, handleChangeCurrentPolygon }) => {
 	const map = useMap()
 
 	useEffect(() => {
@@ -27,45 +13,12 @@ export const MapContent: FC<IMapContentProps> = ({
 
 	return (
 		<>
-			{illustrateChecker(illustratePolygons, 'area') && areaPolygons && (
+			{currentPolygon && (
 				<MapPolygons
-					illustratePolygons={illustratePolygons}
-					polygons={areaPolygons}
-					activePolygon={activePolygon}
+					polygons={currentPolygon.data}
+					handleChangeCurrentPolygon={handleChangeCurrentPolygon}
+					color='indigo'
 				></MapPolygons>
-			)}
-			{illustrateChecker(illustratePolygons, 'district') && districtPolygons && (
-				<MapPolygons
-					illustratePolygons={illustratePolygons}
-					polygons={districtPolygons.data}
-					activePolygon={activePolygon}
-				></MapPolygons>
-			)}
-			{illustrateChecker(illustratePolygons, 'polygon') && polygons && (
-				<>
-					{polygons
-						.filter((item: any) => searchParams.get(illustrate) !== item.ID)
-						.map((polygon: any, index: number) => (
-							<Polygon
-								key={`${index}-${polygon}`}
-								positions={polygon?.GEOMETRY_RINGS ? polygon.GEOMETRY_RINGS : []}
-								eventHandlers={{
-									click() {
-										console.log(polygon.KADASTR)
-									}
-								}}
-							></Polygon>
-						))}
-				</>
-			)}
-
-			{illustrateChecker(illustratePolygons, 'district') && (
-				<MapActivePolygon
-					activePolygon={activePolygon}
-					setActivePolygon={setActivePolygon}
-					polygons={districtPolygons}
-					illustratePolygons={illustratePolygons}
-				/>
 			)}
 		</>
 	)

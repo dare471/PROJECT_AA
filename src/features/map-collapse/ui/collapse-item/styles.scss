@@ -1,0 +1,160 @@
+.map_collapse_li {
+	inline-size: 100%;
+	min-block-size: 25px;
+
+	&:not(:last-child) {
+		margin-block-end: 5px;
+	}
+
+	&.children {
+		padding-inline-start: 20px;
+		position: relative;
+
+		&:before,
+		&:after {
+			content: '';
+			display: block;
+			inline-size: 10px;
+			block-size: 2px;
+
+			background-color: var(--dark);
+
+			position: absolute;
+			top: calc(50% - 3px);
+			left: 5px;
+
+			transform: rotate(45deg);
+		}
+
+		&:after {
+			top: calc(50% + 3px);
+			transform: rotate(135deg);
+		}
+	}
+}
+
+.map_collapse_header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	inline-size: 100%;
+	block-size: 100%;
+
+	background-color: var(--white);
+	border: 1px solid var(--dark);
+	border-radius: 0.5rem;
+
+	position: relative;
+	padding: 3px 5px;
+
+	&.active {
+		background-color: var(--purple);
+	}
+
+	&:not(.active):hover {
+		background-color: var(--white-300);
+	}
+}
+
+.map_collapse_header_title {
+	inline-size: 100%;
+	block-size: 100%;
+
+	font-size: 0.95rem;
+	font-weight: 500;
+	font-family: inherit;
+
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-align: start;
+	inline-size: 100%;
+	block-size: 100%;
+}
+
+.map_collapse_header_button {
+	padding: 10px;
+	position: relative;
+	transition: all 0.5s linear;
+
+	background-color: transparent;
+	box-shadow: none;
+	justify-self: end;
+
+	&.open,
+	&.close {
+		&:hover {
+			&:before,
+			&:after {
+				background-color: var(--cyan);
+			}
+		}
+	}
+
+	&.open:before,
+	&.close:before,
+	&.close:after {
+		content: '';
+		display: block;
+		inline-size: 2px;
+		block-size: 11px;
+
+		background-color: var(--purple);
+
+		position: absolute;
+		top: 5.5px;
+		left: 50%;
+
+		transform: rotate(90deg);
+	}
+
+	&.close {
+		&:before {
+			transform: rotate(180deg);
+		}
+	}
+
+	&.district {
+		background-color: transparent;
+		position: relative;
+
+		padding-inline: 16px;
+
+		&.active {
+			&:before {
+				color: var(--cyan);
+			}
+		}
+
+		&:before {
+			content: 'view';
+			color: var(--purple);
+			display: block;
+			inline-size: 30px;
+			block-size: 15px;
+
+			position: absolute;
+			top: calc(50% - 7.5px);
+			left: calc(50% - 15px);
+		}
+
+		&:hover {
+			&:before {
+				color: var(--cyan);
+			}
+		}
+	}
+}
+
+.map_collapse_article {
+	inline-size: 100%;
+	block-size: auto;
+
+	margin-block: 0.5rem;
+}
+
+.map_collapse_ul_children {
+	inline-size: 100%;
+	block-size: 100%;
+}

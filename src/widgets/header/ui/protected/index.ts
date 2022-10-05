@@ -1,0 +1,1 @@
+export { ProtectedHeader } from './ui'

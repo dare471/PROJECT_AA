@@ -1,0 +1,32 @@
+.map_comment_item {
+	display: flex;
+	gap: 15px;
+	padding: 10px;
+
+	border: 1px solid var(--dark);
+	border-radius: 0.5rem;
+}
+
+.map_comment_item_header {
+	flex: 0 0 50px;
+}
+
+.map_comment_item_content {
+	flex: 1 0 auto;
+}
+
+.map_comment_item_title {
+	font-size: 1.05rem;
+	font-weight: 700;
+	font-family: inherit;
+	color: var(--purple);
+}
+
+.map_comment_item_text {
+	font-size: 1rem;
+	font-weight: 300;
+	font-family: inherit;
+	color: var(--dark);
+
+	white-space: wrap;
+}

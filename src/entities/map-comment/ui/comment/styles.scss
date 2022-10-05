@@ -1,0 +1,10 @@
+.map_comment {
+	inline-size: 100%;
+	block-size: 100%;
+}
+
+.map_comment_list_inner {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}

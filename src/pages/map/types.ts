@@ -1,13 +1,27 @@
-export type TCurrentIllustrate = 'area' | 'district' | 'polygon' | null
+import { IPolygon } from '@/shared/api'
 
-export interface IIllustratePolygons {
-	current: TCurrentIllustrate
+export type TCurrentIllustrate = 'country' | 'region' | 'district' | 'polygon' | null
+
+export interface IIllustratePolygon {
+	current: TCurrentIllustrate | null
 }
-
-export type TIllustrateKeys = 'area' | 'district' | 'polygon' | 'nothing'
 
 export interface IPosition {
 	x: number
 	y: number
 	zoom: number
 }
+
+export interface IListPolygons extends IPolygon {
+	[key: string]: any
+	children?: IListPolygons
+}
+
+export type THandleChangeAction = 'request' | 'map' | 'prev'
+
+export type TModalType = 'error' | 'comment' | null
+
+export type TModals = {
+	type: TModalType
+	data: any
+} | null

@@ -1,4 +1,3 @@
 export * from './map'
-export * from './content'
-export * from './polygons'
+export * from './polygon'
 export * from './map/types'

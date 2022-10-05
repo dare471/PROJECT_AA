@@ -1,4 +1,4 @@
 export interface IArticleProps {
 	[key: string]: any
-	className: string
+	className?: string
 }
