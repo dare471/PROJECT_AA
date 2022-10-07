@@ -1,0 +1,22 @@
+.header {
+	inline-size: 100%;
+	block-size: var(--height-header);
+
+	background-color: var(--light);
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+
+	position: relative;
+	z-index: var(--z-index-header);
+}
+
+.header_nav {
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+	justify-content: space-between;
+	inline-size: 100%;
+	block-size: 100%;
+
+	position: relative;
+
+	animation: header-item-animation 0.7s ease;
+}

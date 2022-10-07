@@ -1,0 +1,5 @@
+export interface IButtonProps {
+	[key: string]: any
+	className?: string
+	boxShadow?: boolean
+}

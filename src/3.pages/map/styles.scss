@@ -1,0 +1,15 @@
+.map_main {
+	block-size: 100%;
+
+	margin-block-start: 2rem;
+}
+
+.map_article {
+	inline-size: 100%;
+	block-size: calc(100vh - var(--height-header) - 2rem) !important;
+	min-block-size: 20rem;
+	max-block-size: 100%;
+
+	overflow: hidden;
+	position: relative;
+}
