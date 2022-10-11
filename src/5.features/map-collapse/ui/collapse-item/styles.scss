@@ -87,7 +87,7 @@
 		&:hover {
 			&:before,
 			&:after {
-				background-color: var(--cyan);
+				background-color: var(--gray-dark);
 			}
 		}
 	}
@@ -100,7 +100,7 @@
 		inline-size: 2px;
 		block-size: 11px;
 
-		background-color: var(--purple);
+		background-color: var(--dark);
 
 		position: absolute;
 		top: 5.5px;
@@ -123,13 +123,13 @@
 
 		&.active {
 			&:before {
-				color: var(--cyan);
+				color: var(--gray-dark);
 			}
 		}
 
 		&:before {
 			content: 'view';
-			color: var(--purple);
+			color: var(--dark);
 			display: block;
 			inline-size: 30px;
 			block-size: 15px;
@@ -141,7 +141,7 @@
 
 		&:hover {
 			&:before {
-				color: var(--cyan);
+				color: var(--gray-dark);
 			}
 		}
 	}

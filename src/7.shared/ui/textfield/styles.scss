@@ -8,10 +8,11 @@
 
 .textfield-label-default {
 	position: absolute;
+	z-index: 2;
 	left: 1rem;
 	top: calc(50% - 0.5rem);
 
-	background-color: var(--white-600);
+	background-color: transparent;
 
 	font-size: 1rem;
 	font-weight: 300;
@@ -30,7 +31,7 @@
 	inline-size: 100%;
 	block-size: 100%;
 
-	background-color: transparent;
+	background-color: var(--white-600);
 	border: 1px solid var(--dark);
 	border-radius: 0.5rem;
 	box-shadow: none;
@@ -42,7 +43,7 @@
 	font-family: inherit;
 	color: var(--dark);
 
-	&:hover {
+	&:hover and &:not(:has(&.error)) {
 		border-color: var(--info);
 	}
 }
@@ -52,6 +53,7 @@
 	top: -0.5rem;
 	left: 0.8rem;
 	color: var(--dark);
+	background-color: var(--white-600);
 	font-size: 1.05rem;
 	font-weight: 500;
 	z-index: 10;
@@ -60,14 +62,4 @@
 .textfield-input-default:focus,
 .textfield-input-default:not(:placeholder-shown).textfield-input-default:not(:focus) ~ .textfield-input-default {
 	border-color: rgb(154, 215, 235);
-}
-
-.input-success {
-	background-color: var(--success);
-	border: 1.5px solid var(--success);
-}
-
-.input-error {
-	background-color: var(--danger);
-	border: 1.5px solid var(--danger);
 }

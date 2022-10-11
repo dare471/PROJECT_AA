@@ -8,4 +8,14 @@
 	&.box-shadow {
 		box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 	}
+
+	&.success {
+		background-color: rgba(#28c76f, 0.5);
+		border: 1.5px solid var(--success);
+	}
+
+	&.error {
+		background-color: rgba(#ea5455, 0.4);
+		border: 1.5px solid var(--danger);
+	}
 }

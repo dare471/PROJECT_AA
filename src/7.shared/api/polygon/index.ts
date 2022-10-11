@@ -1,3 +1,3 @@
 export * from './types'
-export * from './polygons'
+export * from './polygon'
 export * from './normalizer'

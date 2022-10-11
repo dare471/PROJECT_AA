@@ -11,8 +11,8 @@ export const HomePage = () => {
 	}
 
 	return (
-		<Main>
-			<Section>
+		<Main className='home_main'>
+			<Section className='home_section'>
 				<div>
 					<Button className='home_button' onClick={handleClick}>
 						Go To Map

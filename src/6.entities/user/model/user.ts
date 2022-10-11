@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { IUser, signIn } from '@/7.shared/api'
+import { IUser, UserApi } from '@/7.shared/api'
 import { RootState } from '@/7.shared/lib'
 import { IUserState } from './types'
 
@@ -67,7 +67,7 @@ export const fetchSignIn = createAsyncThunk<IUser, { email: string; password: st
 	`${NAME}/SignUp`,
 	async ({ email, password }, { rejectWithValue }) => {
 		try {
-			const res = await signIn(email, password)
+			const res = await UserApi.signIn(email, password)
 			return res
 		} catch (err: any) {
 			if (err.response && err.response.data.message) {

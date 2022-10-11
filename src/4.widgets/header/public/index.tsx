@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 import { NavLink } from 'react-router-dom'
-import { Template } from '@/4.widgets/template'
+import { Template } from '@/4.widgets/templates'
 import { useAuth } from '@/6.entities/user'
 import { ROUTE_TO_HOME, ROUTE_TO_LOGIN, ROUTE_TO_MAP } from '@/7.shared/config'
 import { Button } from '@/7.shared/ui'
@@ -60,6 +60,7 @@ export const PublicHeader: FC<IPublicHeaderProps> = ({ auth }) => {
 					<li className='header_li first'>
 						{auth ? (
 							<Button
+								boxShadow={false}
 								onClick={() => {
 									userLogout()
 									navigate(ROUTE_TO_LOGIN())

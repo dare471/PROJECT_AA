@@ -1,1 +1,0 @@
-export { MapInfoSidebar } from './ui'

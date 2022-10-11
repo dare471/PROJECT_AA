@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
-import { Template } from '@/4.widgets/template'
+import { Template } from '@/4.widgets/templates'
 import { ROUTE_TO_ERROR, ROUTE_TO_HOME } from '@/7.shared/config'
 import { publicRouteMap } from './_routes'
 

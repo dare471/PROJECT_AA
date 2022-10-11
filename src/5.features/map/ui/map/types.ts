@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction } from 'react'
-import { IPosition } from '@/3.pages/map'
-import { TPolygon } from '@/7.shared/api'
+import { IPosition } from '@/3.pages'
 
 export interface IMapProps {
 	position: IPosition
-	childrenPolygon: TPolygon
-	setChildrenPolygon: Dispatch<SetStateAction<TPolygon>>
-	handleChangeCurrentPolygon: any
+	countryMutation: any
+	regionMutation: any
+	districtMutation: any
+	clientMutation: any
+	clientPolygonMutation: any
 }

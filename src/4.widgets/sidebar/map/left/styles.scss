@@ -1,0 +1,142 @@
+.map_sidebar_wrapper {
+	inline-size: 20%;
+	max-inline-size: 100%;
+	block-size: 100%;
+
+	background-color: var(--white-600);
+	border: 5px solid var(--white-500);
+	border-top-right-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	transition: transform 0.5s ease;
+
+	animation: map-sidebar-animation 1.3s ease;
+}
+
+.map_sidebar {
+	display: flex;
+	flex-direction: column;
+	inline-size: 100%;
+	block-size: 100%;
+
+	position: relative;
+
+	padding-block: 5px 0;
+}
+
+.map_sidebar_header_wrapper {
+	padding-inline: 5px;
+	padding-block-start: 0.5rem;
+}
+
+.map_sidebar_header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	gap: 10px;
+	inline-size: 100%;
+}
+
+.map_sidebar_header_item {
+	font-size: 1rem;
+	color: var(--purple);
+
+	position: relative;
+
+	&.active {
+		color: var(--cyan);
+		text-decoration-line: underline;
+
+		&.map_sidebar_header_item {
+			&:after,
+			&:before {
+				background-color: var(--purple);
+			}
+		}
+	}
+
+	&:not(:last-child) {
+		&:before,
+		&:after {
+			content: '';
+			display: block;
+			width: 8px;
+			height: 1.5px;
+
+			position: absolute;
+			right: -9px;
+			top: calc(50% - 2px);
+			transform: rotate(-135deg);
+
+			background-color: var(--purple);
+		}
+
+		&:after {
+			top: calc(50% - 2px);
+		}
+
+		&:before {
+			top: calc(50% + 2px);
+			transform: rotate(-45deg);
+		}
+	}
+}
+
+.map_sidebar_content {
+	display: flex;
+	flex-direction: column;
+	block-size: 100%;
+	min-block-size: 0;
+
+	padding-inline: 5px;
+}
+
+.map_sidebar_button {
+	background-color: transparent;
+	box-shadow: none;
+
+	font-size: 0.8rem;
+	font-weight: 500;
+	color: var(--purple);
+
+	margin-block-start: 0.1rem;
+
+	&:hover {
+		color: var(--cyan);
+	}
+}
+
+.map_sidebar_divider {
+	&.sidebar_header_divider {
+		block-size: 2px;
+	}
+}
+
+.map_sidebar_collapse_wrapper {
+	inline-size: 100%;
+	block-size: 100%;
+	min-block-size: 0;
+}
+
+@keyframes map-sidebar-animation {
+	0% {
+		opacity: 0;
+		transform: translateY(5%);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 1024px) {
+	.map_sidebar_wrapper {
+		inline-size: 100%;
+
+		transform: translateY(-100%);
+	}
+}

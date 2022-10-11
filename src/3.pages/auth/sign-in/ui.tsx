@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useLocation } from 'react-router'
-import { SignInForm } from '@/5.features/sign-up-form'
+import { SignInForm } from '@/5.features/auth/sign-in'
 import { useAuth } from '@/6.entities/user'
 import { ROUTE_TO_MAP } from '@/7.shared/config'
 import { Article, Container, Main, Section } from '@/7.shared/ui'

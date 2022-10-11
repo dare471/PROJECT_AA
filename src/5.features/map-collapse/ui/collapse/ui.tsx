@@ -3,17 +3,11 @@ import { IMapCollapseProps } from './types'
 import { MapCollapseItem } from '../collapse-item'
 import './styles.scss'
 
-export const MapCollapse: FC<IMapCollapseProps> = ({ listPolygons, handleChangeCurrentPolygon }) => {
+export const MapCollapse: FC<IMapCollapseProps> = ({ listPolygons }) => {
 	return (
 		<ul className='map_ul' role='menu'>
 			{listPolygons &&
-				listPolygons.data.map((item: any, index: number) => (
-					<MapCollapseItem
-						key={`${item}-${index}`}
-						data={item}
-						handleChangeCurrentPolygon={handleChangeCurrentPolygon}
-					/>
-				))}
+				listPolygons.map((item: any, index: number) => <MapCollapseItem key={`${item}-${index}`} data={item} />)}
 		</ul>
 	)
 }
