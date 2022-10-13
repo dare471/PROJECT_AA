@@ -1,9 +1,11 @@
 import { IPolygon } from '@/7.shared/api'
 
-export type TCurrentIllustrate = 'country' | 'region' | 'district' | 'client' | 'clientPolygon'
+export type TIllustrate = 'country' | 'region' | 'district' | 'client' | 'clientPolygon' | null
+
+export type TMode = 'true' | 'false'
 
 export interface IIllustratePolygon {
-	current: TCurrentIllustrate | null
+	current: TIllustrate | null
 }
 
 export type THandleChangeAction = 'request' | 'map' | 'prev'
@@ -25,3 +27,6 @@ export interface IListPolygons extends IPolygon {
 	[key: string]: any
 	children?: IListPolygons
 }
+
+export type TSuccessActions = 'position' | 'list' | 'list-change' | 'client-info' | 'session-country'
+export type TErrorActions = 'delete' | 'modal'

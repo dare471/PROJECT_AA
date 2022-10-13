@@ -1,10 +1,11 @@
-//environments from root
-//
-//
-//
-//
-//
-//
-export const env = {
-	API_URL: process.env.API_URL || 'http://192.168.1.16'
+/**
+ *
+ * @remark variables from .env
+ */
+
+export const getEnvVar = (key: string) => {
+	if (process.env[key] === undefined) {
+		throw new Error(`Env variable ${key} is required`)
+	}
+	return process.env[key] || ''
 }

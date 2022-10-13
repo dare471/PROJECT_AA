@@ -2,7 +2,6 @@ import { CRS, Point } from 'leaflet'
 
 export const polygonNormalizer = (res: any) => {
 	return res.data.GEOMETRY_RINGS[0].map((item: any) => [item[0], item[1]])
-	
 }
 
 export const JsonNormalizer = (res: any) => {

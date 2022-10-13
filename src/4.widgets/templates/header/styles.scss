@@ -7,6 +7,8 @@
 
 	position: relative;
 	z-index: var(--z-index-header);
+
+	margin-block-end: 20px;
 }
 
 .header_nav {
@@ -19,4 +21,10 @@
 	position: relative;
 
 	animation: header-item-animation 0.7s ease;
+}
+
+@media (max-width: 768px) {
+	.header_nav {
+		grid-template-columns: 2fr 1fr;
+	}
 }

@@ -6,10 +6,16 @@ import { IUserState } from './types'
 const NAME = 'User'
 
 const userToken = localStorage.getItem('user') ? localStorage.getItem('user') : null
+const userId = localStorage.getItem('id') ? localStorage.getItem('id') : null
+const userName = localStorage.getItem('name') ? localStorage.getItem('name') : null
+const userImage = localStorage.getItem('userImage') ? localStorage.getItem('userImage') : null
 
 const initialState = {
 	userInfo: null,
 	userToken,
+	userId,
+	userName,
+	userImage,
 	success: false,
 	error: null,
 	loading: false
@@ -22,10 +28,15 @@ const userSlice = createSlice({
 		logout(state, action: PayloadAction<undefined>) {
 			state.userInfo = null
 			state.userToken = null
+			state.userId = null
+			state.userName = null
 			state.success = false
 			state.error = null
 			state.loading = false
 			localStorage.removeItem('user')
+			localStorage.removeItem('id')
+			localStorage.removeItem('name')
+			localStorage.removeItem('image')
 		}
 	},
 	extraReducers(builder) {
@@ -35,25 +46,30 @@ const userSlice = createSlice({
 			})
 			.addCase(fetchSignIn.fulfilled, (state, action: PayloadAction<IUser>) => {
 				const userToken = action.payload.token
-				const name = action.payload.name
-				const email = action.payload.email
-				const user_id = action.payload.user_id
-				const role = action.payload.role
-				const region = action.payload.region
-				const work_position = action.payload.work_position
+				const userId = action.payload.users_data.users_id
+				const userName = action.payload.users_data.name
+				const userImage = action.payload.users_data.image
+				const email = action.payload.users_data.email
+				const role = action.payload.users_data.role
+				const work_position = action.payload.users_data.work_position
+				console.log(action.payload)
 
 				localStorage.setItem('user', userToken)
+				localStorage.setItem('id', userId)
+				localStorage.setItem('name', userName)
+				localStorage.setItem('userImage', userImage)
 				state.loading = false
 				state.error = null
 				state.success = true
 				state.userToken = userToken
+				state.userName = userName
+				state.userId = userId
+				state.userId = userImage
 				state.userInfo = {
-					name,
 					email,
-					user_id,
 					role,
-					region,
-					work_position
+					work_position,
+					fullName: null
 				}
 			})
 			.addCase(fetchSignIn.rejected, (state, action) => {

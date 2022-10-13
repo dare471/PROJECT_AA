@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { env } from '@/7.shared/config/env'
+import { getEnvVar } from '@/7.shared/config'
 
 export const instance = axios.create({
-	baseURL: env.API_URL + '/api'
+	baseURL: getEnvVar('REACT_APP_API_URL') + '/api'
 })

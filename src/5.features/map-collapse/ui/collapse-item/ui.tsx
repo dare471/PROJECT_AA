@@ -1,22 +1,20 @@
 import { FC, memo, useEffect, useState } from 'react'
 import useCollapse from 'react-collapsed'
-import { useSearchParams } from 'react-router-dom'
-import { TCurrentIllustrate } from '@/3.pages'
-import { useMapSpecific } from '@/5.features/map/lib'
-import { Article, Button, Load } from '@/7.shared/ui'
+import { useMapQP } from '@/5.features/map/lib'
+import { useQP } from '@/7.shared/lib'
+import { Button, Load } from '@/7.shared/ui'
 import { IMapCollapseItemProps } from './types'
 import './styles.scss'
 
 export const MapCollapseItem: FC<IMapCollapseItemProps> = memo(
-	({ data }) => {
+	({ data, illustrate }) => {
 		const [isLoad, setIsLoad] = useState<boolean>(false)
 		const [isExpanded, setIsExpanded] = useState<boolean>(false)
-		const { setParam, setChangedParam } = useMapSpecific()
 
-		const [searchParams] = useSearchParams()
-		const dataParam = searchParams.get(data.type)
-		const changedParam = searchParams.get('changed')
-		const illustrateParam = searchParams.get('illustrate') as TCurrentIllustrate
+		const { setIllustrateDataQP } = useMapQP()
+		const { getQP } = useQP()
+		const dataParam = getQP(data.type)
+		const illustrateDataQP = getQP(illustrate)
 
 		const config = {
 			duration: 500
@@ -35,16 +33,12 @@ export const MapCollapseItem: FC<IMapCollapseItemProps> = memo(
 		}, [dataParam])
 
 		useEffect(() => {
-			if (
-				(changedParam === 'map' || changedParam === 'prev' || changedParam === 'collapse') &&
-				dataParam === data.KATO &&
-				illustrateParam === data.type
-			) {
+			if (dataParam === data.KATO && illustrate === data.type) {
 				setIsLoad(true)
 				setIsExpanded(true)
 			}
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, [changedParam])
+		}, [illustrate, illustrateDataQP])
 
 		useEffect(() => {
 			if (data?.children && dataParam === data.KATO) {
@@ -60,8 +54,7 @@ export const MapCollapseItem: FC<IMapCollapseItemProps> = memo(
 					const type = data.type
 					const id = data.KATO
 
-					setParam(type, id)
-					setChangedParam('collapse')
+					setIllustrateDataQP(type, id)
 				}
 				if (!isLoad) {
 					setIsExpanded(prev => !prev)
@@ -95,7 +88,7 @@ export const MapCollapseItem: FC<IMapCollapseItemProps> = memo(
 						{data?.children && (
 							<ul className='map_collapse_ul_children'>
 								{data?.children.map((item: any, index: number) => (
-									<MapCollapseItem key={`${item}-${index}`} data={item} />
+									<MapCollapseItem key={`${item}-${index}`} data={item} illustrate={illustrate} />
 								))}
 							</ul>
 						)}

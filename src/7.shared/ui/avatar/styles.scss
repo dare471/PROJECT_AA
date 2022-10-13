@@ -1,0 +1,17 @@
+.avatar {
+	display: flex;
+	inline-size: 45px;
+	block-size: 45px;
+
+	cursor: pointer;
+
+	transition: all 0.1s linear;
+
+	img {
+		max-inline-size: 100%;
+		block-size: auto;
+		object-fit: cover;
+
+		border-radius: 2rem;
+	}
+}

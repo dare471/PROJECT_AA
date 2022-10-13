@@ -6,7 +6,11 @@ import { JsonNormalizer, Normalizer3857 } from './normalizer'
 // import { areaPolygonsMock, districtPolygonsMock } from './mock'
 
 class PolygonApiClass {
-	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 *
+	 * @param param0
+	 * @returns
+	 */
 	async getCountry({ signal }: { signal: AbortSignal | undefined }): Promise<TPolygon> {
 		try {
 			console.log(process.env.API_URL)
@@ -29,7 +33,11 @@ class PolygonApiClass {
 		// return areaPolygonsMock.features
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 *
+	 * @param param0
+	 * @returns
+	 */
 	async getRegion({ id, signal }: { id: string | null; signal: AbortSignal | undefined }): Promise<TPolygon> {
 		if (id) {
 			try {
@@ -55,7 +63,11 @@ class PolygonApiClass {
 		// return districtPolygonsMock.features
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 *
+	 * @param param0
+	 * @returns
+	 */
 	async getDistrict({ id, signal }: { id: string | null; signal: AbortSignal | undefined }): Promise<TPolygon> {
 		if (id) {
 			try {
@@ -65,6 +77,7 @@ class PolygonApiClass {
 					signal
 				})
 
+				console.log(data)
 				if (data && data?.data && data.data.length > 0 && data.success) {
 					return Normalizer3857(JsonNormalizer(data))
 				} else {
@@ -81,7 +94,11 @@ class PolygonApiClass {
 		// return polygonsMock
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 *
+	 * @param param0
+	 * @returns
+	 */
 	async getClient({ id, signal }: { id: string | null; signal: AbortSignal | undefined }): Promise<IClientInfo | void> {
 		if (id) {
 			try {
@@ -104,7 +121,11 @@ class PolygonApiClass {
 		}
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 *
+	 * @param param0
+	 * @returns
+	 */
 	async getClientPolygon({ id, signal }: { id: string | null; signal: AbortSignal | undefined }) {
 		if (id) {
 			try {
@@ -125,7 +146,11 @@ class PolygonApiClass {
 		}
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 *
+	 * @param param0
+	 * @returns
+	 */
 	async findByIin({ iin, signal }: { iin: number; signal: AbortSignal | undefined }) {
 		const { data } = await instance({
 			method: 'GET',

@@ -3,20 +3,27 @@ import 'leaflet/dist/leaflet.css'
 import { FC, memo } from 'react'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import { useSearchParams } from 'react-router-dom'
-import { TCurrentIllustrate } from '@/3.pages'
 import { MarkerIcon } from '@/7.shared/assets'
 import { IMapProps } from './types'
-import { findChoosePolygon, useMapSpecific } from '../../lib'
+import { findChoosePolygon, useMapQP } from '../../lib'
 import { MapPolygons } from '../polygon'
 import { MapPosition } from '../position'
 import './styles.scss'
 
 export const Map: FC<IMapProps> = memo(
-	({ countryMutation, regionMutation, districtMutation, clientMutation, clientPolygonMutation, position }) => {
-		const { setParam, setChangedParam } = useMapSpecific()
+	({
+		countryMutation,
+		regionMutation,
+		districtMutation,
+		clientMutation,
+		clientPolygonMutation,
+		position,
+		illustrate,
+		setIllustrate
+	}) => {
+		const { setIllustrateDataQP } = useMapQP()
 		const [searchParams] = useSearchParams()
 		const districtParam = searchParams.get('district')
-		const illustrateParam = searchParams.get('illustrate') as TCurrentIllustrate
 
 		const LeafIcon = icon({
 			iconUrl: MarkerIcon,
@@ -37,8 +44,8 @@ export const Map: FC<IMapProps> = memo(
 			}
 
 			if (type && id) {
-				setParam(type, id)
-				setChangedParam('map')
+				setIllustrateDataQP(type, id)
+				setIllustrate(type)
 			}
 		}
 
@@ -65,7 +72,7 @@ export const Map: FC<IMapProps> = memo(
 					{regionMutation.data?.data && (
 						<MapPolygons
 							polygons={regionMutation.data.data}
-							color={illustrateParam === 'region' ? 'grey' : 'blue'}
+							color={illustrate === 'region' ? 'grey' : 'blue'}
 							onClick={handleClickCurrent}
 						></MapPolygons>
 					)}
@@ -78,17 +85,17 @@ export const Map: FC<IMapProps> = memo(
 							onClick={handleClickCurrent}
 						></MapPolygons>
 					)}
-					{regionMutation.data?.data && districtParam && illustrateParam !== 'region' && (
+					{regionMutation.data?.data && districtParam && illustrate !== 'region' && (
 						<MapPolygons
 							polygons={findChoosePolygon(regionMutation.data.data, districtParam)}
-							color={illustrateParam === 'district' ? 'white' : 'blue'}
+							color={illustrate === 'district' ? 'white' : 'blue'}
 							onClick={handleClickCurrent}
 						></MapPolygons>
 					)}
 					{clientMutation.data?.data && (
 						<MapPolygons
 							polygons={clientMutation.data.data}
-							color={illustrateParam === 'client' ? 'white' : 'orange'}
+							color={illustrate === 'client' ? 'white' : 'orange'}
 							onClick={handleClickCurrent}
 						></MapPolygons>
 					)}

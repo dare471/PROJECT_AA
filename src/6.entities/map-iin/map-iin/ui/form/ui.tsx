@@ -1,5 +1,5 @@
 import { FC, memo, useEffect, useState } from 'react'
-import { useMapSpecific } from '@/5.features/map/lib'
+import { useMapQP } from '@/5.features/map/lib'
 import { Button, ErrorMessage } from '@/7.shared/ui'
 import { TextField } from '@/7.shared/ui/textfield'
 import { IMapIinFormProps } from './types'
@@ -14,7 +14,7 @@ import './styles.scss'
 
 export const MapIinForm: FC<IMapIinFormProps> = memo(({ mutationCoincideIin, abortCoincideIin, iin, setIin }) => {
 	const [error, setError] = useState<string | null>(null)
-	const { setParam, setChangedParam } = useMapSpecific()
+	const { setIllustrateDataQP } = useMapQP()
 
 	useEffect(() => {
 		setError(prev => {
@@ -45,8 +45,8 @@ export const MapIinForm: FC<IMapIinFormProps> = memo(({ mutationCoincideIin, abo
 			if (String(iin).length === 12) {
 				mutationCoincideIin.reset()
 				setIin('')
-				setChangedParam('map')
-				setParam('client', mutationCoincideIin.data[0]['CLIENT_ID'])
+
+				setIllustrateDataQP('client', mutationCoincideIin.data[0]['CLIENT_ID'])
 			}
 		} catch (err) {
 			setIin('')

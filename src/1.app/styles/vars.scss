@@ -9,7 +9,7 @@
 	--orange: #ff9f43;
 	--yellow: #ffc107;
 	--green: #28c76f;
-	--light-green: #90ee90; 
+	--light-green: #90ee90;
 	--teal: #20c997;
 	--cyan: #17a2b8;
 	--white: #fff;
@@ -26,6 +26,7 @@
 	--danger: #ea5455;
 	--light: #f6f6f6;
 	--dark: #4b4b4b;
+	--black: #000000;
 
 	/* breakpoint */
 	--breakpoint-xs: 0;
@@ -43,6 +44,9 @@
 	--height-header: 80px;
 	--height-footer: 120px;
 	--height-map-sidebar: 500px;
+
+	/* width */
+	--max-width: 1230px;
 
 	/* z-index */
 	--z-index-header: 1500;
