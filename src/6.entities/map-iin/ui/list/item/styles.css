@@ -1,0 +1,31 @@
+.map_iin_list_li {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.map_iin_list_button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  cursor: pointer;
+}
+
+.map_iin_list_button:hover {
+  background-color: var(--gray);
+}
+
+.map_iin_list_too {
+  inline-size: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/*# sourceMappingURL=styles.css.map */

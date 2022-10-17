@@ -1,0 +1,37 @@
+.map_comment_item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 15px;
+  padding: 10px;
+  border: 1px solid var(--dark);
+  border-radius: 0.5rem;
+}
+
+.map_comment_item_header {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 50px;
+          flex: 0 0 50px;
+}
+
+.map_comment_item_content {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
+}
+
+.map_comment_item_title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--purple);
+}
+
+.map_comment_item_text {
+  font-size: 1rem;
+  font-weight: 300;
+  font-family: inherit;
+  color: var(--dark);
+  white-space: wrap;
+}
+/*# sourceMappingURL=styles.css.map */

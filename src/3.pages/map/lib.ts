@@ -1,2 +1,2 @@
 export const illustrateParams = ['country', 'region', 'district', 'client', 'clientPolygon']
-export const modeParams = ['true', 'false']
+export const modeParams = ['off', 'reset', 'push']

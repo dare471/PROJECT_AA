@@ -1,33 +1,28 @@
 import { FC, memo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useQueryParam } from 'use-query-params'
 import { Templates } from '@/4.widgets/templates'
-import { useMapQP } from '@/5.features/map'
 import { Article, Card } from '@/7.shared/ui'
 import { IMapRightSidebarProps } from './types'
 import './styles.scss'
 
-export const MapRightSidebar: FC<IMapRightSidebarProps> = memo(({ clientInfo, setModal }) => {
-	const [searchParams, setSearchParams] = useSearchParams()
-	const clientPolygonParam = searchParams.get('clientPolygon')
-	const illustrateParam = searchParams.get('illustrate')
-	const { setIllustrateDataQP } = useMapQP()
+export const MapRightSidebar: FC<IMapRightSidebarProps> = memo(({ clientInfo, setModal, setIllustrate }) => {
+	const [clientPolygonQP, setClientPolygonQP] = useQueryParam('clientPolygon')
 
 	const handleClickView = (item: any) => {
-		const type = 'clientPolygon'
-		const id = item.ID
-		setIllustrateDataQP(type, id)
+		setIllustrate('clientPolygon')
+		setClientPolygonQP(item.ID)
 	}
 
 	const handleKeyUpView = (e: any, item: any) => {
 		if (e.key === 'Enter') {
-			const type = 'clientPolygon'
-			const id = item.ID
-			setIllustrateDataQP(type, id)
+			setIllustrate('clientPolygon')
+			setClientPolygonQP(item.ID)
 		}
 	}
 
 	const handleClickComment = (item: any, index: number) => {
-		setIllustrateDataQP('clientPolygon', item.ID)
+		setIllustrate('clientPolygon')
+		setClientPolygonQP(item.ID)
 
 		setModal({
 			type: 'comment',
@@ -37,9 +32,9 @@ export const MapRightSidebar: FC<IMapRightSidebarProps> = memo(({ clientInfo, se
 
 	const handleKeyUpComment = (e: any, item: any, index: number) => {
 		if (e.key === 'Enter') {
-			setIllustrateDataQP('clientPolygon', item.ID)
+			setIllustrate('clientPolygon')
+			setClientPolygonQP(item.ID)
 
-			setSearchParams(searchParams)
 			setModal({
 				type: 'comment',
 				data: { header: { name: clientInfo?.header.NAME, address: clientInfo?.header.ADDRESS }, info: item, index }
@@ -60,9 +55,7 @@ export const MapRightSidebar: FC<IMapRightSidebarProps> = memo(({ clientInfo, se
 							{clientInfo.data.map((item: any, index: number) => (
 								<Card
 									key={`${item}-${index}`}
-									className={`map_info_sidebar_card${
-										illustrateParam === 'clientPolygon' && clientPolygonParam === item.ID ? ' active' : ''
-									}`}
+									className={`map_info_sidebar_card${clientPolygonQP === item.ID ? ' active' : ''}`}
 								>
 									<div className='map_info_sidebar_item first'>
 										<span>{index + 1}.</span>

@@ -1,17 +1,22 @@
 import { FC } from 'react'
 import { useLocation } from 'react-router'
-import { Navigate, useSearchParams } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
+import { useQueryParam } from 'use-query-params'
 import { illustrateParams, modeParams } from '@/3.pages/map'
 import { ERROR_ROUTE } from '@/7.shared/config'
 
 export const MapRequireParams = (Component: FC): FC => {
 	return props => {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const [searchParams] = useSearchParams()
+		const [modeQP] = useQueryParam<string>('mode')
+
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const [illustrateQP] = useQueryParam<string>('illustrate')
+
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const location = useLocation()
-		const hasModeParam = modeParams.includes(searchParams.get('mode') || '')
-		const hasIllustrateParam = illustrateParams.includes(searchParams.get('illustrate') || '')
+		const hasModeParam = modeParams.includes(modeQP || '')
+		const hasIllustrateParam = illustrateParams.includes(illustrateQP || '')
 
 		return (
 			<>

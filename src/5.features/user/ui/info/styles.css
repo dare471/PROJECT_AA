@@ -1,0 +1,71 @@
+.userinfo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+  min-block-size: 200px;
+}
+
+.userinfo_item_load {
+  min-block-size: 200px;
+  block-size: 100%;
+}
+
+.userinfo_avatar {
+  inline-size: 200px;
+  block-size: 200px;
+  cursor: auto;
+}
+
+.userinfo_avatar img {
+  border-radius: 15px;
+}
+
+.userinfo_content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  inline-size: 100%;
+  block-size: 100%;
+  -webkit-margin-before: 10px;
+          margin-block-start: 10px;
+}
+
+.userinfo_title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--purple);
+}
+
+.userinfo_info {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(200px, 1fr))[auto-fit];
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-row-gap: 50px;
+  grid-column-gap: 30px;
+  -webkit-margin-before: 20px;
+          margin-block-start: 20px;
+}
+
+.userinfo_info_item .userinfo_title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--dark);
+}
+
+.userinfo_info_item .userinfo_text {
+  font-size: 1rem;
+  font-weight: 300;
+  font-family: inherit;
+  color: var(--gray-dark);
+  -webkit-margin-before: 10px;
+          margin-block-start: 10px;
+}
+/*# sourceMappingURL=styles.css.map */

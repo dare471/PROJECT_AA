@@ -2,7 +2,12 @@ import { IPolygon } from '@/7.shared/api'
 
 export type TIllustrate = 'country' | 'region' | 'district' | 'client' | 'clientPolygon' | null
 
-export type TMode = 'true' | 'false'
+export interface IIllustrate {
+	value: TIllustrate
+	timeout: number
+}
+
+export type TMode = 'off' | 'reset' | 'push'
 
 export interface IIllustratePolygon {
 	current: TIllustrate | null
@@ -20,7 +25,6 @@ export type TModals = {
 export interface IPosition {
 	x: number
 	y: number
-	zoom: number
 }
 
 export interface IListPolygons extends IPolygon {
@@ -29,4 +33,4 @@ export interface IListPolygons extends IPolygon {
 }
 
 export type TSuccessActions = 'position' | 'list' | 'list-change' | 'client-info' | 'session-country'
-export type TErrorActions = 'delete' | 'modal'
+export type TErrorActions = 'modal'

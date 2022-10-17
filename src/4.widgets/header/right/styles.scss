@@ -12,35 +12,33 @@
 	block-size: 100%;
 }
 
-.header_li {
-	a {
-		font-size: 1rem;
-		font-family: inherit;
-		font-weight: 700;
-		color: var(--dark);
-		text-decoration: none;
+.header_link {
+	font-size: 1rem;
+	font-family: inherit;
+	font-weight: 700;
+	color: var(--dark);
+	text-decoration: none;
 
-		position: relative;
-		transition: all 0.3s ease;
+	position: relative;
+	transition: all 0.3s ease;
 
-		&.active {
-			&:after {
-				content: '';
-				display: block;
-				inline-size: 100%;
-				block-size: 2px;
+	&.active {
+		&:after {
+			content: '';
+			display: block;
+			inline-size: 100%;
+			block-size: 2px;
 
-				position: absolute;
-				bottom: -5px;
-				left: 0;
+			position: absolute;
+			bottom: -5px;
+			left: 0;
 
-				background-color: var(--purple);
-			}
+			background-color: var(--purple);
 		}
+	}
 
-		&:hover {
-			color: var(--cyan);
-		}
+	&:hover {
+		color: var(--cyan);
 	}
 }
 

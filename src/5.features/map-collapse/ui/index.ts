@@ -1,1 +1,2 @@
-export * from './collapse'
+export { MapCollapse } from './ui'
+export * from './types'

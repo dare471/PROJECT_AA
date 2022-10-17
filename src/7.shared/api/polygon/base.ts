@@ -1,6 +1,11 @@
 import axios from 'axios'
-import { getEnvVar } from '@/7.shared/config'
+import { envVar } from '@/7.shared/config'
+import { checkDataInterceptors, checkGeometryInterceptors, checkStatusInterceptors } from './../interceptors/index'
 
 export const instance = axios.create({
-	baseURL: getEnvVar('REACT_APP_API_URL') + '/api'
+	baseURL: envVar.API_URL
 })
+
+checkStatusInterceptors(instance)
+checkDataInterceptors(instance)
+checkGeometryInterceptors(instance)

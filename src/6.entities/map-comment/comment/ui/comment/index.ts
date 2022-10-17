@@ -1,1 +1,0 @@
-export { MapComment } from './ui'

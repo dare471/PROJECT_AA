@@ -1,0 +1,20 @@
+.map_container {
+  inline-size: 80%;
+  max-inline-size: 100%;
+  block-size: 100%;
+  -webkit-margin-start: 20%;
+          margin-inline-start: 20%;
+  -webkit-transition: all 0.6s ease;
+  transition: all 0.6s ease;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+@media (max-width: 1024px) {
+  .map_container {
+    inline-size: 100%;
+    -webkit-margin-start: 0;
+            margin-inline-start: 0;
+  }
+}
+/*# sourceMappingURL=styles.css.map */

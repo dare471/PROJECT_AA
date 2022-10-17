@@ -1,0 +1,46 @@
+.map_collapse_li {
+	inline-size: 100%;
+	min-block-size: 25px;
+
+	&:not(:last-child) {
+		margin-block-end: 5px;
+	}
+
+	&.children {
+		padding-inline-start: 20px;
+		position: relative;
+
+		&:before,
+		&:after {
+			content: '';
+			display: block;
+			inline-size: 10px;
+			block-size: 2px;
+
+			background-color: var(--dark);
+
+			position: absolute;
+			top: calc(50% - 3px);
+			left: 5px;
+
+			transform: rotate(45deg);
+		}
+
+		&:after {
+			top: calc(50% + 3px);
+			transform: rotate(135deg);
+		}
+	}
+}
+
+.map_collapse_article {
+	inline-size: 100%;
+	block-size: auto;
+
+	margin-block: 0.5rem;
+}
+
+.map_collapse_ul_children {
+	inline-size: 100%;
+	block-size: 100%;
+}

@@ -1,1 +1,0 @@
-export { MapIin } from './ui'

@@ -3,11 +3,14 @@ import { Modals } from '@/4.widgets/modals'
 import { namedLazy } from '@/7.shared/lib'
 import { Article, Load, LoadBlocker } from '@/7.shared/ui'
 import { useMapModel } from './model'
-import { Sidebar } from './sidebar'
 import './styles.scss'
 import { MapTemplate } from './template'
 
-const Map = namedLazy(() => import('@/5.features/map'), 'Map')
+// import { MapTabs } from './sidebar/tabs'
+
+const Map = namedLazy(() => import('@/4.widgets/map'), 'Map')
+const LeftSidebar = namedLazy(() => import('./sidebar/left'), 'MapLeftSidebar')
+const RightSidebar = namedLazy(() => import('./sidebar/right'), 'MapRightSidebar')
 
 export const MapPage = () => {
 	const {
@@ -19,33 +22,38 @@ export const MapPage = () => {
 		position,
 		illustrate,
 		setIllustrate,
-		countryMutation,
-		regionMutation,
-		districtMutation,
-		clientMutation,
-		clientPolygonMutation,
+		handleMutation,
 		handlePrev
 	} = useMapModel()
 
 	return (
 		<MapTemplate>
 			<Article className='map_article'>
-				<Sidebar.Left listPolygons={listPolygons} handlePrev={handlePrev} illustrate={illustrate} />
+				{/* <MapTabs
+					listPolygons={listPolygons}
+					handlePrev={handlePrev}
+					illustrate={illustrate}
+					setIllustrate={setIllustrate}
+					clientInfo={clientInfo}
+					setModal={setModal}
+				/> */}
+				<LeftSidebar
+					listPolygons={listPolygons}
+					handlePrev={handlePrev}
+					illustrate={illustrate}
+					setIllustrate={setIllustrate}
+				/>
 
 				<Suspense fallback={<Load />}>
 					<Map
 						position={position}
-						countryMutation={countryMutation}
-						regionMutation={regionMutation}
-						districtMutation={districtMutation}
-						clientMutation={clientMutation}
-						clientPolygonMutation={clientPolygonMutation}
+						handleMutation={handleMutation}
 						illustrate={illustrate}
 						setIllustrate={setIllustrate}
 					/>
 				</Suspense>
 
-				<Sidebar.Right clientInfo={clientInfo} setModal={setModal} />
+				<RightSidebar clientInfo={clientInfo} setModal={setModal} setIllustrate={setIllustrate} />
 
 				{isLoad && <LoadBlocker />}
 				<Modals modal={modal} setModal={setModal} />

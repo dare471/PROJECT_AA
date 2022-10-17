@@ -1,9 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
-import { calculateCenter } from '@/5.features/map'
-import { useFetchClient, useFetchCountry, useFetchDistrict, useFetchRegion } from '@/6.entities/map'
+import { StringParam, useQueryParam } from 'use-query-params'
+import { calculateCenter } from '@/4.widgets/map'
+import {
+	useFetchClient,
+	useFetchClientPolygon,
+	useFetchCountry,
+	useFetchDistrict,
+	useFetchRegion
+} from '@/6.entities/polygon'
 import { IClientInfo } from '@/7.shared/api'
-import { useQP, useSessionStorage } from '@/7.shared/lib'
+import { useSessionStorage } from '@/7.shared/lib'
 import { IListPolygons, IPosition, TErrorActions, TModals, TSuccessActions } from '../types'
+import { TIllustrate } from '../types'
 import { useIllustrateQP } from './use-qp-illustrate'
 import { useQPMode } from './use-qp-mode'
 
@@ -16,19 +24,26 @@ export const useMapModel = () => {
 	const [listPolygons, setListPolygons] = useState<IListPolygons | null>(null)
 	const [position, setPosition] = useState<IPosition>({
 		x: 68,
-		y: 48,
-		zoom: 5.45
+		y: 48
 	})
 
-	const { deleteQP, getQP } = useQP()
-	const illustrateDataQP = getQP(illustrate)
-	const regionQP = getQP('region')
-	const districtQP = getQP('district')
-	const clientQP = getQP('client')
-	const clientPolygonQP = getQP('clientPolygon')
+	const [regionQP, setRegionQP] = useQueryParam('region', StringParam)
+	const [districtQP, setDistrictQP] = useQueryParam('district', StringParam)
+	const [clientQP, setClientQP] = useQueryParam('client', StringParam)
+	const [clientPolygonQP, setClientPolygonQP] = useQueryParam('clientPolygon', StringParam)
+	const illustrateData =
+		illustrate === 'region'
+			? regionQP
+			: illustrate === 'district'
+			? districtQP
+			: illustrate === 'client'
+			? clientQP
+			: illustrate === 'clientPolygon'
+			? clientPolygonQP
+			: null
 
 	const [sessionCountry, setSessionCountry] = useSessionStorage<any>('country', null)
-	const [countryMutation] = useFetchCountry({
+	const [countryMutation, abortCountry] = useFetchCountry({
 		onSuccess(res: any, sessionCountry: any) {
 			if (!sessionCountry) {
 				handleSuccess({ res, actions: ['list', 'session-country'] })
@@ -37,51 +52,67 @@ export const useMapModel = () => {
 			}
 		},
 		onError(err) {
-			handleError({ err, actions: ['delete', 'modal'] })
+			handleError({ err, actions: ['modal'] })
 		}
 	})
-	const [regionMutation] = useFetchRegion({
+	const [regionMutation, abortRegion] = useFetchRegion({
 		onSuccess(res, id) {
 			handleSuccess({ res, actions: ['list-change', 'position'], params: { id } })
 		},
 		onError(err) {
-			handleError({ err, actions: ['delete', 'modal'], params: { key: 'region' } })
+			handleError({ err, actions: ['modal'], params: { key: 'region' } })
+			setRegionQP(null)
 		}
 	})
-	const [districtMutation] = useFetchDistrict({
+	const [districtMutation, abortDistrict] = useFetchDistrict({
 		onSuccess(res: any) {
 			handleSuccess({ res, actions: ['position'] })
 		},
 		onError(err) {
-			handleError({ err, actions: ['delete', 'modal'], params: { key: 'district' } })
+			handleError({ err, actions: ['modal'], params: { key: 'district' } })
+			setDistrictQP(null)
 		}
 	})
-	const [clientMutation] = useFetchClient({
+	const [clientMutation, abortClient] = useFetchClient({
 		onSuccess(res: any) {
 			handleSuccess({ res, actions: ['position', 'client-info'] })
 		},
 		onError(err) {
-			handleError({ err, actions: ['delete', 'modal'], params: { key: 'client' } })
+			handleError({ err, actions: ['modal'], params: { key: 'client' } })
+			setClientQP(null)
 		}
 	})
-	const [clientPolygonMutation] = useFetchClient({
+	const [clientPolygonMutation, abortClientPolygon] = useFetchClientPolygon({
 		onSuccess(res: any) {
 			handleSuccess({ res, actions: ['position'] })
 		},
 		onError(err) {
-			handleError({ err, actions: ['delete', 'modal'], params: { key: 'clientPolygon' } })
+			handleError({ err, actions: ['modal'], params: { key: 'clientPolygon' } })
+			setClientPolygonQP(null)
 		}
 	})
 
 	useEffect(() => {
-		if (sessionCountry) {
-			countryMutation.mutate(sessionCountry)
-		} else {
-			countryMutation.mutate('')
-		}
+		countryMutation.mutate(sessionCountry ? sessionCountry : '')
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	useEffect(() => {
+		if (!regionQP) {
+			regionMutation.reset()
+		}
+		if (!districtQP) {
+			districtMutation.reset()
+		}
+		if (!clientQP) {
+			clientMutation.reset()
+		}
+		if (!clientPolygonQP) {
+			clientPolygonMutation.reset()
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [regionQP, districtQP, clientQP, clientPolygonQP])
 
 	useEffect(() => {
 		if (
@@ -103,53 +134,28 @@ export const useMapModel = () => {
 		clientPolygonMutation.isLoading
 	])
 
-	// useEffect(() => {
-	// 	if (illustrate === 'region') {
-	// 		districtMutation.reset()
-	// 		clientMutation.reset()
-	// 		clientPolygonMutation.reset()
-	// 		setTimeout(() => {
-	// 			deleteQP('district')
-	// 			deleteQP('client')
-	// 			deleteQP('clientPolygon')
-	// 		}, 2000)
-	// 	} else if (illustrate === 'district') {
-	// 		clientMutation.reset()
-	// 		clientPolygonMutation.reset()
-	// 		setTimeout(() => {
-	// 			deleteQP('client')
-	// 			deleteQP('clientPolygon')
-	// 		}, 2000)
-	// 	} else if (illustrate === 'client') {
-	// 		clientPolygonMutation.reset()
-	// 		setTimeout(() => {
-	// 			deleteQP('clientPolygon')
-	// 		}, 2000)
-	// 	}
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [illustrateDataQP])
-
 	useEffect(() => {
-		if (illustrateDataQP) {
+		// console.log(illustrate, illustrateData, 'mutate')
+		if (illustrateData) {
 			if (illustrate === 'region') {
-				regionMutation.mutate(illustrateDataQP)
+				regionMutation.mutate(illustrateData)
 			}
 			if (illustrate === 'district') {
-				districtMutation.mutate(illustrateDataQP)
+				districtMutation.mutate(illustrateData)
 			}
 			if (illustrate === 'client') {
-				clientMutation.mutate(illustrateDataQP)
+				clientMutation.mutate(illustrateData)
 			}
 			if (illustrate === 'clientPolygon') {
-				clientPolygonMutation.mutate(illustrateDataQP)
+				clientPolygonMutation.mutate(illustrateData)
 			}
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [illustrate, illustrateDataQP])
+	}, [illustrate, illustrateData])
 
 	useEffect(() => {
-		if (mode) {
+		if (mode === 'reset') {
 			handlePolygon()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,7 +176,7 @@ export const useMapModel = () => {
 			})
 		}
 		if (actions.includes('position')) {
-			setPosition(prev => (data[0]?.GEOMETRY_RINGS ? calculateCenter(data, 6) : prev))
+			setPosition(prev => (data[0]?.GEOMETRY_RINGS ? calculateCenter(data) : prev))
 		}
 		if (actions.includes('client-info')) {
 			setClientInfo(res)
@@ -185,9 +191,6 @@ export const useMapModel = () => {
 		if (actions.includes('modal')) {
 			setModal({ type: 'error', data: { error: error.message } })
 		}
-		if (actions.includes('delete')) {
-			deleteQP(params?.key)
-		}
 	}
 
 	const handlePrev = useCallback(() => {
@@ -197,12 +200,12 @@ export const useMapModel = () => {
 				message: 'Do u want to view map teleport',
 				onClickAccept() {
 					setModal(null)
-					setMode(true)
+					setMode('reset')
 					handlePolygon()
 				},
 				onClickReject() {
 					setModal(null)
-					setMode(false)
+					setMode('off')
 				}
 			}
 		})
@@ -212,27 +215,59 @@ export const useMapModel = () => {
 		if (regionQP) {
 			setTimeout(async () => {
 				setIllustrate('region')
-			}, 500)
+			}, 3000)
 		}
 
 		if (districtQP) {
 			setTimeout(async () => {
 				setIllustrate('district')
-			}, 1000)
+			}, 4500)
 		}
 
 		if (clientQP) {
 			setTimeout(async () => {
 				setIllustrate('client')
-			}, 2000)
+			}, 6500)
 		}
 
 		if (clientPolygonQP) {
 			setTimeout(async () => {
 				setIllustrate('clientPolygon')
-			}, 3000)
+			}, 7500)
 		}
-	}, [])
+	}, [regionQP, districtQP, clientQP, clientPolygonQP])
+
+	const handleMutation = useCallback(
+		(mutation: TIllustrate) => {
+			if (mutation === 'country') {
+				return [countryMutation, abortCountry] as const
+			}
+			if (mutation === 'region') {
+				return [regionMutation, abortRegion] as const
+			}
+			if (mutation === 'district') {
+				return [districtMutation, abortDistrict] as const
+			}
+			if (mutation === 'client') {
+				return [clientMutation, abortClient] as const
+			}
+			if (mutation === 'clientPolygon') {
+				return [clientPolygonMutation, abortClientPolygon] as const
+			}
+		},
+		[
+			countryMutation,
+			regionMutation,
+			districtMutation,
+			clientMutation,
+			clientPolygonMutation,
+			abortCountry,
+			abortRegion,
+			abortDistrict,
+			abortClient,
+			abortClientPolygon
+		]
+	)
 
 	return {
 		isLoad,
@@ -243,11 +278,7 @@ export const useMapModel = () => {
 		position,
 		illustrate,
 		setIllustrate,
-		countryMutation,
-		regionMutation,
-		districtMutation,
-		clientMutation,
-		clientPolygonMutation,
+		handleMutation,
 		handlePrev
 	}
 }

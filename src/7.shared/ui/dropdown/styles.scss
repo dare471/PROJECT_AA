@@ -10,11 +10,12 @@
 	border-end-start-radius: 10px;
 	border-end-end-radius: 10px;
 
+	overflow: hidden;
 	box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-	padding: 1.5rem 1rem 2rem 1rem;
+	padding: 1.5rem 1rem;
 
 	position: absolute;
-	top: 100%;
+	top: 80%;
 	right: 0;
 
 	:not(:last-child) {
@@ -29,7 +30,7 @@
 			background-color: black;
 
 			position: absolute;
-			bottom: -50%;
+			top: 125%;
 			left: 0;
 		}
 	}

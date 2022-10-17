@@ -1,0 +1,19 @@
+.avatar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  inline-size: 45px;
+  block-size: 45px;
+  cursor: pointer;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+}
+
+.avatar img {
+  max-inline-size: 100%;
+  block-size: auto;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 2rem;
+}
+/*# sourceMappingURL=styles.css.map */

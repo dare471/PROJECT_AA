@@ -1,6 +1,6 @@
 export interface IAvatarProps {
 	className?: string
-	image: string
+	src: string
 	role?: string
 	onClick: any
 }

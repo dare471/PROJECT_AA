@@ -1,0 +1,29 @@
+.login_form {
+  inline-size: 300px;
+  max-inline-size: 100%;
+  margin-inline: auto;
+}
+
+.login_textfield_wrapper {
+  inline-size: 100%;
+  block-size: 40px;
+}
+
+.login_textfield_wrapper.second {
+  -webkit-margin-before: 1rem;
+          margin-block-start: 1rem;
+}
+
+.login_button {
+  inline-size: 100%;
+  block-size: 40px;
+  background-color: var(--purple);
+  border-radius: 0.5rem;
+  -webkit-margin-before: 1rem;
+          margin-block-start: 1rem;
+}
+
+.login_button:hover {
+  background-color: var(--cyan);
+}
+/*# sourceMappingURL=styles.css.map */

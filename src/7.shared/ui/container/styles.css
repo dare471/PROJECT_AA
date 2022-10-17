@@ -1,0 +1,7 @@
+.container {
+  max-inline-size: var(--max-width);
+  block-size: 100%;
+  padding-inline: 1rem;
+  margin-inline: auto;
+}
+/*# sourceMappingURL=styles.css.map */

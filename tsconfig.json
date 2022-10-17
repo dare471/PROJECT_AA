@@ -17,6 +17,6 @@
 		"incremental": true
 	},
 	"extends": "./tsconfig.paths.json",
-	"include": ["global.d.ts", "**/*.ts", "**/*.tsx", "src/7.shared/ui/label/index.tsc", "src/4.widgets/header/public/ui.tss"],
+	"include": ["global.d.ts", "**/*.ts", "**/*.tsx", "src/7.shared/ui/label/index.tsc", "src/4.widgets/header/public/ui.tss", "src/3.pages/map/sidebar/tabs/types.tsxs"],
 	"exclude": ["node_modules"]
 }

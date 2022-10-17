@@ -1,0 +1,38 @@
+.dropdown {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 20px;
+  inline-size: auto;
+  block-size: auto;
+  background-color: var(--white);
+  border-radius: 3px;
+  border-end-start-radius: 10px;
+  border-end-end-radius: 10px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+          box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  padding: 1.5rem 1rem 2rem 1rem;
+  position: absolute;
+  top: 100%;
+  right: 0;
+}
+
+.dropdown :not(:last-child) {
+  position: relative;
+}
+
+.dropdown :not(:last-child):after {
+  content: '';
+  display: block;
+  inline-size: 100%;
+  block-size: 1px;
+  background-color: black;
+  position: absolute;
+  bottom: -50%;
+  left: 0;
+}
+/*# sourceMappingURL=styles.css.map */

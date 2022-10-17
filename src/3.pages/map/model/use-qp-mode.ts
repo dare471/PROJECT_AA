@@ -1,27 +1,20 @@
 import { useEffect, useState } from 'react'
-import { useMapQP } from '@/5.features/map/lib'
+import { useQueryParam } from 'use-query-params'
+import { TMode } from '../types'
 
 export const useQPMode = () => {
-	const [mode, setMode] = useState<boolean>(false)
-	const { getModeQP, setModeQP } = useMapQP()
-	const modeQP = getModeQP()
+	const [mode, setMode] = useState<TMode | null>(null)
+	const [modeQP, setModeQP] = useQueryParam<TMode>('mode')
 
 	useEffect(() => {
-		if (modeQP === 'true') {
-			setMode(true)
-		} else if (modeQP === 'false') {
-			setMode(false)
-		}
+		setMode(modeQP)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	useEffect(() => {
 		if (mode) {
-			setModeQP('true')
-		} else {
-			setModeQP('false')
+			setModeQP(mode)
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mode])
 

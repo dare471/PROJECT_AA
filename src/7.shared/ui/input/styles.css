@@ -1,0 +1,23 @@
+.input {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  -webkit-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+}
+
+.input.box-shadow {
+  -webkit-box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+          box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.input.success {
+  background-color: rgba(40, 199, 111, 0.5);
+  border: 1.5px solid var(--success);
+}
+
+.input.error {
+  background-color: rgba(234, 84, 85, 0.4);
+  border: 1.5px solid var(--danger);
+}
+/*# sourceMappingURL=styles.css.map */

@@ -1,1 +1,0 @@
-export { MapIinListItem } from './ui'

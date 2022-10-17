@@ -7,12 +7,5 @@ import { IUserAvatarProps } from './types'
 export const UserAvatar: FC<IUserAvatarProps> = ({ className, onClick }) => {
 	const userImage = useAppSelector(state => state.user.userImage)
 
-	return (
-		<Avatar
-			className={className}
-			image={userImage ? userImage : UserImagePlaceholder}
-			onClick={onClick}
-			role='menuitem'
-		/>
-	)
+	return <Avatar src={UserImagePlaceholder} className={className} onClick={onClick} role='menuitem' />
 }

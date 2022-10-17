@@ -1,28 +1,42 @@
+import { generateRoute } from '../lib'
+
 export const HOME_ROUTE = 'home'
 export const MAP_ROUTE = 'map'
 export const SIGN_IN_ROUTE = 'login'
 export const ERROR_ROUTE = 'error'
 export const PROFILE_ROUTE = 'profile'
 
-export const ROUTE_TO_HOME = (params: string[] = [], queryParams: string[] = []) =>
-	`/${HOME_ROUTE}${params.length > 0 ? `/${params.join('/')}` : ''}${
-		queryParams.length > 0 ? `?${queryParams.join('&')}` : ''
-	}`
-export const ROUTE_TO_MAP = (params: string[] = [], queryParams: string[] = ['illustrate=country', 'mode=false']) =>
-	`/${MAP_ROUTE}${params.length > 0 ? `/${params.join('/')}` : ''}${
-		queryParams.length > 0 ? `?${queryParams.join('&')}` : ''
-	}`
+const home = generateRoute({
+	path: HOME_ROUTE
+})
 
-export const ROUTE_TO_LOGIN = (params: string[] = [], queryParams: string[] = []) =>
-	`/${SIGN_IN_ROUTE}${params.length > 0 ? `/${params.join('/')}` : ''}${
-		queryParams.length > 0 ? `?${queryParams.join('&')}` : ''
-	}`
+const map = generateRoute({
+	path: MAP_ROUTE,
+	defaultQueryParams: {
+		illustrate: 'country',
+		mode: 'off'
+	}
+})
 
-export const ROUTE_TO_ERROR = (params: string[] = ['404'], queryParams: string[] = []) =>
-	`/${ERROR_ROUTE}${params.length > 0 ? `/${params.join('/')}` : ''}${
-		queryParams.length > 0 ? `?${queryParams.join('&')}` : ''
-	}`
-export const ROUTE_TO_PROFILE = (params: string[] = [], queryParams: string[] = []) =>
-	`/${PROFILE_ROUTE}${params.length > 0 ? `/${params.join('/')}` : ''}${
-		queryParams.length > 0 ? `?${queryParams.join('&')}` : ''
-	}`
+const signIn = generateRoute({
+	path: SIGN_IN_ROUTE
+})
+
+const profile = generateRoute({
+	path: PROFILE_ROUTE
+})
+
+const error = generateRoute({
+	path: ERROR_ROUTE,
+	defaultParams: {
+		errorStatus: 404
+	}
+})
+
+export const routes = {
+	home,
+	map,
+	signIn,
+	profile,
+	error
+} as const

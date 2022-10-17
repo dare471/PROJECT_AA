@@ -1,5 +1,5 @@
 import { FC, memo } from 'react'
-import { Modal } from '@/5.features/modal'
+import { Modal } from '@/4.widgets/modals/modal'
 import { IModalsProps } from './types'
 
 export const Modals: FC<IModalsProps> = memo(({ modal, setModal, ...props }) => {

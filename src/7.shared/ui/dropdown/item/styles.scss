@@ -1,0 +1,22 @@
+.dropdown_item {
+	display: flex;
+	align-items: center;
+	block-size: 40px;
+
+	border-radius: 0.5rem;
+	padding: 0.5rem;
+
+	color: var(--dark);
+
+	text-decoration: none;
+
+	&:hover {
+		background-color: var(--gray);
+	}
+}
+
+.dropdown_item_icon {
+	&.right {
+		margin-left: auto;
+	}
+}

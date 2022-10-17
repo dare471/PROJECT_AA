@@ -1,2 +1,2 @@
 export * from './use-session-storage'
-export * from './use-query-params'
+export * from './generate-route'

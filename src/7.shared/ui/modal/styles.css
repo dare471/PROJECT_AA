@@ -1,0 +1,85 @@
+.modal_wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: var(--z-index-poppup-1);
+}
+
+.modal {
+  inline-size: 400px;
+  block-size: 250px;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  -webkit-box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+          box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+  -webkit-animation: modal-animation 0.6s ease;
+          animation: modal-animation 0.6s ease;
+  position: relative;
+}
+
+.modal_close_button {
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.modal_close:before, .modal_close:after {
+  content: '';
+  display: block;
+  inline-size: 3px;
+  block-size: 15px;
+  position: absolute;
+  top: 10%;
+  right: 45%;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  background-color: var(--white);
+}
+
+.modal_close:after {
+  -webkit-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+
+@-webkit-keyframes modal-animation {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(30px);
+            transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes modal-animation {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(30px);
+            transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+/*# sourceMappingURL=styles.css.map */

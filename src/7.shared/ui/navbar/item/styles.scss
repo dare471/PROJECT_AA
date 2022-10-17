@@ -1,0 +1,17 @@
+.navbar_item {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	block-size: 100%;
+
+	position: relative;
+
+	> a {
+		color: var(--dark);
+		text-decoration: none;
+	}
+}
+
+.navbar_item_content {
+	inline-size: auto;
+}
