@@ -1,0 +1,98 @@
+.comment_modal_wrapper {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.comment_modal {
+	display: flex;
+	flex-direction: column;
+	inline-size: 500px;
+	max-inline-size: 100%;
+	block-size: auto;
+	max-block-size: 100%;
+	min-block-size: 100%;
+
+	padding: 1rem;
+	padding-block-start: 4rem;
+
+	overflow: hidden;
+	overflow-y: scroll;
+
+	background-color: var(--white-600);
+	border-radius: 0.3rem;
+}
+
+.comment_modal_close {
+	&:before,
+	&:after {
+		background-color: black;
+	}
+}
+
+.comment_modal_item {
+	&.second {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 15px;
+
+		margin-block-start: 10px;
+	}
+
+	&.third {
+		margin-block-start: 1rem;
+	}
+
+	&.fourth {
+	}
+}
+
+.comment_modal_header_title {
+	font-size: 1.2rem;
+	font-weight: 700;
+	font-family: inherit;
+	color: var(--purple);
+
+	&.second {
+		font-size: 1.05rem;
+		font-weight: 500;
+
+		margin-block-start: 0.5rem;
+	}
+}
+
+.comment_modal_details {
+	&.comment_modal_details_title {
+		font-size: 1.02rem;
+		font-weight: 500;
+		font-family: inherit;
+		color: var(--purple);
+	}
+
+	&.comment_modal_details_text {
+		font-size: 1rem;
+		font-weight: 300;
+		font-family: inherit;
+		color: var(--dark);
+
+		margin-block-start: 0.4rem;
+	}
+}
+
+.comment_modal_comment_header {
+	h4 {
+		font-size: 1.2rem;
+		font-weight: 700;
+		font-family: inherit;
+		color: var(--purple);
+	}
+}
+
+.comment {
+	display: flex;
+	flex-direction: column;
+	flex: 1 0 auto;
+	inline-size: 100%;
+	block-size: auto;
+
+	margin-block-start: 1rem;
+}

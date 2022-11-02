@@ -1,0 +1,65 @@
+.textfield-wrapper {
+	position: relative;
+
+	inline-size: 100%;
+	max-inline-size: 100%;
+	block-size: 55px;
+}
+
+.textfield-label-default {
+	position: absolute;
+	z-index: 2;
+	left: 1rem;
+	top: calc(50% - 0.5rem);
+
+	background-color: transparent;
+
+	font-size: 1rem;
+	font-weight: 300;
+	font-family: inherit;
+	color: var(--dark);
+
+	padding: 0 0.25rem;
+	transition: all 0.3s;
+}
+
+.textfield-input-default {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	inline-size: 100%;
+	block-size: 100%;
+
+	background-color: var(--white-600);
+	border: 1px solid var(--dark);
+	border-radius: 0.5rem;
+	box-shadow: none;
+	padding: 10px 50px 10px 15px;
+	transition: all 0.3s;
+
+	font-size: 1rem;
+	font-weight: 300;
+	font-family: inherit;
+	color: var(--dark);
+
+	&:hover and &:not(:has(&.error)) {
+		border-color: var(--info);
+	}
+}
+
+.textfield-input-default:focus ~ .textfield-label-default,
+.textfield-input-default:not(:placeholder-shown).textfield-input-default:not(:focus) ~ .textfield-label-default {
+	top: -0.5rem;
+	left: 0.8rem;
+	color: var(--dark);
+	background-color: var(--white-600);
+	font-size: 1.05rem;
+	font-weight: 500;
+	z-index: 10;
+}
+
+.textfield-input-default:focus,
+.textfield-input-default:not(:placeholder-shown).textfield-input-default:not(:focus) ~ .textfield-input-default {
+	border-color: rgb(154, 215, 235);
+}

@@ -1,0 +1,37 @@
+.map_tab {
+	inline-size: 100%;
+
+	cursor: pointer;
+
+	transition: background-color 0.5s ease-in-out;
+
+	padding: 0.8rem;
+	outline: none;
+
+	&:not(.map_tab_disabled):hover {
+		color: var(--purple);
+	}
+
+	h1 {
+		inline-size: 100%;
+		block-size: 100%;
+
+		font-size: 1.15rem;
+		vertical-align: center;
+		text-align: center;
+	}
+}
+
+.map_tab_disabled {
+	color: black;
+	opacity: 0.4;
+	background-color: grey;
+	border-block-end: 2px solid var(--gray);
+
+	cursor: not-allowed;
+}
+
+.map_tab_selected {
+	border-bottom: none;
+	border-block-end: 2px solid var(--purple);
+}

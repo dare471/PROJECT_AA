@@ -1,0 +1,10 @@
+.divider {
+	inline-size: 100%;
+	block-size: 1px;
+
+	background-color: var(--gray);
+	border-radius: 1px;
+
+	margin-inline: auto;
+	margin-block: 15px;
+}

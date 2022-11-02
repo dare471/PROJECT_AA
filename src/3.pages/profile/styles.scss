@@ -1,0 +1,51 @@
+.profile_section {
+	display: block !important;
+	inline-size: 100%;
+	min-block-size: calc(100vh - var(--height-header) - 20px) !important;
+	max-block-size: 100%;
+
+	overflow: hidden;
+	position: relative;
+
+	padding-block: 6rem 6rem;
+}
+
+.profile_article {
+	padding: 50px;
+}
+
+.profile_divider {
+	&.first {
+		block-size: 2px;
+	}
+}
+
+.profile_card_section {
+	display: flex;
+	inline-size: 100%;
+	min-block-size: 300px;
+
+	&.second,
+	&.third {
+		margin-block-start: 20px;
+	}
+}
+
+.profile_item_card {
+	inline-size: 100%;
+	min-block-size: 100%;
+	block-size: none;
+
+	padding: 30px;
+}
+
+@media (max-width: 425px) {
+	.profile_item {
+		&.first {
+			flex-direction: column;
+
+			justify-content: center;
+			align-items: center;
+		}
+	}
+}

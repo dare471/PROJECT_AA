@@ -1,0 +1,14 @@
+.map_reset_button {
+	background-color: transparent;
+	box-shadow: none;
+
+	font-size: 0.8rem;
+	font-weight: 500;
+	color: var(--purple);
+
+	margin-block-start: 0.1rem;
+
+	&:hover {
+		color: var(--cyan);
+	}
+}

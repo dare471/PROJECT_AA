@@ -1,0 +1,61 @@
+:root {
+	/* color */
+	--blue: #00cfe8;
+	--pink: #ffc0cb;
+	--indigo: #6610f2;
+	--purple: #4d95d3;
+	--pink: #e83e8c;
+	--red: #ea5455;
+	--orange: #ff9f43;
+	--yellow: #ffc107;
+	--green: #28c76f;
+	--light-green: #90ee90;
+	--teal: #20c997;
+	--cyan: #17a2b8;
+	--white: #fff;
+	--white-600: #f8f8f8;
+	--white-500: #ebe9f1;
+	--white-300: #d0ced4;
+	--gray: #b8c2cc;
+	--gray-dark: #1e1e1e;
+	--primary: #7367f0;
+	--secondary: #82868b;
+	--success: #28c76f;
+	--info: #00cfe8;
+	--warning: #ff9f43;
+	--danger: #ea5455;
+	--light: #f6f6f6;
+	--dark: #4b4b4b;
+	--black: #000000;
+
+	/* breakpoint */
+	--breakpoint-xs: 0;
+	--breakpoint-sm: 576px;
+	--breakpoint-md: 768px;
+	--breakpoint-lg: 992px;
+	--breakpoint-xl: 1200px;
+	--breakpoint-xxl: 1450px;
+
+	/* font-family */
+	--font-family-sans-serif: 'Montserrat', Helvetica, Arial, serif;
+	--font-family-monospace: 'Montserrat', Helvetica, Arial, serif;
+
+	/* height */
+	--height-header: 80px;
+	--height-footer: 120px;
+	--height-map-sidebar: 500px;
+
+	/* width */
+	--max-width: 1230px;
+
+	/* z-index */
+	--z-index-header: 1500;
+	--z-index-sidebar: 1100;
+	--z-index-poppup-1: 1200;
+}
+
+@media (max-width: 768px) {
+	:root {
+		font-size: 14px;
+	}
+}

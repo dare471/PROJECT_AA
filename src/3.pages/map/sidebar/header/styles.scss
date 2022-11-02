@@ -1,0 +1,32 @@
+.map_sidebar_header_item {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.map_sidebar_header_button {
+	inline-size: 100%;
+	block-size: 50px;
+
+	font-size: 0.9rem;
+	font-weight: 300;
+	font-family: inherit;
+	color: var(--purple);
+
+	cursor: pointer;
+
+	padding: 3px 10px;
+
+	&:not(:disabled) {
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&.prev {
+		grid-column: 1;
+	}
+
+	&.next {
+		grid-column: 2;
+	}
+}

@@ -1,0 +1,17 @@
+.user_panel {
+	inline-size: 100%;
+	block-size: 100%;
+}
+
+.user_panel_item {
+	inline-size: 130px;
+	pointer-events: none;
+	text-decoration: none;
+	cursor: default;
+
+	color: var(--purple);
+
+	&:hover {
+		background-color: transparent;
+	}
+}

@@ -1,0 +1,116 @@
+.map_collapse_section {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	inline-size: 100%;
+	block-size: 100%;
+
+	background-color: var(--white);
+	border: 1px solid var(--secondary);
+
+	border-radius: 0;
+	border-top-right-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
+
+	position: relative;
+	padding: 7px 5px;
+
+	&.active {
+		background-color: rgba(77, 149, 211, 0.4);
+	}
+
+	&:not(.active):hover {
+		background-color: var(--white-300);
+	}
+}
+
+.map_collapse_card_title {
+	inline-size: 100%;
+	block-size: 100%;
+
+	font-size: 1.05rem;
+	font-weight: 500;
+	font-family: inherit;
+
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-align: start;
+	inline-size: 100%;
+	block-size: 100%;
+
+	&.active {
+		color: rgb(31, 82, 127);
+		text-decoration: underline;
+	}
+}
+
+.map_collapse_card_button {
+	padding: 10px;
+	position: relative;
+
+	transition: background-color 0.5s ease;
+
+	background-color: transparent;
+	box-shadow: none;
+	justify-self: end;
+
+	&.open,
+	&.close {
+		&:hover {
+			&:before,
+			&:after {
+				background-color: var(--purple);
+			}
+		}
+	}
+
+	&.open:before,
+	&.close:before,
+	&.close:after {
+		content: '';
+		display: block;
+		inline-size: 2px;
+		block-size: 11px;
+
+		background-color: var(--dark);
+
+		position: absolute;
+		top: 5.5px;
+		left: 50%;
+
+		transform: rotate(90deg);
+	}
+
+	&.close {
+		&:before {
+			transform: rotate(180deg);
+		}
+	}
+
+	&.view {
+		background-color: transparent;
+		position: relative;
+
+		padding-inline: 16px;
+
+		&:before {
+			content: 'view';
+			color: var(--dark);
+			display: block;
+			inline-size: 30px;
+			block-size: 15px;
+
+			position: absolute;
+			top: calc(50% - 7.5px);
+			left: calc(50% - 15px);
+		}
+
+		&:hover {
+			&:before {
+				color: var(--purple);
+			}
+		}
+	}
+}

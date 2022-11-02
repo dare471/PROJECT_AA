@@ -1,0 +1,66 @@
+.collapse_wrapper {
+	inline-size: 100%;
+	block-size: 100%;
+}
+
+.collapse_button {
+	inline-size: 100%;
+	block-size: auto;
+
+	background-color: var(--purple);
+	border-radius: 1px;
+
+	position: relative;
+
+	padding: 0.2rem 1rem;
+}
+
+.collapse_label {
+	font-size: 1.1rem;
+	font-weight: 500;
+	font-family: inherit;
+	color: var(--white);
+}
+
+.collapse_arrow {
+	padding: 10px;
+	position: absolute;
+	top: 50%;
+	right: 0;
+
+	transform: translateY(-50%);
+
+	&:before,
+	&:after {
+		content: '';
+		inline-size: 8px;
+		block-size: 1.5px;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+
+		transform: translateX(20%) translateY(-50%) rotate(135deg);
+		transition: transform 0.2s linear;
+
+		background-color: var(--white);
+	}
+
+	&:after {
+		transform: translateX(80%) translateY(-50%) rotate(45deg);
+	}
+
+	&.active {
+		&:before {
+			transform: translateX(20%) translateY(-50%) rotate(45deg);
+		}
+
+		&:after {
+			transform: translateX(80%) translateY(-50%) rotate(135deg);
+		}
+	}
+}
+
+.collapse_children {
+	inline-size: 100%;
+	block-size: auto;
+}

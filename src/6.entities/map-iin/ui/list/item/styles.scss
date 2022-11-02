@@ -1,0 +1,27 @@
+.map_iin_list_li {
+	inline-size: 100%;
+	block-size: 100%;
+}
+.map_iin_list_button {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	inline-size: 100%;
+	block-size: 100%;
+
+	cursor: pointer;
+
+	&:hover {
+		background-color: var(--gray);
+	}
+}
+
+.map_iin_list_iin {
+}
+
+.map_iin_list_too {
+	inline-size: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

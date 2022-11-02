@@ -1,0 +1,47 @@
+.map_sidebar_content {
+	display: flex;
+	flex-direction: column;
+}
+
+.tabs {
+	display: flex;
+	flex-direction: column;
+	inline-size: 100%;
+	block-size: 100%;
+	min-block-size: 0;
+
+	flex: 0 1 auto;
+}
+
+.tab_list_wrapper {
+	inline-size: 100%;
+}
+
+.tab_list {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	inline-size: 100%;
+
+	margin-inline: auto;
+
+	border-block-end: 1px solid var(--dark);
+}
+
+.tab_panel {
+	inline-size: 100%;
+	block-size: 100%;
+
+	min-block-size: 0;
+
+	&.show {
+		display: flex;
+		flex-direction: column;
+		visibility: visible;
+	}
+
+	&.hide {
+		display: none;
+		visibility: hidden;
+	}
+}

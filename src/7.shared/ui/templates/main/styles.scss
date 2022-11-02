@@ -1,0 +1,23 @@
+.page_wrapper {
+	display: flex;
+	flex-direction: column;
+	min-block-size: 100%;
+
+	&.block {
+		overflow: hidden;
+	}
+}
+
+.page_header {
+	flex: 0 1;
+}
+
+.page_content {
+	flex: 1 0 auto;
+
+	margin-block-start: 2rem;
+}
+
+.page_footer {
+	flex-shrink: 0;
+}

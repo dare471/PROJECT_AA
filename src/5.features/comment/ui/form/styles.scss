@@ -1,0 +1,33 @@
+.comment_modal_comment {
+	margin-block-start: 0.5rem;
+
+	textarea {
+		display: block;
+		inline-size: 100%;
+		min-inline-size: min(100%, 300px);
+		max-inline-size: 100%;
+		min-block-size: 80px;
+
+		border: 1px solid black;
+		border-radius: 0.5rem;
+
+		font-size: 0.95rem;
+		font-weight: 300;
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		color: black;
+		line-height: 20px;
+
+		padding: 5px 10px;
+	}
+}
+
+.comment_modal_button {
+	inline-size: 100%;
+	block-size: 40px;
+
+	background-color: var(--purple);
+	border: 1px solid var(--dark);
+	border-radius: 0.5rem;
+
+	margin-block-start: 1rem;
+}

@@ -1,0 +1,76 @@
+.district_details_card {
+	margin-inline: 0.5rem;
+}
+
+.district_details_section {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 1rem 2rem;
+	padding-block-end: calc(2rem + 10px);
+}
+
+.district_details_item {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+
+	inline-size: 100%;
+
+	&.first {
+		justify-content: space-between;
+	}
+}
+
+.district_details_name {
+	font-size: 1.2rem;
+	font-weight: 700;
+	font-family: inherit;
+	color: var(--purple);
+}
+
+.district_details_info {
+	font-size: 0.9rem;
+	font-weight: 300;
+	font-family: inherit;
+
+	&.our {
+		color: var(--purple);
+	}
+
+	&.not-our {
+		color: var(--gray);
+	}
+}
+
+.district_details_button {
+	inline-size: 100%;
+
+	font-size: 1rem;
+	font-weight: 300;
+	font-family: inherit;
+	color: var(--dark);
+
+	border: 1px solid var(--secondary);
+	/* background-color: var(--secondary); */
+	border-radius: 1rem;
+
+	padding: 0.4rem 1rem;
+}
+
+@media (max-width: 1280px) {
+	.district_details_item {
+		&.first {
+			align-items: flex-start;
+			flex-direction: column;
+		}
+	}
+}
+
+@media (max-width: 1024px) {
+	.district_details_item {
+		&.first {
+			flex-direction: row;
+		}
+	}
+}

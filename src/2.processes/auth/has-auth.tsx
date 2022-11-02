@@ -1,0 +1,17 @@
+import { FC } from 'react'
+import { Navigate, useLocation } from 'react-router'
+
+import { useAuth } from '@/6.entities/session'
+
+import { routes } from '@/7.shared/config'
+
+export const HasAuth =
+	(Component: FC): FC =>
+	props => {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const { isAuth } = useAuth()
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const { state } = useLocation()
+
+		return <>{isAuth ? <Navigate to={state?.from || routes.map({})} /> : <Component {...props} />}</>
+	}
