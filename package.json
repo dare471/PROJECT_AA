@@ -6,18 +6,36 @@
   "scripts": {
     "dev": "vite --port=8000 --host",
     "build": "tsc && vite build",
-    "preview": "vite preview --port=8080 --host"
+    "preview": "vite preview --port=8080 --host",
+    "lint:fix": "eslint ./src --ext .jsx,.js,.ts,.tsx --quiet --fix --ignore-path ./.gitignore",
+    "lint:format": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
+    "lint": "yarn lint:format && yarn lint:fix",
+    "type-check": "tsc"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
+    "@types/node": "^18.11.9",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
+    "@typescript-eslint/parser": "^5.44.0",
     "@vitejs/plugin-react": "^2.2.0",
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-effector": "^0.10.3",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.8.0",
     "typescript": "^4.6.4",
     "vite": "^3.2.3",
+    "vite-plugin-checker": "^0.5.1",
+    "vite-plugin-pwa": "^0.13.3",
     "vite-tsconfig-paths": "^3.6.0"
   }
 }
