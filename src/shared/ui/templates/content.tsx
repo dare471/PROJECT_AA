@@ -36,5 +36,21 @@ const CenterContent = styled.div`
 	}
 `
 
-export const ContentTemp = { Center }
-//
+const Main = styled.main`
+	display: flex;
+	flex-shrink: 0;
+	width: 100%;
+	height: calc(100vh - 72px);
+
+	${breakpoints.devices.tablet} {
+		height: calc(100vh - 72px + 18px);
+	}
+
+	${breakpoints.devices.mobile} {
+		height: calc(100vh - 72px + 12px);
+	}
+
+	padding-top: 1.875rem;
+`
+
+export const ContentTemp = { Center, Main }

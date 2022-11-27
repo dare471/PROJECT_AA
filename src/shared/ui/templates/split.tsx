@@ -1,8 +1,6 @@
 import { FC, PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
-import { breakpoints } from '~src/shared/lib'
-
 type TSubComponents = {
 	Content: typeof Content
 	Header: typeof Header
@@ -18,19 +16,11 @@ const Container = styled.section`
 	flex-direction: column;
 	height: 100%;
 
-	${breakpoints.devices.mobile} {
-		overflow-y: auto;
-	}
+	overflow-y: auto;
 `
 
 const Content = styled.article`
-	flex-grow: 1;
-	overflow-y: auto;
-	padding-top: 1.875rem;
-
-	${breakpoints.devices.mobile} {
-		overflow: unset;
-	}
+	flex: 1 0 auto;
 `
 
 const Header = styled.div`

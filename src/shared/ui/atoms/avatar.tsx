@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components'
 
 import { theme } from '~src/shared/lib'
 
-interface Props {
+type Props = {
 	src?: string
 	size?: string
 }
