@@ -8,9 +8,14 @@ import { Pages } from '~src/pages'
 import { breakpoints } from '~src/shared/lib'
 import { customProps } from '~src/shared/lib/theme'
 
+import './index.scss'
+
 const GlobalStyle = createGlobalStyle`
 	html, body, #app, #app > section {
 		height: 100%;
+	}
+
+	#app {
 	}
 
 	html {

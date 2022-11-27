@@ -15,7 +15,7 @@ export function Header() {
 						<Link to={routes.home}>Home</Link>
 						<Link to={routes.map}>Map</Link>
 					</Nav>
-					<SignUpButton>Sign UP</SignUpButton>
+					<SignUpButton>Sign Up</SignUpButton>
 				</Content>
 			</ContentTemp.Center>
 		</Container>
@@ -39,19 +39,21 @@ const Content = styled.div`
 	grid-template-columns: 1fr 1fr 1fr;
 	align-items: center;
 	height: 100%;
+
+	padding: 18px 0;
+
+	${breakpoints.devices.mobile} {
+		padding: 12px 0;
+	}
 `
 
 const Nav = styled.nav`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 72px;
 
 	${breakpoints.devices.mobile} {
 		flex-wrap: wrap;
-		height: auto;
-
-		padding: 12px 0;
 	}
 `
 

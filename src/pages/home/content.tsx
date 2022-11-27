@@ -8,21 +8,15 @@ export function HomePageContent() {
 	const navigate = useNavigate()
 
 	return (
-		<Main>
+		<ContentTemp.Main>
 			<ContentTemp.Center>
 				<Content>
 					<Button onClick={() => navigate(routes.map)}>Go To Map</Button>
 				</Content>
 			</ContentTemp.Center>
-		</Main>
+		</ContentTemp.Main>
 	)
 }
-
-const Main = styled.main`
-	display: flex;
-	flex-shrink: 0;
-	height: 100%;
-`
 
 const Content = styled.div`
 	display: flex;

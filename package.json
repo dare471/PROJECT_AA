@@ -22,12 +22,14 @@
     "react-leaflet": "^4.1.0",
     "react-router": "^6.4.3",
     "react-router-dom": "^6.4.3",
+    "sass": "^1.56.1",
     "styled-components": "^5.3.6",
     "styled-normalize": "^8.0.7"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/compose-function": "^0.0.30",
+    "@types/leaflet": "^1.9.0",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
