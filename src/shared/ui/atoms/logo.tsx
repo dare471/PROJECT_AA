@@ -1,0 +1,32 @@
+import React from 'react'
+import styled from 'styled-components'
+
+import { AlemAgroLogo } from '~src/shared/assets'
+
+export function Logo() {
+	return (
+		<IconWrapper>
+			<img src={AlemAgroLogo} alt='logo' data-icon='text' />
+		</IconWrapper>
+	)
+}
+
+const IconWrapper = styled.div`
+	display: flex;
+	align-items: baseline;
+
+	[data-icon='text'] {
+		height: 35px;
+		margin-left: 10px;
+	}
+
+	[data-icon='square'] {
+		height: 17px;
+		width: 17px;
+		border-radius: 3px;
+
+		& rect {
+			fill: #683aef;
+		}
+	}
+`
