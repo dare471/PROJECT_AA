@@ -16,14 +16,14 @@ export function MapPageContent() {
 	)
 }
 
+const Main = styled(ContentTemp.Main)`
+	min-height: 30rem;
+`
+
 const Content = styled.div`
 	display: flex;
 	width: 100%;
 	height: 100%;
 
 	position: relative;
-`
-
-const Main = styled(ContentTemp.Main)`
-	padding: 0;
 `

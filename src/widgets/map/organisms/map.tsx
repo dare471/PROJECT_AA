@@ -1,15 +1,22 @@
+import { useUnit } from 'effector-react'
+import { useEvent } from 'effector-react/effector-react.umd'
 import 'leaflet/dist/leaflet.css'
 import { MapContainer as _MapContainer, TileLayer } from 'react-leaflet'
 import styled from 'styled-components'
 
+import { mapModel } from '~src/entities/map'
+
 export function Map() {
+	const { position, zoom } = useUnit({ position: mapModel.$mapPosition, zoom: mapModel.$mapZoom })
+	const handleMapControl = useEvent(mapModel.mapMounted)
+
 	return (
 		<Container>
 			<MapContainer
-				center={[48, 50]}
-				zoom={5}
+				center={position}
+				zoom={zoom}
 				scrollWheelZoom={false}
-				// ref={mapModel.setControl}
+				ref={handleMapControl}
 				zoomControl
 				attributionControl
 			>

@@ -40,17 +40,9 @@ const Main = styled.main`
 	display: flex;
 	flex-shrink: 0;
 	width: 100%;
-	height: calc(100vh - 72px);
+	height: 100vh;
 
-	${breakpoints.devices.tablet} {
-		height: calc(100vh - 72px + 18px);
-	}
-
-	${breakpoints.devices.mobile} {
-		height: calc(100vh - 72px + 12px);
-	}
-
-	padding-top: 1.875rem;
+	padding-top: 72px;
 `
 
 export const ContentTemp = { Center, Main }

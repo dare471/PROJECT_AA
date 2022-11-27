@@ -27,8 +27,11 @@ const Container = styled.header`
 	flex-shrink: 0;
 	justify-content: center;
 	align-items: center;
+	width: 100%;
 
-	position: relative;
+	position: absolute;
+	top: 0;
+	left: 0;
 
 	background-color: var(${theme.palette.bnw100});
 	border-bottom: 1px solid var(${theme.palette.bnw200});
@@ -38,13 +41,7 @@ const Content = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	align-items: center;
-	height: 100%;
-
-	padding: 18px 0;
-
-	${breakpoints.devices.mobile} {
-		padding: 12px 0;
-	}
+	height: 72px;
 `
 
 const Nav = styled.nav`

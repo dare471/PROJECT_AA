@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export function MapContent() {
-	return <Container></Container>
+	return <Container>wewfw</Container>
 }
 
 const Container = styled.div`
@@ -11,4 +11,5 @@ const Container = styled.div`
 	position: absolute;
 	top: 0;
 	left: 0;
+	z-index: 1000;
 `
