@@ -2,25 +2,34 @@ import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
 import { routes } from '~src/shared/routes'
-import { Button, ContentTemp } from '~src/shared/ui'
+import { Button, ContentTemp, Text } from '~src/shared/ui'
 
-export function HomePageContent() {
+export const HomePageContent = () => {
 	const navigate = useNavigate()
 
 	return (
-		<ContentTemp.Main>
+		<ContentTemp.Article>
 			<ContentTemp.Center>
 				<Content>
-					<Button onClick={() => navigate(routes.map)}>Go To Map</Button>
+					<Text type='h3'>Welcome To AlemAgro</Text>
+					<MapButton onClick={() => navigate(routes.map)}>Go To Map</MapButton>
 				</Content>
 			</ContentTemp.Center>
-		</ContentTemp.Main>
+		</ContentTemp.Article>
 	)
 }
 
 const Content = styled.div`
 	display: flex;
-	justify-content: center;
+	gap: 5rem;
+	flex-direction: column;
 	align-items: center;
 	height: 100%;
+
+	padding-top: 20rem;
+	//padding-bottom: 10rem;
+`
+
+const MapButton = styled(Button)`
+	padding: 1rem 2rem;
 `

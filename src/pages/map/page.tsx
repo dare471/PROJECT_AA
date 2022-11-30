@@ -5,7 +5,7 @@ import { Split } from '~src/shared/ui'
 
 import { MapPageContent } from './content'
 
-export function MapPage() {
+export const MapPage = () => {
 	return (
 		<Split>
 			<Split.Header>

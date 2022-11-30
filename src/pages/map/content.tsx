@@ -1,3 +1,5 @@
+import { useEvent } from 'effector-react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { Map } from '~src/widgets/map'
@@ -5,25 +7,29 @@ import { Sidebar } from '~src/widgets/map-sidebar'
 
 import { ContentTemp } from '~src/shared/ui'
 
-export function MapPageContent() {
+import * as model from './model'
+
+export const MapPageContent = () => {
+	const handlePageMounted = useEvent(model.mapPageMounted)
+
+	useEffect(() => {
+		handlePageMounted()
+	}, [])
+
 	return (
-		<Main>
+		<ContentTemp.Article>
 			<Content>
 				<Sidebar />
 				<Map />
 			</Content>
-		</Main>
+		</ContentTemp.Article>
 	)
 }
 
-const Main = styled(ContentTemp.Main)`
-	min-height: 30rem;
-`
-
 const Content = styled.div`
 	display: flex;
+	flex: 1 0 auto;
 	width: 100%;
-	height: 100%;
 
 	position: relative;
 `

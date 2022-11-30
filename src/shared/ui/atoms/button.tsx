@@ -15,26 +15,36 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	ref?: MutableRefObject<HTMLButtonElement>
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-	{ theme = 'primary', variant = 'solid', icon, type, accented = false, children, ...buttonProps },
-	ref
-) {
-	return (
-		<ButtonStyled
-			data-theme={theme}
-			data-variant={variant}
-			data-squared={Boolean(icon && !children)}
-			data-accented={accented}
-			type={type}
-			// eslint-disable-next-line react/jsx-props-no-spreading
-			{...buttonProps}
-			ref={ref}
-		>
-			{icon && <span>{icon}</span>}
-			{children && <span>{children}</span>}
-		</ButtonStyled>
-	)
-})
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+	(
+		{
+			theme = 'primary',
+			variant = 'solid',
+			icon,
+			type,
+			accented = false,
+			children,
+			...buttonProps
+		},
+		ref
+	) => {
+		return (
+			<ButtonStyled
+				data-theme={theme}
+				data-variant={variant}
+				data-squared={Boolean(icon && !children)}
+				data-accented={accented}
+				type={type}
+				// eslint-disable-next-line react/jsx-props-no-spreading
+				{...buttonProps}
+				ref={ref}
+			>
+				{icon && <span>{icon}</span>}
+				{children && <span>{children}</span>}
+			</ButtonStyled>
+		)
+	}
+)
 
 const Themes = css`
 	&[data-theme='primary'] {

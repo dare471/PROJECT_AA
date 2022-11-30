@@ -5,7 +5,7 @@ import { Split } from '~src/shared/ui'
 
 import { HomePageContent } from './content'
 
-export function HomePage() {
+export const HomePage = () => {
 	return (
 		<Split>
 			<Split.Header>

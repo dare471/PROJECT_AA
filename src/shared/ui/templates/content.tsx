@@ -1,17 +1,33 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { breakpoints } from '~src/shared/lib'
 
-type ContentCenterProps = {
+type MainVariant = 'full' | 'fit'
+
+interface ContentCenterProps {
 	children: React.ReactNode
 }
 
-function Center({ children }: ContentCenterProps) {
+interface MainProps {
+	children: React.ReactNode
+	variant?: MainVariant
+	minHeight?: number
+}
+
+const Center = ({ children }: ContentCenterProps) => {
 	return (
 		<CenterContainer>
 			<CenterContent>{children}</CenterContent>
 		</CenterContainer>
+	)
+}
+
+const Article = ({ variant = 'full', minHeight = 40, children }: MainProps) => {
+	return (
+		<StyledArticle data-variant={variant} minHeight={minHeight}>
+			{children}
+		</StyledArticle>
 	)
 }
 
@@ -36,13 +52,22 @@ const CenterContent = styled.div`
 	}
 `
 
-const Main = styled.main`
-	display: flex;
-	flex-shrink: 0;
-	width: 100%;
-	height: 100vh;
+//FIXME: use header-height var from theme
+const StyledArticle = styled.main<{ 'data-variant': MainVariant; minHeight: number }>`
+	--header-height: 72px;
 
-	padding-top: 72px;
+	display: flex;
+	flex: 1 0 auto;
+	width: 100%;
+
+	&[data-variant='full'] {
+		height: calc(100vh - var(--header-height));
+		min-height: ${(props) => props.minHeight}rem;
+	}
+
+	&[data-variant='fit'] {
+		height: auto;
+	}
 `
 
-export const ContentTemp = { Center, Main }
+export const ContentTemp = { Center, Article }

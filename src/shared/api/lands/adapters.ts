@@ -1,3 +1,5 @@
+import { CRS, Point } from 'leaflet'
+
 import { District, DistrictsRes, Region, RegionsRes } from './types'
 
 interface _Region {
@@ -33,7 +35,7 @@ export function regionsAdapter(res: _RegionsRes): RegionsRes {
 		regionId: Number(region.id),
 		name: region.name,
 		population_area: Number(region.population_area),
-		geometry_rings: region.geometry_rings
+		geometry_rings: getGeometriesNormalize(region.geometry_rings)
 	}))
 
 	return { header: null, data: newData }
@@ -45,8 +47,27 @@ export function districtsAdapter(res: _DistrictsRes): DistrictsRes {
 		districtId: Number(district.id),
 		name: district.name,
 		klkod: Number(district.klkod),
-		geometry_rings: district.geometry_rings
+		geometry_rings: getGeometriesNormalize(district.geometry_rings)
 	}))
 
 	return { header: null, data: newData }
+}
+
+function getGeometriesNormalize(geometries: number[][][]): number[][][] {
+	try {
+		const proj = CRS.EPSG3857
+
+		if (geometries) {
+			const newGeometries = geometries[0].map((geometry: any) => {
+				const newGeometry = proj.unproject(new Point(geometry[0], geometry[1]))
+				return [newGeometry.lat, newGeometry.lng]
+			})
+
+			return [newGeometries]
+		}
+
+		return geometries
+	} catch (err) {
+		throw err
+	}
 }

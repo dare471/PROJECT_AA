@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { AlemAgroLogo } from '~src/shared/assets'
 
-export function Logo() {
+export const Logo = () => {
 	return (
 		<IconWrapper>
 			<img src={AlemAgroLogo} alt='logo' data-icon='text' />

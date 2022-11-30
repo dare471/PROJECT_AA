@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { routesMap } from '~src/pages/routes'
 
-export function Pages() {
+export const Pages = () => {
 	return (
 		<Routes>
 			<Route path='/'>

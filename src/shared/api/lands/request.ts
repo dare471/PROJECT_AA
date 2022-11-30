@@ -10,7 +10,6 @@ const instance = axios.create({ baseURL: envVar.API_URL })
 
 export const getRegionsQuery = createQuery<void, RegionsRes>({
 	handler: async () => {
-		console.log('lol')
 		const response: AxiosResponse<_RegionsRes> = await instance({
 			url: '/api/country/v2',
 			method: 'POST',
@@ -19,20 +18,18 @@ export const getRegionsQuery = createQuery<void, RegionsRes>({
 			}
 		})
 
-		console.log(response.config)
-
 		return regionsAdapter(response.data)
 	}
 })
 
-export const getDistrictsQuery = createQuery<{ districtId: number }, DistrictsRes>({
-	handler: async ({ districtId }) => {
+export const getDistrictsQuery = createQuery<{ regionId: number }, DistrictsRes>({
+	handler: async ({ regionId }) => {
 		const response: AxiosResponse<_DistrictsRes> = await instance({
 			url: '/api/country/v2',
 			method: 'POST',
 			data: {
 				type: 'district',
-				cato: districtId
+				regionId
 			}
 		})
 

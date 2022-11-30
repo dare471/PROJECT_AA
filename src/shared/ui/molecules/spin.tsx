@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 import { Roller } from '~src/shared/ui'
 
-export function Spin() {
+export const Spin = () => {
 	return (
 		<Container>
 			<Roller />
