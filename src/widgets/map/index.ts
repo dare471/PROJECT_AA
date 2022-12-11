@@ -1,1 +1,1 @@
-export { Map } from './organisms'
+export { Map } from './templates'
