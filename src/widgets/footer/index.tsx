@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { theme } from '~src/shared/lib'
 import { ContentTemp, Logo } from '~src/shared/ui'
 
-export function Footer() {
+export const Footer = () => {
 	return (
 		<Container>
 			<ContentTemp.Center>
@@ -17,7 +17,7 @@ export function Footer() {
 
 const Container = styled.footer`
 	display: flex;
-	background-color: var(${theme.palette.bnw100});
+	background-color: var(${theme.palette.bnw950});
 `
 
 const Content = styled.div`

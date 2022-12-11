@@ -5,7 +5,7 @@ import { breakpoints, theme } from '~src/shared/lib'
 import { routes } from '~src/shared/routes'
 import { Button, ContentTemp, Logo } from '~src/shared/ui'
 
-export function Header() {
+export const Header = () => {
 	return (
 		<Container>
 			<ContentTemp.Center>
@@ -29,12 +29,11 @@ const Container = styled.header`
 	align-items: center;
 	width: 100%;
 
-	position: absolute;
-	top: 0;
-	left: 0;
+	background-color: var(${theme.palette.bnw1000});
+	box-shadow: ${theme.shadow.bnw[0]};
 
-	background-color: var(${theme.palette.bnw100});
-	border-bottom: 1px solid var(${theme.palette.bnw200});
+	position: relative;
+	z-index: 10000;
 `
 
 const Content = styled.div`
@@ -58,12 +57,15 @@ const Link = styled(NavLink)`
 	font-size: 1.2rem;
 	font-weight: 500;
 	font-family: inherit;
-	color: var(${theme.palette.bnw600});
-
+	color: var(${theme.palette.bnw200});
 	text-decoration: none;
 
 	margin-right: 0.5rem;
 	margin-left: 0.5rem;
+
+	&:hover {
+		color: var(${theme.palette.primaryHover});
+	}
 `
 
 const SignUpButton = styled(Button)`
