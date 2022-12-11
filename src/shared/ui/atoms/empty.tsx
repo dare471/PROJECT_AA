@@ -19,8 +19,9 @@ export const Empty: React.FC<EmptySearchProps> = ({ text, children }) => {
 
 const EmptyBlock = styled.div`
 	display: flex;
-	margin-top: 15%;
 	flex-direction: column;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+
+	margin-top: 15%;
 `

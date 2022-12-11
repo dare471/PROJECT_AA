@@ -28,7 +28,7 @@ const TextStyled = styled.p<{ 'data-type': TextProps['type'] }>`
 	}
 
 	&[data-type='p'] {
-		font-size: 0.75rem;
+		font-size: 0.85rem;
 		line-height: 15px;
 	}
 
@@ -40,6 +40,11 @@ const TextStyled = styled.p<{ 'data-type': TextProps['type'] }>`
 		${breakpoints.devices.mobile} {
 			font-size: 2.8125rem;
 		}
+	}
+
+	&[data-type='h2'] {
+		font-weight: 700;
+		font-size: 3.5rem;
 	}
 
 	&[data-type='h3'] {

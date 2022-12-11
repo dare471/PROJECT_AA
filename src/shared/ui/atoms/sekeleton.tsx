@@ -34,7 +34,7 @@ const Root = styled.article`
 	background: var(${theme.palette.bnw950});
 	border: 1px solid var(${theme.palette.bnw900});
 	box-sizing: border-box;
-	box-shadow: ${theme.shadows[1]};
+	box-shadow: ${theme.shadow.bnw[1]};
 	border-radius: 6px;
 	opacity: 0.5;
 	animation: blink 2s infinite ease;

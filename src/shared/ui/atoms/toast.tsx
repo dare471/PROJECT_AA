@@ -19,11 +19,11 @@ export const Toast: React.FC<Props> = ({ extra, children }) => {
 
 const Root = styled.article`
 	display: flex;
-	background: var(${theme.palette.primary900});
+	justify-content: space-between;
+	background: var(${theme.palette.primary100});
 	border-bottom: 1px solid var(${theme.palette.primary700});
 	box-sizing: border-box;
-	box-shadow: ${theme.shadows[2]};
-	justify-content: space-between;
+	box-shadow: ${theme.shadow.bnw[2]};
 	margin-top: -1.875rem; // Компенсируем отступ PagesContainer
 	padding: 0 36px;
 

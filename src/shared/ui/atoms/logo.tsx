@@ -21,8 +21,8 @@ const IconWrapper = styled.div`
 	}
 
 	[data-icon='square'] {
-		height: 17px;
-		width: 17px;
+		height: 25px;
+		width: 25px;
 		border-radius: 3px;
 
 		& rect {
