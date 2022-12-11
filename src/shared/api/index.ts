@@ -1,1 +1,2 @@
-export * from './lands'
+export * from './land'
+export * from './client-land'

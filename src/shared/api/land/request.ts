@@ -4,13 +4,13 @@ import axios, { AxiosResponse } from 'axios'
 import { envVar } from '~src/shared/config'
 
 import { _DistrictsRes, _RegionsRes, districtsAdapter, regionsAdapter } from './adapters'
-import { DistrictsRes, RegionsRes } from './types'
+import { District, Region } from './types'
 
 const instance = axios.create({ baseURL: envVar.API_URL })
 
-export const getRegionsQuery = createQuery<void, RegionsRes>({
+export const getRegionsQuery = createQuery<void, Region[]>({
 	handler: async () => {
-		const response: AxiosResponse<_RegionsRes> = await instance({
+		const req: AxiosResponse<_RegionsRes> = await instance({
 			url: '/api/country/v2',
 			method: 'POST',
 			data: {
@@ -18,13 +18,13 @@ export const getRegionsQuery = createQuery<void, RegionsRes>({
 			}
 		})
 
-		return regionsAdapter(response.data)
+		return regionsAdapter(req.data).data
 	}
 })
 
-export const getDistrictsQuery = createQuery<{ regionId: number }, DistrictsRes>({
+export const getDistrictsQuery = createQuery<{ regionId: number }, District[]>({
 	handler: async ({ regionId }) => {
-		const response: AxiosResponse<_DistrictsRes> = await instance({
+		const req: AxiosResponse<_DistrictsRes> = await instance({
 			url: '/api/country/v2',
 			method: 'POST',
 			data: {
@@ -33,6 +33,6 @@ export const getDistrictsQuery = createQuery<{ regionId: number }, DistrictsRes>
 			}
 		})
 
-		return districtsAdapter(response.data)
+		return districtsAdapter(req.data).data
 	}
 })
