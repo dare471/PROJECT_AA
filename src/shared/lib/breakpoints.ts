@@ -7,10 +7,10 @@ const sizes = {
 }
 
 const devices = {
-	mobile: `@media screen and (max-width: ${sizes.tablet - 1}px)`,
-	tablet: `@media screen and (max-width: ${sizes.laptop - 1}px)`,
-	laptop: `@media screen and (max-width: ${sizes.desktop - 1}px)`,
-	desktop: `@media screen and (max-width: ${sizes.desktopL - 1}px)`,
+	mobile: `@media screen and (max-width: ${sizes.mobile - 1}px)`,
+	tablet: `@media screen and (max-width: ${sizes.tablet - 1}px)`,
+	laptop: `@media screen and (max-width: ${sizes.laptop - 1}px)`,
+	desktop: `@media screen and (max-width: ${sizes.desktop - 1}px)`,
 	desktopL: `@media screen and (min-width: ${sizes.desktopL}px)`
 }
 
