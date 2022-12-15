@@ -1,0 +1,1 @@
+export { PurchaseHistoriesAnalyticModal } from './modal'

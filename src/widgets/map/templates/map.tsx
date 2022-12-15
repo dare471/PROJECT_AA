@@ -2,19 +2,18 @@ import { useEvent } from 'effector-react'
 import type { Map as TMap } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useCallback, useEffect, useState } from 'react'
-import { MapContainer as _MapContainer, Pane, TileLayer, ZoomControl } from 'react-leaflet'
+import { MapContainer as _MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
 import styled from 'styled-components'
 
 import { MapContent } from '~src/widgets/map/organisms'
 
-import {
-	ClientsLandPolygon,
-	DistrictLandPolygon,
-	DistrictsLandPolygon,
-	RegionLandPolygon,
-	RegionsLandPolygon
-} from '~src/features/land/polygon'
-
+// import {
+// 	ClientsLandPolygon,
+// 	DistrictLandPolygon,
+// 	DistrictsLandPolygon,
+// 	RegionLandPolygon,
+// 	RegionsLandPolygon
+// } from '~src/features/land/polygon'
 import { mapModel } from '~src/entities/map'
 
 import * as model from '../model'
@@ -65,22 +64,22 @@ export const Map = () => {
 
 				<MapContent />
 
-				<Pane name='regions' style={{ zIndex: 400 }}>
-					<RegionsLandPolygon />
-				</Pane>
-				<Pane name='region' style={{ zIndex: 1000 }}>
-					<RegionLandPolygon />
-				</Pane>
-				<Pane name='districts' style={{ zIndex: 500 }}>
-					<DistrictsLandPolygon />
-				</Pane>
-				<Pane name='district' style={{ zIndex: 1500 }}>
-					<DistrictLandPolygon />
-				</Pane>
+				{/*<Pane name='regions' style={{ zIndex: 400 }}>*/}
+				{/*	<RegionsLandPolygon />*/}
+				{/*</Pane>*/}
+				{/*<Pane name='region' style={{ zIndex: 1000 }}>*/}
+				{/*	<RegionLandPolygon />*/}
+				{/*</Pane>*/}
+				{/*<Pane name='districts' style={{ zIndex: 500 }}>*/}
+				{/*	<DistrictsLandPolygon />*/}
+				{/*</Pane>*/}
+				{/*<Pane name='district' style={{ zIndex: 1500 }}>*/}
+				{/*	<DistrictLandPolygon />*/}
+				{/*</Pane>*/}
 
-				<Pane name='clients' style={{ zIndex: 1500 }}>
-					<ClientsLandPolygon />
-				</Pane>
+				{/*<Pane name='clients' style={{ zIndex: 1500 }}>*/}
+				{/*	<ClientsLandPolygon />*/}
+				{/*</Pane>*/}
 
 				<ZoomControl zoomInText='+' zoomOutText='-' />
 			</MapContainer>

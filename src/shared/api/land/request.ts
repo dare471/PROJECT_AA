@@ -1,16 +1,16 @@
-import { createQuery } from '@farfetched/core'
 import axios, { AxiosResponse } from 'axios'
+import { createEffect } from 'effector'
 
 import { envVar } from '~src/shared/config'
 
-import { _DistrictsRes, _RegionsRes, districtsAdapter, regionsAdapter } from './adapters'
-import { District, Region } from './types'
+import { _District, _Region, districtsAdapter, regionsAdapter } from './adapters'
+import type { Culture, CulturesRes, District, Region } from './types'
 
 const instance = axios.create({ baseURL: envVar.API_URL })
 
-export const getRegionsQuery = createQuery<void, Region[]>({
+export const getRegionsQuery = createEffect<void, Region[]>({
 	handler: async () => {
-		const req: AxiosResponse<_RegionsRes> = await instance({
+		const req: AxiosResponse<_Region[]> = await instance({
 			url: '/api/country/v2',
 			method: 'POST',
 			data: {
@@ -18,13 +18,28 @@ export const getRegionsQuery = createQuery<void, Region[]>({
 			}
 		})
 
-		return regionsAdapter(req.data).data
+		return regionsAdapter(req.data)
 	}
 })
 
-export const getDistrictsQuery = createQuery<{ regionId: number }, District[]>({
+export const getRegionCulturesQuery = createEffect<{ regionId: number }, Culture[]>({
 	handler: async ({ regionId }) => {
-		const req: AxiosResponse<_DistrictsRes> = await instance({
+		const req: AxiosResponse<CulturesRes> = await instance({
+			method: 'POST',
+			url: `/api/mainquery`,
+			data: {
+				type: 'sprCult',
+				regionId
+			}
+		})
+
+		return req.data.data
+	}
+})
+
+export const getDistrictsQuery = createEffect<{ regionId: number }, District[]>({
+	handler: async ({ regionId }) => {
+		const req: AxiosResponse<_District[]> = await instance({
 			url: '/api/country/v2',
 			method: 'POST',
 			data: {
@@ -33,6 +48,6 @@ export const getDistrictsQuery = createQuery<{ regionId: number }, District[]>({
 			}
 		})
 
-		return districtsAdapter(req.data).data
+		return districtsAdapter(req.data)
 	}
 })

@@ -56,3 +56,12 @@ export interface FilterCulturePlot {
 	districtName: string
 	clientName: string
 }
+
+export interface Culture {
+	cultureId: string
+	cultureName: string
+}
+
+export interface CulturesRes {
+	data: Culture[]
+}

@@ -5,13 +5,12 @@ import { withProviders } from '~src/app/providers'
 
 import { Pages } from '~src/pages'
 
-import { breakpoints } from '~src/shared/lib'
-import { customProps } from '~src/shared/lib/theme'
+import { breakpoints, paletteProps } from '~src/shared/lib'
 
 import './index.scss'
 
 const GlobalStyle = createGlobalStyle`
-	html, body, #app, #app > section {
+	html, body, #app, #app > div {
 		height: 100%;
 	}
 
@@ -20,9 +19,10 @@ const GlobalStyle = createGlobalStyle`
 
 	html {
 		font-size: 16px;
+		scroll-behavior: smooth;
 
 		${breakpoints.devices.tablet} {
-			font-size: 80%;
+			font-size: 90%;
 		}
 	}
 
@@ -38,10 +38,10 @@ const GlobalStyle = createGlobalStyle`
 	}
 
 	${normalize}
-	${customProps}
+	${paletteProps}
 `
 
-function App() {
+const App = () => {
 	return (
 		<>
 			<GlobalStyle />

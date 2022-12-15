@@ -1,0 +1,1 @@
+export { PotentialCulturesAnalyticModal } from './modal'

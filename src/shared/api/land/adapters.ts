@@ -1,8 +1,8 @@
 import { CRS, Point } from 'leaflet'
 
-import { District, DistrictsRes, Region, RegionsRes } from './types'
+import { District, Region } from './types'
 
-interface _Region {
+export interface _Region {
 	id: string
 	type: 'region'
 	name: string
@@ -10,12 +10,7 @@ interface _Region {
 	geometry_rings: number[][][]
 }
 
-export interface _RegionsRes {
-	header: null
-	data: _Region[]
-}
-
-interface _District {
+export interface _District {
 	id: string
 	type: 'district'
 	name: string
@@ -24,13 +19,8 @@ interface _District {
 	geometry_rings: number[][][]
 }
 
-export interface _DistrictsRes {
-	header: null
-	data: _District[]
-}
-
-export function regionsAdapter(res: _RegionsRes): RegionsRes {
-	const newData: Region[] = res.data.map((region) => ({
+export function regionsAdapter(res: _Region[]): Region[] {
+	const newData: Region[] = res.map((region) => ({
 		type: region.type,
 		regionId: Number(region.id),
 		name: region.name,
@@ -38,11 +28,11 @@ export function regionsAdapter(res: _RegionsRes): RegionsRes {
 		geometry_rings: getGeometriesNormalize(region.geometry_rings)
 	}))
 
-	return { header: null, data: newData }
+	return newData
 }
 
-export function districtsAdapter(res: _DistrictsRes): DistrictsRes {
-	const newData: District[] = res.data.map((district) => ({
+export function districtsAdapter(res: _District[]): District[] {
+	const newData: District[] = res.map((district) => ({
 		type: district.type,
 		districtId: Number(district.id),
 		name: district.name,
@@ -50,7 +40,7 @@ export function districtsAdapter(res: _DistrictsRes): DistrictsRes {
 		geometry_rings: getGeometriesNormalize(district.geometry_rings)
 	}))
 
-	return { header: null, data: newData }
+	return newData
 }
 
 function getGeometriesNormalize(geometries: number[][][]): number[][][] {

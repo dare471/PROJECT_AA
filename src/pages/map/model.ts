@@ -1,10 +1,15 @@
-import { createEvent, sample } from 'effector'
+import { createEvent, createStore, sample } from 'effector'
 
-import { landsModel } from '~src/entities/lands'
+import { landModel } from '~src/entities/land'
 
 export const mapPageMounted = createEvent<void>()
+export const clickedSidebarButton = createEvent<void>()
+
+export const $sidebarIsActive = createStore<boolean>(false)
 
 sample({
 	clock: mapPageMounted,
-	target: landsModel.getRegions
+	target: landModel.getRegions
 })
+
+$sidebarIsActive.on(clickedSidebarButton, (prev) => !prev)

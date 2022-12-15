@@ -4,6 +4,7 @@ import { routes, routesPath } from '~src/shared/routes'
 const HomePage = lazy(() => import('./home'), 'HomePage')
 const MapPage = lazy(() => import('./map'), 'MapPage')
 const ErrorPage = lazy(() => import('./error'), 'ErrorPage')
+const MapPlayGroundPage = lazy(() => import('./map-playground'), 'MapPlayGroundPage')
 
 export const routesMap = {
 	home: {
@@ -15,6 +16,11 @@ export const routesMap = {
 	map: {
 		path: routesPath.map,
 		element: MapPage,
+		template: null
+	},
+	mapPlayGround: {
+		path: routesPath.mapPlayGround,
+		element: MapPlayGroundPage,
 		template: null
 	},
 	error: {

@@ -6,10 +6,10 @@ export interface ClientLand {
 	guid: 0 | 1
 	regionId: number
 	districtId: number
-	linkPlot: ClientLandPlot[]
+	linkPlot: ClientLandLinkPlot[]
 }
 
-export interface ClientLandPlot {
+export interface ClientLandLinkPlot {
 	plotId: number
 	geometry_rings: number[][][]
 }
@@ -26,4 +26,28 @@ export interface ClientLandPlotCulture {
 	plotRegion: number
 	plotDistrict: number
 	linkPlot: number[][][]
+}
+
+export interface ClientLandPlot {
+	_id: {
+		$oid: '63915be54737b83f21e1da19'
+	}
+	clientId: number
+	clientAddress: string
+	guid: 0 | 1
+	clientName: string
+	clientBin: string
+	clientAction: string
+	regionId: number
+	districtId: number
+	linkPlot: ClientLandPlotLinkPlot[]
+}
+
+export interface ClientLandPlotLinkPlot {
+	plotId: number
+	plotName: string
+	plotArea: number
+	plotCultId: string //number
+	plotCultName: string
+	geometry_rings: number[][][]
 }

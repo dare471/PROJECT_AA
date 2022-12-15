@@ -1,12 +1,13 @@
 import { combine, createEvent, createStore, sample } from 'effector'
 
+import type { ClientLand, ClientLandPlotCulture } from '~src/shared/api'
 import { clientLandApi } from '~src/shared/api'
 
 export const getClientsLand = createEvent<{ regionId: number }>()
 
-export const $clientsLand = clientLandApi.getClientsLandFromRegionsQuery.$data
+export const $clientsLand = createStore<ClientLand[] | null>(null)
 export const $clientLandId = createStore<number | null>(null)
-export const $clientLandPlots = clientLandApi.getClientsLandPlotsCulturesQuery.$data
+export const $clientLandPlots = createStore<ClientLandPlotCulture[] | null>(null)
 export const $clientLandPlotId = createStore<number | null>(null)
 
 export const $clientLand = combine($clientsLand, $clientLandId, (clientsLand, clientLandId) => {
@@ -29,5 +30,5 @@ export const $clientLandPlot = combine(
 
 sample({
 	clock: getClientsLand,
-	target: clientLandApi.getClientsLandFromRegionsQuery.start
+	target: clientLandApi.getClientsLandFromRegionsQuery
 })

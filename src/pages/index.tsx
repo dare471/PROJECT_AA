@@ -14,6 +14,10 @@ export const Pages = () => {
 				<Route index element={<routesMap.map.element />} />
 			</Route>
 
+			<Route path={routesMap.mapPlayGround.path}>
+				<Route index element={<routesMap.mapPlayGround.element />} />
+			</Route>
+
 			<Route path={routesMap.error.path} element={<routesMap.error.element />} />
 
 			<Route path='*' element={<Navigate to={routesMap.error.redirect} />} />

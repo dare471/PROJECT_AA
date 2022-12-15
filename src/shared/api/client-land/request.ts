@@ -1,15 +1,15 @@
-import { createQuery } from '@farfetched/core'
 import axios from 'axios'
+import { createEffect } from 'effector'
 
 import { envVar } from '~src/shared/config'
 
-import type { ClientLand, ClientLandPlotCulture } from './types'
+import type { ClientLand, ClientLandPlot, ClientLandPlotCulture } from './types'
 
 const instance = axios.create({
 	baseURL: envVar.API_URL
 })
 
-export const getClientsLandFromRegionsQuery = createQuery<{ regionId: number }, ClientLand[]>({
+export const getClientsLandFromRegionsQuery = createEffect<{ regionId: number }, ClientLand[]>({
 	handler: async ({ regionId }) => {
 		const req = await instance({
 			method: 'POST',
@@ -24,7 +24,7 @@ export const getClientsLandFromRegionsQuery = createQuery<{ regionId: number }, 
 	}
 })
 
-export const getClientsLandPlotsCulturesQuery = createQuery<
+export const getClientsLandPlotsCulturesQuery = createEffect<
 	{ id: number; cultIds: number[] },
 	ClientLandPlotCulture[]
 >({
@@ -36,6 +36,21 @@ export const getClientsLandPlotsCulturesQuery = createQuery<
 				type: 'mainQuery',
 				regionId: id,
 				cultId: cultIds
+			}
+		})
+
+		return req.data
+	}
+})
+
+export const getClientLandPlots = createEffect<{ clientId: number }, ClientLandPlot[]>({
+	handler: async ({ clientId }) => {
+		const req = await instance({
+			method: 'POST',
+			url: 'api/mainquery',
+			data: {
+				type: 'mainQuery',
+				clientId
 			}
 		})
 

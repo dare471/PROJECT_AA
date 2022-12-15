@@ -1,5 +1,6 @@
 import { combine, createEvent, createStore, sample } from 'effector'
 
+import type { District, Region } from '~src/shared/api'
 import { landApi } from '~src/shared/api'
 
 export const getRegions = createEvent<void>()
@@ -8,8 +9,8 @@ export const getDistricts = createEvent<{ regionId: number }>()
 export const regionIdSet = createEvent<number>()
 export const districtIdSet = createEvent<number>()
 
-export const $regions = landApi.getRegionsQuery.$data
-export const $districts = landApi.getDistrictsQuery.$data
+export const $regions = createStore<Region[] | null>(null)
+export const $districts = createStore<District[] | null>(null)
 
 export const $regionId = createStore<number | null>(null)
 export const $districtId = createStore<number | null>(null)
@@ -35,7 +36,7 @@ $districtId.on(districtIdSet, (_, districtId) => districtId)
 $regions.reset(getRegions)
 $districts.reset(getDistricts)
 
-sample({ clock: getRegions, target: landApi.getRegionsQuery.start })
+sample({ clock: getRegions, target: landApi.getRegionsQuery })
 // sample({ clock: getDistricts, target: landApi.getDistrictsQuery.start })
 
 sample({

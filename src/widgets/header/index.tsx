@@ -12,10 +12,10 @@ export const Header = () => {
 				<Content>
 					<Logo />
 					<Nav>
-						<Link to={routes.home}>Home</Link>
-						<Link to={routes.map}>Map</Link>
+						<Link to={routes.home}>Главная</Link>
+						<Link to={routes.map}>Карта</Link>
 					</Nav>
-					<SignUpButton>Sign Up</SignUpButton>
+					<SignUpButton>Регистрация</SignUpButton>
 				</Content>
 			</ContentTemp.Center>
 		</Container>
