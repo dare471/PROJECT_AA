@@ -8,7 +8,7 @@ export const withRouter = (component: () => React.ReactNode) => () =>
 			<React.Suspense
 				fallback={
 					<Center h='100vh'>
-						<Spinner size='lg' />
+						<Spinner size='lg' color='blue.500' />
 					</Center>
 				}
 			>
