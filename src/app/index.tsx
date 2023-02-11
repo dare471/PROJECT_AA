@@ -1,9 +1,13 @@
+import { withProviders } from '~src/app/providers'
+
+import { Pages } from '~src/pages'
+
 export function App() {
 	return (
 		<>
-			<>Welcome to AlemAgro</>
+			<Pages />
 		</>
-	);
+	)
 }
 
-export default App;
+export default withProviders(App)
