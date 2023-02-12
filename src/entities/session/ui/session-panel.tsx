@@ -4,7 +4,7 @@ import { FaUserAlt } from 'react-icons/fa'
 
 export function SessionPanel() {
 	return (
-		<Menu>
+		<Menu placement='bottom-end'>
 			<MenuButton>
 				<Avatar icon={<FaUserAlt />} size='md' />
 			</MenuButton>
