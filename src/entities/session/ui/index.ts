@@ -1,1 +1,5 @@
 export { SessionPanel } from './session-panel'
+export { SignInButton } from './sign-in-button'
+export { ShowOnly } from './show-only'
+export { AuthProvider } from './auth-provider'
+export { GuestProvider } from './guest-provider'
