@@ -38,7 +38,7 @@ export function Header() {
 					</Flex>
 					<Flex justify='end' align='center'>
 						<ButtonGroup alignItems='center'>
-							<Button variant='ghost'>
+							<Button variant='ghost' colorScheme='blue' onClick={() => navigate(routes.map())}>
 								<Icon as={BsMap} />
 							</Button>
 							<SessionPanel />
