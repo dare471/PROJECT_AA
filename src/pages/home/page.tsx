@@ -1,4 +1,4 @@
-import { Box, Button, Center, Container, Flex, Heading } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, Heading } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
 
 import { Header } from '~src/widgets/header'
@@ -21,7 +21,7 @@ export function HomePage() {
 				bgSize='cover'
 				bgBlendMode='overlay'
 			>
-				<Flex minH='inherit' h='full' direction='column' justify='space-between' align='center' py='40'>
+				<Flex minH='inherit' direction='column' justify='space-between' align='center' py='40'>
 					<Box bgColor='whiteAlpha.900' h='fit-content' p='4' rounded='md'>
 						<Heading size='3xl' bgImage='linear-gradient(60deg, #006eb7, #00c4ba)' bgClip='text' color='transparent'>
 							Добро полжаловать в AlemAgro
