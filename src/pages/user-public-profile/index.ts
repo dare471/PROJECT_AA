@@ -1,0 +1,1 @@
+export { UserPublicProfilePage } from './page'
