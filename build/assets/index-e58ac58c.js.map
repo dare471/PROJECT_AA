@@ -1,0 +1,1 @@
+{"version":3,"file":"index-e58ac58c.js","sources":["../../src/pages/error/page.tsx"],"sourcesContent":["export function ErrorPage() {\n\treturn <>Error</>\n}\n"],"names":["ErrorPage"],"mappings":"+CAAO,SAASA,GAAY,CAC3B,YAAS,SAAK,OAAA,CAAA,CACf"}

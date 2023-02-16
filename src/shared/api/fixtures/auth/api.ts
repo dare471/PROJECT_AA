@@ -20,15 +20,26 @@ export const signInQuery = createEffect<{ email: string; password: string }, Use
 			},
 		})
 
-		return req.data
+		if (req.status === 200) {
+			return req.data
+		}
+
+		throw new Error('status is not 200')
 	},
 )
 
-export const sessionHookQuery = createEffect<{ userId: number }, SessionHook>(async ({}) => {
+export const sessionHookQuery = createEffect<{ userId: number }, SessionHook>(async ({ userId }) => {
 	const req = await instance({
 		method: 'POST',
-		url: '/webhook/user',
+		url: '/weebhook/user',
+		data: {
+			userId,
+		},
 	})
 
-	return req.data
+	if (req.status === 200) {
+		return req.data[0]
+	}
+
+	throw new Error('status is not 200')
 })

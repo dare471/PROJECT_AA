@@ -6,6 +6,6 @@ import { FullSpinner } from '~src/shared/ui'
 export const withRouter = (component: () => React.ReactNode) => () =>
 	(
 		<BrowserRouter>
-			<React.Suspense fallback={<FullSpinner />}>{component()}</React.Suspense>
+			<React.Suspense fallback={<FullSpinner h='window' />}>{component()}</React.Suspense>
 		</BrowserRouter>
 	)

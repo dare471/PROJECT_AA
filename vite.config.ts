@@ -1,6 +1,5 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
-
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { defineConfig } from 'vite'
@@ -14,29 +13,29 @@ export default defineConfig({
 			'~src': path.resolve(__dirname, './src'),
 		},
 	},
-  build: {
-    outDir: "build",
-    sourcemap: true,
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "src/setup-tests",
-    mockReset: true,
-  },
+	build: {
+		outDir: 'build',
+		sourcemap: true,
+	},
+	test: {
+		globals: true,
+		environment: 'jsdom',
+		setupFiles: 'src/setup-tests',
+		mockReset: true,
+	},
 	plugins: [
 		react(),
 		checker({
 			typescript: true,
 			overlay: {
 				initialIsOpen: false,
-				position: 'bl',
+				position: 'br',
 			},
 			eslint: {
 				lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
 			},
 		}),
-    
+
 		VitePWA({
 			manifest: {
 				name: 'Colecta',
@@ -63,6 +62,5 @@ export default defineConfig({
 				theme_color: '#ffffff',
 			},
 		}),
-	]
+	],
 })
-

@@ -12,8 +12,12 @@ const instance = axios.create({
 export const userInfoQuery = createEffect<{ userId: number }, UserInfo>(async ({ userId }) => {
 	const req = await instance({
 		method: 'GET',
-		url: `/user/${userId}`,
+		url: `/user_data/${userId}`,
 	})
 
-	return req.data
+	if (req.status === 200) {
+		return req.data[0]
+	}
+
+	throw new Error('status is not 200')
 })
