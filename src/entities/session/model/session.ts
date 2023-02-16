@@ -5,6 +5,8 @@ import { authApi, type Session, type UserCredentials } from '~src/shared/api'
 
 export const signedOut = createEvent<void>()
 export const signedIn = createEvent<void>()
+export const clientsFavoriteAdded = createEvent<number[]>()
+export const clientsFavoriteDeleted = createEvent<number[]>()
 
 export const $session = createStore<Session | null>(null)
 export const $sessionPending = createStore<boolean>(false)
@@ -16,7 +18,7 @@ export const signInFx = attach({ effect: authApi.signInQuery })
 export const getSessionHookFx = attach({
 	effect: authApi.sessionHookQuery,
 	source: $session,
-	mapParams: (_, session) => {
+	mapParams: (params: void, session) => {
 		if (!session) throw new Error('Session is not defined')
 		return { userId: session.id }
 	},
@@ -38,6 +40,22 @@ $session.on(getSessionHookFx.doneData, (session, sessionHook) => {
 })
 
 $session.on(signedOut, () => null)
+
+$session.on(clientsFavoriteAdded, (session, clientIds) => {
+	if (!session) return null
+	return {
+		...session,
+		favoriteClients: [...session.favoriteClients, ...clientIds],
+	}
+})
+
+$session.on(clientsFavoriteDeleted, (session, clientIds) => {
+	if (!session) return null
+	return {
+		...session,
+		favoriteClients: session.favoriteClients.filter((id) => !clientIds.includes(id)),
+	}
+})
 
 function sessionAdapter(session: UserCredentials): Session {
 	return {
