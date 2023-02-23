@@ -1,9 +1,9 @@
-export type RegionLand = {
-	id: string //number
-	type: 'region' | 'regionBilling'
+export type Region = {
+	type: 'region'
+	id: number
 	name: string
-	population_area: string //number
-	geometry_rings: number[][][]
+	populationArea: number
+	geometryRings: number[][][]
 }
 
 export type RegionAnalytic = {

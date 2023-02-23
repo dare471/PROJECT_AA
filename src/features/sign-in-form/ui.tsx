@@ -1,10 +1,25 @@
 import { ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/icons'
-import { Center, FormControl, IconButton, Input, InputGroup, InputRightElement, Stack, Text } from '@chakra-ui/react'
+import {
+	Center,
+	chakra,
+	FormControl,
+	IconButton,
+	Input,
+	InputGroup,
+	InputLeftElement,
+	InputRightElement,
+	Stack,
+	Text,
+} from '@chakra-ui/react'
 import { useUnit } from 'effector-react'
+import { FaLock, FaUserCircle } from 'react-icons/fa'
 
 import { SignInButton } from '~src/entities/session'
 
 import { type createSignInForm } from './model'
+
+const CFaUserAlt = chakra(FaUserCircle)
+const CFaLock = chakra(FaLock)
 
 interface SignInFormProps {
 	model: ReturnType<typeof createSignInForm>
@@ -27,10 +42,15 @@ export function SignInForm(props: SignInFormProps) {
 	const [passwordVisible, handlePasswordVisibleClick] = useUnit([model.$passwordVisible, model.passwordVisibleClicked])
 
 	return (
-		<FormControl>
+		<form onSubmit={(event) => event.preventDefault()}>
 			<Stack>
 				<Stack>
-					<Input type='email' value={email} onChange={(e) => handleEmailChange(e.target.value)} />
+					<InputGroup>
+						<InputLeftElement pointerEvents='none'>
+							<CFaUserAlt color='gray.300' />
+						</InputLeftElement>
+						<Input type='email' value={email} onChange={(e) => handleEmailChange(e.target.value)} />
+					</InputGroup>
 					{emailError && (
 						<Center justifyContent='start' gap='1'>
 							<WarningIcon color='red' />
@@ -40,6 +60,9 @@ export function SignInForm(props: SignInFormProps) {
 				</Stack>
 				<Stack>
 					<InputGroup>
+						<InputLeftElement pointerEvents='none' color='gray.300'>
+							<CFaLock color='gray.300' />
+						</InputLeftElement>
 						<Input
 							type={passwordVisible ? 'text' : 'password'}
 							value={password}
@@ -62,6 +85,6 @@ export function SignInForm(props: SignInFormProps) {
 				</Stack>
 				<SignInButton type='submit' onClick={() => handleSubmit()} />
 			</Stack>
-		</FormControl>
+		</form>
 	)
 }

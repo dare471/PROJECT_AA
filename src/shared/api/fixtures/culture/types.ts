@@ -1,4 +1,4 @@
-export type CultureReference = {
-	cultureId: string //number
+export type CultureRef = {
+	cultureId: number
 	cultureName: string
 }

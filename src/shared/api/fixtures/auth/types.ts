@@ -1,11 +1,11 @@
-export type Session = {
+export interface Session {
 	id: number
-	active: 0 | 1
+	active: boolean
 	name: string
 	email: string
 	role: [0 | 1]
 	subscribeRegions: number[]
-	unFollowClients: number[]
+	subscribeClients: number[]
 	favoriteClients: number[]
 	token: string
 }

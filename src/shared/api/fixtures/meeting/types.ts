@@ -1,4 +1,4 @@
-export type PlannedMeetingMockup = {
+export interface AddPlannedMeeting {
 	clientId: number
 	meetingType: number
 	meetingPlace: number
@@ -10,20 +10,20 @@ export type PlannedMeetingMockup = {
 
 export type PlannedMeeting = {
 	id: number
-	dateToVisit: string
-	statusVisit: string
-	clients: PlannedMeetingClient[]
+	date: string
+	status: string
+	meetingClients: MeetingClient[]
 }
 
-export type PlannedMeetingClient = {
-	clientId: number
-	clientName: string
-	clientIin: number
-	clientAddress: string
-	visitName: string
-	visitId: number
+export type MeetingClient = {
+	id: number
+	name: string
+	iin: number
+	address: string
+	meetingType: string
+	meetingTypeId: number
 	meetingId: number
-	meetingTime: string | null
 	meetingName: string
+	meetingTime: string | null
 	plotId: number
 }

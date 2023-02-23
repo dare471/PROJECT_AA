@@ -12,16 +12,16 @@ export interface ClientSearchProps {
 export const ClientSearch = modelView(createClientSearch, function ClientSearch(props: ClientSearchProps) {
 	const { model } = props
 
-	const [clientSearchType, handleSearchTypeChange] = useUnit([model.$clientSearchType, model.clientSearchTypeChanged])
+	const [searchType, handleSearchTypeChange] = useUnit([model.$searchType, model.searchTypeChanged])
 
 	return (
 		<Stack direction='row' align='center' position='relative'>
 			<Tooltip hasArrow label='Поменять режим поиска'>
 				<Box>
-					<Switch colorScheme='whiteAlpha' checked={clientSearchType === 'bin'} onChange={handleSearchTypeChange} />
+					<Switch colorScheme='whiteAlpha' checked={searchType === 'bin'} onChange={handleSearchTypeChange} />
 				</Box>
 			</Tooltip>
-			{clientSearchType === 'name' ? <ClientSearchByName /> : <ClientSearchByBin />}
+			{searchType === 'name' ? <ClientSearchByName /> : <ClientSearchByBin />}
 
 			{/* {clientSearchType === 'name' ? <ClientNameInput /> : <ClientBinInput />}
 			<ClientSearchHints /> */}
@@ -31,25 +31,25 @@ export const ClientSearch = modelView(createClientSearch, function ClientSearch(
 
 function ClientSearchByName() {
 	const model = createClientSearch.useModel()
-	const [clientNameField, handleClientNameFieldChange] = useUnit([model.$clientNameField, model.clientNameFieldChanged])
-	const [clientSearchNameOptions, handleClientHintClick, clientSearchHintsPending] = useUnit([
-		model.$clientSearchNameOptions,
+	const [clientName, handleClientNameChange] = useUnit([model.$clientName, model.clientNameChanged])
+	const [clientNameOptions, handleClientHintClick, clientHintsPending] = useUnit([
+		model.$clientNameOptions,
 		model.clientHintClicked,
-		model.$clientSearchHintsPending,
+		model.$clientHintsPending,
 	])
-	const [districtId, currentClientHintNameOption] = useUnit([model.$districtId, model.$currentClientHintNameOption])
+	const [districtId, clientHintNameOption] = useUnit([model.$districtId, model.$clientHintNameOption])
 
 	return (
 		<Select
 			placeholder='Поиск клиента по Тoo/Ип'
-			options={clientSearchNameOptions}
-			inputValue={clientNameField}
+			options={clientNameOptions}
+			inputValue={clientName}
 			onInputChange={(value, action) =>
-				action.action === 'input-change' || action.action === 'set-value' ? handleClientNameFieldChange(value) : null
+				action.action === 'input-change' || action.action === 'set-value' ? handleClientNameChange(value) : null
 			}
-			value={currentClientHintNameOption}
+			value={clientHintNameOption}
 			onChange={(option) => (option ? handleClientHintClick(option.value) : null)}
-			isLoading={clientSearchHintsPending}
+			isLoading={clientHintsPending}
 			isDisabled={districtId === null}
 			noOptionsMessage={() => 'Нет результатов'}
 			isClearable
@@ -61,25 +61,25 @@ function ClientSearchByName() {
 
 function ClientSearchByBin() {
 	const model = createClientSearch.useModel()
-	const [clientBinField, handleClientBinFieldChange] = useUnit([model.$clientBinField, model.clientBinFieldChanged])
-	const [clientSearchBinOptions, handleClientHintClick, clientSearchHintsPending] = useUnit([
-		model.$clientSearchBinOptions,
+	const [clientBin, handleClientBinChange] = useUnit([model.$clientBin, model.clientBinChanged])
+	const [clientBinOptions, handleClientHintClick, clientHintsPending] = useUnit([
+		model.$clientBinOptions,
 		model.clientHintClicked,
-		model.$clientSearchHintsPending,
+		model.$clientHintsPending,
 	])
-	const [districtId, currentClientHintBinOption] = useUnit([model.$districtId, model.$currentClientHintBinOption])
+	const [districtId, clientHintBinOption] = useUnit([model.$districtId, model.$clientHintBinOption])
 
 	return (
 		<Select
 			placeholder='Поиск клиента по Иин/Бин'
-			options={clientSearchBinOptions}
-			inputValue={clientBinField}
+			options={clientBinOptions}
+			inputValue={clientBin}
 			onInputChange={(value, action) =>
-				action.action === 'input-change' || action.action === 'set-value' ? handleClientBinFieldChange(value) : null
+				action.action === 'input-change' || action.action === 'set-value' ? handleClientBinChange(value) : null
 			}
-			value={currentClientHintBinOption}
+			value={clientHintBinOption}
 			onChange={(option) => (option ? handleClientHintClick(option.value) : null)}
-			isLoading={clientSearchHintsPending}
+			isLoading={clientHintsPending}
 			isDisabled={districtId === null}
 			noOptionsMessage={() => 'Нет результатов'}
 			isClearable

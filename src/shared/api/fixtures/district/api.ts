@@ -3,14 +3,14 @@ import { createEffect } from 'effector'
 
 import { envVars } from '~src/shared/config'
 
-import { districtsAdapter } from '../../adapters'
-import type { DistrictLand } from './types'
+import { districtsAdapter } from './adapter'
+import type { District } from './types'
 
 const instance = axios.create({
 	baseURL: `${envVars.API_URL}/api`,
 })
 
-export const districtsQuery = createEffect<{ regionId: number }, DistrictLand[]>({
+export const districtsQuery = createEffect<{ regionId: number }, District[]>({
 	handler: async ({ regionId }) => {
 		const req = await instance({
 			url: '/country',

@@ -1,6 +1,6 @@
-export type UserInfo = {
-	guid: string
+export interface User {
 	id: number
+	guid: string
 	telegramId: number
 	fullName: string
 	direction: string
@@ -10,35 +10,13 @@ export type UserInfo = {
 	crmCato: number | null
 }
 
-export interface UserSelectClient {
+export interface UserMapHistory {
 	id: number
-	meetingType: Array<{
-		id: number
-		name: string
-	}>
-	meetingPlace: Array<{
-		id: number
-		name: string
-	}>
+	userId: number
 	clientId: number
 	clientName: string
-	clientIin: number
-	clientAddress: string
-}
-
-export interface UserPlannedMeeting {
-	id: number
-	dateToVisit: string
-	statusVisit: string
-	clients: Array<{
-		clientId: number
-		clientName: string
-		clientIin: number
-		clientAddress: string
-		visitName: string
-		visitId: number
-		meetingId: number
-		meetingName: string
-		plotId: number
-	}>
+	regionId: number
+	regionName: string
+	plotId: number
+	plotName: string | null
 }

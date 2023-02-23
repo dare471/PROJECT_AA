@@ -31,9 +31,9 @@ export default defineConfig({
 				initialIsOpen: false,
 				position: 'br',
 			},
-			eslint: {
-				lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
-			},
+			// eslint: {
+			// 	lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
+			// },
 		}),
 
 		VitePWA({

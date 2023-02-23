@@ -1,7 +1,7 @@
 import { createClientOffice } from './model'
 import { ClientOffice } from './ui'
 
-export const ClientOfficeCreate = {
+export const ClientOfficeFactory = {
 	ClientOffice,
 	createClientOffice,
 }

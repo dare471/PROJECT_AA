@@ -37,8 +37,8 @@ export const ClientInformalPointRefSelect = modelView(
 				<Select value={selectRef ?? undefined} onChange={(e) => handleRefChange(Number(e.target.value))}>
 					<option value={undefined}>{placeholder}</option>
 					{refs.map((ref, index) => (
-						<option key={index} value={ref.id}>
-							{ref.name}
+						<option key={index} value={ref.pointId}>
+							{ref.pointName}
 						</option>
 					))}
 				</Select>

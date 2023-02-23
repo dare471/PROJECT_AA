@@ -3,24 +3,20 @@ import { Box, Button, Center, Icon, SelectField, Stack, StackItem } from '@chakr
 import { useUnit } from 'effector-react'
 import { motion, useDragControls } from 'framer-motion'
 import React from 'react'
+import { MdOutlineViewAgenda } from 'react-icons/md'
 import { TbLayoutBoardSplit } from 'react-icons/tb'
 import { VscSplitHorizontal } from 'react-icons/vsc'
 import Select from 'react-select'
 
 import { ClientSearchFactory } from '~src/features/client-search'
+import { CulturesSelectFactory } from '~src/features/cultures-select'
+import { RegionSelectFactory } from '~src/features/region-select'
 
 import * as model from './model'
 import { cultureColors } from './lib'
 
 export function MapToolbar() {
-	const [isToolbarOpen, handleToolbarClick] = useUnit([model.$isToolbarOpen, model.toolbarClicked])
-	const [regions, handleRegionClick] = useUnit([model.$regions, model.regionSettled])
-	const [cultureRefs, cultureRefsPending] = useUnit([model.$cultureRefs, model.$cultureRefsPending])
-	const [isDistrictsView, handleIsDistrictsViewClick] = useUnit([model.$isDistrictsView, model.districtsViewedClicked])
-	const [isClientsPlotsGuideView, handleIsClientsGuideViewClick] = useUnit([
-		model.$isClientsPlotsGuidView,
-		model.clientsGuidViewedClicked,
-	])
+	const [isToolbarOpen, handleToolbarClick] = useUnit([model.$isToolbarOpen, model.toolbarToggled])
 	const controls = useDragControls()
 	const containersRef = React.useRef(null)
 
@@ -50,12 +46,82 @@ export function MapToolbar() {
 					{isToolbarOpen && (
 						<>
 							<StackItem>
-								{/* <Select maxW='container.md' options={regions.map(({ name, id }) => ({ label: name, value: id }))} /> */}
+								<RegionSelectFactory.RegionSelect
+									model={model.$$regionSelect}
+									styles={{
+										container: (styles) => ({
+											...styles,
+											minWidth: '15rem',
+											maxWidth: '25rem',
+										}),
+										valueContainer: (base) => ({
+											...base,
+											overflowX: 'scroll',
+											flexWrap: 'unset',
+										}),
+										multiValue: (base) => ({
+											...base,
+											flex: '1 0 auto',
+										}),
+									}}
+								/>
+							</StackItem>
+							<StackItem>
+								<CulturesSelectFactory.CulturesSelect
+									model={model.$$culturesSelect}
+									styles={{
+										container: (styles) => ({
+											...styles,
+											minWidth: '15rem',
+											maxWidth: '25rem',
+										}),
+										valueContainer: (base) => ({
+											...base,
+											overflowX: 'scroll',
+											flexWrap: 'unset',
+										}),
+										multiValue: (base) => ({
+											...base,
+											flex: '1 0 auto',
+										}),
+										multiValueLabel: (styles, { data }) => {
+											const bgColor = cultureColors[(data as any).value].bgColor ?? 'red'
+
+											return {
+												...styles,
+												paddingLeft: '1.5rem',
+												paddingTop: '.1rem',
+												paddingBottom: '.1rem',
+												position: 'relative',
+												':before': {
+													content: '""',
+													width: '1rem',
+													height: '1rem',
+													backgroundColor: bgColor,
+													borderRadius: '50%',
+													position: 'absolute',
+													top: '50%',
+													left: '.3rem',
+													transform: 'translateY(-50%)',
+												},
+											}
+										},
+									}}
+								/>
+							</StackItem>
+							<StackItem>
+								<ClientSearchFactory.ClientSearch model={model.$$clientSearch} />
+							</StackItem>
+							<StackItem>
+								<ClientSeparateButton />
+							</StackItem>
+							{/* <StackItem>
+								<Select maxW='container.md' options={regions.map(({ name, id }) => ({ label: name, value: id }))} />
 								<Select
 									onChange={(event) => (event ? handleRegionClick(Number(event.value)) : null)}
 									placeholder='Выбрать регион'
 									styles={{ container: (styles) => ({ ...styles, maxWidth: '15rem' }) }}
-									options={regions.map(({ name, id }) => ({ label: name, value: id }))}
+									options={regions.map(({ regionName, regionId }) => ({ label: regionName, value: regionId }))}
 								/>
 							</StackItem>
 							<StackItem position='sticky' top='15px'>
@@ -85,7 +151,7 @@ export function MapToolbar() {
 								>
 									<Icon aria-label='few' as={VscSplitHorizontal} />
 								</Button>
-							</StackItem>
+							</StackItem> */}
 						</>
 					)}
 					<Button isActive={isToolbarOpen} colorScheme='blue' onClick={() => handleToolbarClick()}>
@@ -97,57 +163,73 @@ export function MapToolbar() {
 	)
 }
 
-export function CultureSelect() {
-	const [cultureRefs, cultureRefsPending] = useUnit([model.$cultureRefs, model.$cultureRefsPending])
-	const [selectedCulturesOptions, handleSelectedCultures] = useUnit([
-		model.$selectedCulturesOptions,
-		model.culturesSelected,
-	])
+// export function CultureSelect() {
+// 	const [cultureRefs, cultureRefsPending] = useUnit([model.$cultureRefs, model.$cultureRefsPending])
+// 	const [selectedCulturesOptions, handleSelectedCultures] = useUnit([
+// 		model.$selectedCulturesOptions,
+// 		model.culturesSelected,
+// 	])
+
+// 	return (
+// 		<Select
+// 			styles={{
+// 				container: (styles) => ({
+// 					...styles,
+// 					minWidth: '15rem',
+// 					maxWidth: '25rem',
+// 				}),
+// 				multiValueLabel: (styles, { data }) => {
+// 					const bgColor = cultureColors[data.value].bgColor ?? 'red'
+
+// 					return {
+// 						...styles,
+// 						paddingLeft: '1.5rem',
+// 						paddingTop: '.1rem',
+// 						paddingBottom: '.1rem',
+// 						position: 'relative',
+// 						':before': {
+// 							content: '""',
+// 							width: '1rem',
+// 							height: '1rem',
+// 							backgroundColor: bgColor,
+// 							borderRadius: '50%',
+// 							position: 'absolute',
+// 							top: '50%',
+// 							left: '.3rem',
+// 							transform: 'translateY(-50%)',
+// 						},
+// 					}
+// 				},
+// 			}}
+// 			placeholder='Выбрать културы'
+// 			value={selectedCulturesOptions.map(({ cultureName, cultureId }) => ({
+// 				label: cultureName,
+// 				value: Number(cultureId),
+// 			}))}
+// 			onChange={(values) => handleSelectedCultures(values.map(({ value }) => Number(value)))}
+// 			isDisabled={cultureRefs.length === 0}
+// 			isLoading={cultureRefsPending}
+// 			options={cultureRefs.map(({ cultureName, cultureId }) => ({
+// 				label: cultureName,
+// 				value: Number(cultureId),
+// 			}))}
+// 			isMulti
+// 		/>
+// 	)
+// }
+
+function ClientSeparateButton() {
+	const [isSeparate, handleSeparateToggle] = useUnit([model.$isClientsSeparate, model.clientsSeparateToggled])
 
 	return (
-		<Select
-			styles={{
-				container: (styles) => ({
-					...styles,
-					minWidth: '15rem',
-					maxWidth: '25rem',
-				}),
-				multiValueLabel: (styles, { data }) => {
-					const bgColor = cultureColors[data.value].bgColor ?? 'red'
-
-					return {
-						...styles,
-						paddingLeft: '1.5rem',
-						paddingTop: '.1rem',
-						paddingBottom: '.1rem',
-						position: 'relative',
-						':before': {
-							content: '""',
-							width: '1rem',
-							height: '1rem',
-							backgroundColor: bgColor,
-							borderRadius: '50%',
-							position: 'absolute',
-							top: '50%',
-							left: '.3rem',
-							transform: 'translateY(-50%)',
-						},
-					}
-				},
-			}}
-			placeholder='Выбрать културы'
-			value={selectedCulturesOptions.map(({ cultureName, cultureId }) => ({
-				label: cultureName,
-				value: Number(cultureId),
-			}))}
-			onChange={(values) => handleSelectedCultures(values.map(({ value }) => Number(value)))}
-			isDisabled={cultureRefs.length === 0}
-			isLoading={cultureRefsPending}
-			options={cultureRefs.map(({ cultureName, cultureId }) => ({
-				label: cultureName,
-				value: Number(cultureId),
-			}))}
-			isMulti
-		/>
+		<Button
+			colorScheme='blue'
+			borderWidth='1px'
+			borderColor='white'
+			isActive={isSeparate}
+			onClick={() => handleSeparateToggle()}
+		>
+			<MdOutlineViewAgenda />
+		</Button>
 	)
 }

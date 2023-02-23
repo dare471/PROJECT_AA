@@ -26,7 +26,7 @@ export function SignInPage() {
 			<Container maxW='sm' minH='calc(100vh - 4rem)'>
 				<Box pt='56' pb='52'>
 					<Stack spacing='24'>
-						<Heading textAlign='center' size='2xl'>
+						<Heading textAlign='center' size='2xl' color='blue.500'>
 							Вход
 						</Heading>
 						<SignInFormFactory.SignInForm model={model.signInFormModel} />

@@ -9,7 +9,9 @@ const HomePage = lazy(() => import('./home'), 'HomePage')
 const SignInPage = lazy(() => import('./sign-in'), 'SignInPage')
 const MapPage = lazy(() => import('./map'), 'MapPage')
 const FavoriteClientCartPage = lazy(() => import('./favorite-client-cart'), 'FavoriteClientCartPage')
-const UserPublicProfilePage = lazy(() => import('./user-public-profile'), 'UserPublicProfilePage')
+const UserProfilePage = lazy(() => import('./user-profile'), 'UserProfilePage')
+// const MapPlayGroundPage = lazy(() => import('./map-play-ground'), 'MapPlayGroundPage')
+const ClientProfilePage = lazy(() => import('./client-profile'), 'ClientProfilePage')
 const ErrorPage = lazy(() => import('./error'), 'ErrorPage')
 
 export function Pages() {
@@ -43,15 +45,32 @@ export function Pages() {
 			/>
 
 			<Route
-				path={paths.userPublicProfile}
+				path={paths.userProfile}
 				element={
 					<AuthProvider>
-						<UserPublicProfilePage />
+						<UserProfilePage />
 					</AuthProvider>
 				}
 			/>
 
-			<Route path={paths.userSettingsProfile} element={<AuthProvider>{/* <UserSettingsProfile /> */}</AuthProvider>} />
+			{/* <Route
+				path={paths.mapPlayGround}
+				element={
+					<AuthProvider>
+						<MapPlayGroundPage />
+					</AuthProvider>
+				}
+			/> */}
+			<Route
+				path={paths.clientProfile}
+				element={
+					<AuthProvider>
+						<ClientProfilePage />
+					</AuthProvider>
+				}
+			/>
+
+			<Route path={paths.userSettings} element={<AuthProvider>{/* <UserSettingsProfile /> */}</AuthProvider>} />
 
 			<Route path='error' element={<ErrorPage />} />
 			<Route path='*' element={<Navigate to={routes.error()} />} />

@@ -1,221 +1,325 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Center, Container, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
 import { useUnit } from 'effector-react'
 import 'leaflet-draw/dist/leaflet.draw.css'
-import 'leaflet/dist/leaflet.css'
 import React from 'react'
-import { FeatureGroup, MapContainer, Pane, Polygon, Polyline, TileLayer } from 'react-leaflet'
+import { FeatureGroup, Marker, Pane, Polygon, Tooltip } from 'react-leaflet'
 import { EditControl } from 'react-leaflet-draw'
-import { useResizeDetector } from 'react-resize-detector'
 
 import { Header } from '~src/widgets/header'
 
-import { OverlaySpinner } from '~src/shared/ui'
+import { LandsToLandFactory } from '~src/features/lands-to-land'
+
+import { MapFactory } from '~src/entities/map'
+
+import { lazy, zIndices } from '~src/shared/lib'
 
 import * as model from './model'
-import { MapSidebar } from './sidebar'
-import { MapToolbar } from './toolbar'
+import { cultureColors } from './lib'
 
-export const MAP_ATTRIBUTION =
-	'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-export const MAP_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png'
+const MapSidebar = lazy(() => import('./sidebar'), 'MapSidebar')
+const MapToolbar = lazy(() => import('./toolbar'), 'MapToolbar')
 
 export function MapPage() {
 	const [handleMount, handleUnmount] = useUnit([model.mapPageMounted, model.mapPageUnmounted])
 	const [mapPending] = useUnit([model.$mapPending])
-	const [activeLand] = useUnit([model.$activeLand])
 
 	React.useEffect(() => {
 		handleMount()
-
 		return () => {
 			handleUnmount()
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [handleMount, handleUnmount])
 
 	return (
 		<Box>
 			<Header />
-			<Box maxW='100vw' overflowX='hidden' position='relative' minH='calc(100vh - 4rem)'>
-				<Flex minH='inherit' direction='row'>
-					<Box position='absolute' top='0' left='20' zIndex='dropdown'>
-						{activeLand.country
-							? 'Страна'
-							: activeLand.region
-							? 'Регион'
-							: activeLand.district
-							? 'Район'
-							: activeLand.client
-							? 'Клиент'
-							: activeLand.clientPlot
-							? 'Участок'
-							: null}
-					</Box>
-					<MapSidebar minH='md' />
+			<Container
+				display='flex'
+				maxW='full'
+				maxH='calc(100vh - 4rem)'
+				minH='max(calc(100vh - 4rem), 30rem)'
+				p='0'
+				pos='relative'
+			>
+				<Flex minH='0' direction='row' flexGrow='1'>
+					<MapSidebar minH='0' />
 					<MapToolbar />
 
-					<CustomMap />
+					<MapFactory.Map
+						model={model.$$map}
+						isResize
+						containerProps={{ w: 'full', h: 'full', minH: '0', zIndex: zIndices.map }}
+						style={{ width: '100%', height: '100%' }}
+					>
+						<MapDraw />
+						<FilterClientsPlots />
+						<RegionsOverlay />
+						<Regions />
+						<Districts />
+						<ClientsLand />
+						<ClientPlots />
+						<ClientPoints />
+					</MapFactory.Map>
 				</Flex>
 
-				{mapPending && <OverlaySpinner />}
-			</Box>
+				{mapPending && (
+					<Center
+						w='full'
+						h='full'
+						bg='blackAlpha.300'
+						position='absolute'
+						top='50%'
+						left='50%'
+						zIndex='sticky'
+						transform='translateY(-50%) translateX(-50%)'
+					>
+						<Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+					</Center>
+				)}
+			</Container>
 		</Box>
 	)
 }
 
-function CustomMap(props: any) {
-	const [map, handleMapMount] = useUnit([model.$map, model.mapMounted])
-	const [regionsOverlay] = useUnit([model.$regionsOverlay])
-	const [regions, region, handleRegionClick] = useUnit([model.$regions, model.$region, model.regionSettled])
-	const [districts, isDistrictsView, district, handleDistrictClick] = useUnit([
-		model.$districts,
-		model.$isDistrictsView,
-		model.$district,
-		model.districtSettled,
+function MapDraw() {
+	const [handleDrawCreate, handleDrawRemove] = useUnit([
+		model.$$clientsPlotsInCircle.handleCircleDraw,
+		model.$$clientsPlotsInCircle.handleCircleRemove,
 	])
-	const [clientsPlots, isClientsPlotsGuidView, client, handleClientClick] = useUnit([
-		model.$clientsPlots,
-		model.$isClientsPlotsGuidView,
-		model.$client,
-		model.clientSettled,
-	])
-	const [clientPlots, clientPlot, handleClientPlotClick] = useUnit([
-		model.$clientPlots,
-		model.$clientPlot,
-		model.clientPlotSettled,
-	])
-	const [filterPlots, handleCircleDraw, handleCircleDelete] = useUnit([
-		model.$filterPlots,
-		model.circleDrawn,
-		model.circleDeleted,
-	])
-
-	const { width, height, ref } = useResizeDetector()
-
-	React.useEffect(() => {
-		if (!map) return
-		map.invalidateSize()
-	}, [width, height])
 
 	return (
-		<Box w='full' minH='inherit' position='relative' ref={ref}>
-			<Box
-				as={MapContainer}
-				ref={handleMapMount as any}
-				h='full'
-				minH='md'
-				w='full'
-				position='absolute'
-				top='0'
-				left='0'
-				zIndex='map'
-				width={width}
-				height={height}
-				center={model.CENTER}
-				zoom={model.ZOOM}
-				{...props}
-			>
-				<TileLayer attribution={MAP_ATTRIBUTION} url={MAP_URL} />
-				<FeatureGroup>
-					<EditControl
-						position='bottomright'
-						draw={{
-							circle: true,
-							circlemarker: false,
-							marker: false,
-							polygon: false,
-							polyline: false,
-							rectangle: false,
+		<FeatureGroup>
+			<EditControl
+				position='bottomright'
+				onCreated={handleDrawCreate}
+				onDeleted={handleDrawRemove}
+				draw={{
+					circle: true,
+					circlemarker: false,
+					polyline: false,
+					polygon: false,
+					rectangle: false,
+					marker: false,
+				}}
+			/>
+		</FeatureGroup>
+	)
+}
+
+function FilterClientsPlots() {
+	const [filterClientsPlots, handleClientLandClick] = useUnit([
+		model.$$clientsPlotsInCircle.$circlesClientsPlots,
+		model.$$clientsLandToClientLand.landClicked,
+	])
+
+	return (
+		<Pane name='filter-clients-plots' style={{ zIndex: 308 }}>
+			{filterClientsPlots.map((filterClientPlot, index) => (
+				<Polygon
+					key={index}
+					pathOptions={{
+						color: 'red',
+					}}
+					positions={filterClientPlot.geometryRings as any}
+					eventHandlers={{
+						click: () => {
+							handleClientLandClick(filterClientPlot.clientId)
+						},
+					}}
+				/>
+			))}
+		</Pane>
+	)
+}
+
+function RegionsOverlay() {
+	const [regionsOverlay] = useUnit([model.$$regionsOverlay.$regionsOverlay])
+
+	return (
+		<>
+			<Pane name='regions-overlay' style={{ zIndex: 301 }}>
+				{regionsOverlay.map((region) => (
+					<Polygon
+						key={region.id}
+						pathOptions={{
+							color: 'gray',
 						}}
-						onCreated={(e) => handleCircleDraw(e)}
-						onDeleted={(e) => handleCircleDelete(e)}
+						positions={region.geometryRings as any}
 					/>
-				</FeatureGroup>
+				))}
+			</Pane>
+		</>
+	)
+}
 
-				<Pane name='regions-overlay' style={{ zIndex: 301 }}>
-					{regionsOverlay.map((regionOverlay, index) => (
-						<Polygon key={index} positions={regionOverlay.geometry_rings as any} pathOptions={{ color: 'darkgray' }} />
-					))}
-				</Pane>
-
-				<Pane name='regions' style={{ zIndex: 302 }}>
-					{regions.map((region, index) => (
+function Regions() {
+	return (
+		<>
+			<Pane name='regions' style={{ zIndex: 302 }}>
+				<LandsToLandFactory.Lands model={model.$$regionsToRegion}>
+					{({ land: region, onClick }) => (
 						<Polygon
-							key={index}
-							positions={region.geometry_rings as any}
-							pathOptions={{ color: '#1CA4F8' }}
+							pathOptions={{
+								color: '#1CA4F8',
+							}}
+							positions={region.geometryRings as any}
 							eventHandlers={{
 								click: () => {
-									handleRegionClick(Number(region.id))
+									onClick(region.id)
 								},
 							}}
 						/>
-					))}
-				</Pane>
-				<Pane name='region' style={{ zIndex: 303 }}>
-					{region && <Polyline positions={region.geometry_rings as any} pathOptions={{ color: 'white' }} />}
-				</Pane>
+					)}
+				</LandsToLandFactory.Lands>
+			</Pane>
 
-				<Pane name='districts' style={{ zIndex: 304 }}>
-					{isDistrictsView &&
-						districts.map((district, index) => (
-							<Polyline key={index} positions={district.geometry_rings as any} pathOptions={{ color: '#006cb0' }} />
-						))}
-				</Pane>
+			<Pane name='region' style={{ zIndex: 303 }}>
+				<LandsToLandFactory.Land model={model.$$regionsToRegion}>
+					{({ land: region }) => <Polygon pathOptions={{ color: 'white' }} positions={region.geometryRings as any} />}
+				</LandsToLandFactory.Land>
+			</Pane>
+		</>
+	)
+}
 
-				{
-					<Pane name='clientsPlots' style={{ zIndex: 305 }}>
-						{clientsPlots.map((clientPlot, index) => (
-							<Polygon
-								key={index}
-								positions={clientPlot.geometry_rings as any}
-								pathOptions={{
-									color: isClientsPlotsGuidView ? (clientPlot.guid ? 'lightgreen' : 'yellow') : 'white',
-								}}
-								eventHandlers={{
-									click: () => {
-										handleClientClick(Number(clientPlot.clientId))
-									},
-								}}
-							/>
-						))}
-					</Pane>
-				}
-				<Pane name='client' style={{ zIndex: 306 }}>
-					{client &&
-						clientPlots.map((plot, index) => (
-							<Polyline key={index} positions={plot.geometry_rings as any} pathOptions={{ color: 'purple' }} />
-						))}
-				</Pane>
-
-				<Pane name='client-plots' style={{ zIndex: 307 }}>
-					{clientPlots.map((plot, index) => (
+function Districts() {
+	return (
+		<>
+			<Pane name='districts' style={{ zIndex: 304 }}>
+				<LandsToLandFactory.Lands model={model.$$districtsToDistrict}>
+					{({ land: district, onClick }) => (
 						<Polygon
-							key={index}
-							positions={plot.geometry_rings as any}
-							pathOptions={{ color: 'black' }}
+							pathOptions={{
+								color: 'white',
+							}}
+							positions={district.geometryRings as any}
 							eventHandlers={{
 								click: () => {
-									handleClientPlotClick(plot.plotId)
+									onClick(district.id)
+								},
+							}}
+						>
+							<Tooltip sticky opacity={0.8} direction='bottom'>
+								<Stack direction='row' align='center'>
+									<Text fontSize='sm' fontWeight='bold'>
+										Район:
+									</Text>
+									<Text>{district.name}</Text>
+								</Stack>
+							</Tooltip>
+						</Polygon>
+					)}
+				</LandsToLandFactory.Lands>
+			</Pane>
+			<Pane name='district' style={{ zIndex: 305 }}>
+				<LandsToLandFactory.Land model={model.$$districtsToDistrict}>
+					{({ land: district }) => (
+						<Polygon pathOptions={{ color: 'white' }} positions={district.geometryRings as any} />
+					)}
+				</LandsToLandFactory.Land>
+			</Pane>
+		</>
+	)
+}
+
+function ClientsLand() {
+	const [isSeparate, clientsLandByCultures] = useUnit([
+		model.$isClientsSeparate,
+		model.$$clientsLand.$clientsLandByCultures,
+	])
+
+	return (
+		<>
+			<Pane name='clients-land' style={{ zIndex: 306 }}>
+				<LandsToLandFactory.Lands model={model.$$clientsLandToClientLand}>
+					{({ land: clientLand, onClick, index }) => (
+						<Polygon
+							pathOptions={{
+								color: (() => {
+									if (clientsLandByCultures[index]?.plotCultId) {
+										const cultureId = clientsLandByCultures[index]!.plotCultId
+										const bgColor = cultureColors[cultureId].bgColor ?? 'red'
+										return bgColor
+									} else {
+										return isSeparate ? (clientLand.guid ? 'lightgreen' : 'yellow') : 'blue'
+									}
+								})(),
+							}}
+							positions={clientLand.geometryRings as any}
+							eventHandlers={{
+								click: () => {
+									onClick(clientLand.clientId)
 								},
 							}}
 						/>
-					))}
-				</Pane>
-				<Pane name='filtered-client-plots'>
-					{filterPlots.map((client, index) => (
-						<React.Fragment key={index}>
-							{client.plots.map((plot, index) => (
-								<Polygon key={index} positions={plot.geometry_rings as any} pathOptions={{ color: 'red' }} />
-							))}
-						</React.Fragment>
-					))}
-				</Pane>
+					)}
+				</LandsToLandFactory.Lands>
+			</Pane>
+			<Pane name='client-land' style={{ zIndex: 307 }}>
+				<LandsToLandFactory.Land model={model.$$clientsLandToClientLand}>
+					{({ land: clientLand }) => (
+						<Polygon pathOptions={{ color: 'white' }} positions={clientLand.geometryRings as any} />
+					)}
+				</LandsToLandFactory.Land>
+			</Pane>
+		</>
+	)
+}
 
-				<Pane name='client-plot' style={{ zIndex: 308 }}>
-					{clientPlot && <Polyline positions={clientPlot.geometry_rings as any} pathOptions={{ color: 'white' }} />}
-				</Pane>
-			</Box>
-		</Box>
+function ClientPlots() {
+	return (
+		<>
+			<Pane name='client-plots' style={{ zIndex: 309 }}>
+				<LandsToLandFactory.Lands model={model.$$clientPlotsToClientPlot}>
+					{({ land: clientPlot, onClick }) => (
+						<Polygon
+							pathOptions={{
+								color: 'black',
+							}}
+							positions={clientPlot.geometryRings as any}
+							eventHandlers={{
+								click: () => {
+									onClick(clientPlot.plotId)
+								},
+							}}
+						/>
+					)}
+				</LandsToLandFactory.Lands>
+			</Pane>
+			<Pane name='client-plot' style={{ zIndex: 310 }}>
+				<LandsToLandFactory.Land model={model.$$clientPlotsToClientPlot}>
+					{({ land: clientPlot }) => (
+						<Polygon pathOptions={{ color: 'white' }} positions={clientPlot.geometryRings as any} />
+					)}
+				</LandsToLandFactory.Land>
+			</Pane>
+		</>
+	)
+}
+
+function ClientPoints() {
+	const [clientPoints] = useUnit([model.$$clientPoints.$clientPoints])
+
+	return (
+		<>
+			<Pane name='client-points' style={{ zIndex: 311 }}>
+				{clientPoints.map((clientPoint, index) => (
+					<Marker key={index} position={clientPoint.coordinate as any}>
+						<Tooltip sticky opacity={0.8} direction='bottom'>
+							<Stack direction='row' align='center'>
+								<Text fontSize='sm' fontWeight='bold'>
+									Клиент:
+								</Text>
+								<Text>{clientPoint.name}</Text>
+								<Text fontSize='sm' fontWeight='bold'>
+									Категория:
+								</Text>
+								<Text>{clientPoint.category}</Text>
+							</Stack>
+						</Tooltip>
+					</Marker>
+				))}
+			</Pane>
+		</>
 	)
 }

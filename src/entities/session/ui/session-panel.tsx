@@ -14,8 +14,8 @@ interface SessionPanelProps extends Omit<MenuProps, 'children'> {
 
 export function SessionPanel(props: SessionPanelProps) {
 	const [handleSignOut] = useUnit([model.signedOut])
-	const navigate = useNavigate()
 	const [session] = useUnit([model.$session])
+	const navigate = useNavigate()
 
 	return (
 		<Menu placement='bottom-end' {...props}>
@@ -24,10 +24,13 @@ export function SessionPanel(props: SessionPanelProps) {
 			</MenuButton>
 			<MenuList>
 				<MenuGroup>
-					<MenuItem icon={<AiOutlineUser />} onClick={() => navigate(routes.userPublicProfile(session!.id.toString()))}>
+					<MenuItem
+						icon={<AiOutlineUser />}
+						onClick={() => navigate(routes.userProfile({ userId: session!.id.toString() }))}
+					>
 						Профиль
 					</MenuItem>
-					<MenuItem icon={<AiFillSetting />} onClick={() => navigate(routes.userSettingsProfile())}>
+					<MenuItem icon={<AiFillSetting />} onClick={() => navigate(routes.userSettings())}>
 						Настройкий
 					</MenuItem>
 				</MenuGroup>

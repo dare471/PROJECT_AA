@@ -1,0 +1,1 @@
+export { createClientsPlotsInCircle } from './model'

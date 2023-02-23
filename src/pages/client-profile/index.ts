@@ -1,0 +1,1 @@
+export { ClientProfilePage } from './page'

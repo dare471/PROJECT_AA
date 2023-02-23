@@ -1,0 +1,1 @@
+export { ClientLastContract } from './ui'

@@ -1,4 +1,3 @@
-import { NumberIncrementStepper } from '@chakra-ui/react'
 import { attach, createEvent, createStore, sample, type Store } from 'effector'
 import { modelFactory } from 'effector-factorio'
 import { debounce } from 'patronum'
@@ -12,43 +11,43 @@ export interface CreateClientSearchOptions {
 export const createClientSearch = modelFactory(function createClientSearch(options: CreateClientSearchOptions) {
 	const { districtId } = options
 
-	const clientSearchTypeChanged = createEvent<void>()
+	const searchTypeChanged = createEvent<void>()
 
-	const clientNameFieldChanged = createEvent<string>()
-	const clientBinFieldChanged = createEvent<string>()
+	const clientNameChanged = createEvent<string>()
+	const clientBinChanged = createEvent<string>()
 
 	const clientHintClicked = createEvent<number>()
 
-	const $clientSearchType = createStore<'name' | 'bin'>('name')
+	const $searchType = createStore<'name' | 'bin'>('name')
 
-	const $clientNameField = createStore('')
-	const $clientBinField = createStore('')
+	const $clientName = createStore('')
+	const $clientBin = createStore('')
 
-	const $clientSearchHints = createStore<ClientSearchHint[]>([])
-	const $clientSearchNameOptions = $clientSearchHints.map((clientSearchHints) =>
+	const $clientHints = createStore<ClientSearchHint[]>([])
+	const $clientNameOptions = $clientHints.map((clientSearchHints) =>
 		clientSearchHints.map((clientSearchHint) => ({
 			label: clientSearchHint.clientName,
 			value: clientSearchHint.clientId,
 		})),
 	)
-	const $clientSearchBinOptions = $clientSearchHints.map((clientSearchHints) =>
+	const $clientBinOptions = $clientHints.map((clientSearchHints) =>
 		clientSearchHints.map((clientSearchHint) => ({
 			label: clientSearchHint.clientBin,
 			value: clientSearchHint.clientId,
 		})),
 	)
 	const $currentClientHint = createStore<ClientSearchHint | null>(null)
-	const $currentClientHintNameOption = $currentClientHint.map((currentClientHint) =>
+	const $clientHintNameOption = $currentClientHint.map((currentClientHint) =>
 		currentClientHint ? { label: currentClientHint.clientName, value: Number(currentClientHint.clientId) } : null,
 	)
-	const $currentClientHintBinOption = $currentClientHint.map((currentClientHint) =>
+	const $clientHintBinOption = $currentClientHint.map((currentClientHint) =>
 		currentClientHint ? { label: currentClientHint.clientBin, value: Number(currentClientHint.clientId) } : null,
 	)
-	const $clientSearchHintsPending = createStore<boolean>(false)
+	const $clientHintsPending = createStore<boolean>(false)
 
-	const getClientSearchHintsByNameFx = attach({
+	const getClientHintsByNameFx = attach({
 		effect: clientApi.clientSearchHintsQuery,
-		source: { districtId, clientName: $clientNameField },
+		source: { districtId, clientName: $clientName },
 		mapParams: (params: void, { districtId, clientName }) => {
 			if (!districtId) throw new Error('districtId is null')
 			if (clientName === '') throw new Error('clientName is empty')
@@ -56,9 +55,9 @@ export const createClientSearch = modelFactory(function createClientSearch(optio
 		},
 	})
 
-	const getClientSearchHintsByBinFx = attach({
+	const getClientHintsByBinFx = attach({
 		effect: clientApi.clientSearchHintsQuery,
-		source: { districtId, clientBin: $clientBinField },
+		source: { districtId, clientBin: $clientBin },
 		mapParams: (params: void, { districtId, clientBin }) => {
 			if (!districtId) throw new Error('districtId is null')
 			if (clientBin === '') throw new Error('clientBin is empty')
@@ -66,58 +65,55 @@ export const createClientSearch = modelFactory(function createClientSearch(optio
 		},
 	})
 
-	$clientNameField.on(clientNameFieldChanged, (_, value) => value)
-	$clientBinField.on(clientBinFieldChanged, (_, value) => value)
+	$clientName.on(clientNameChanged, (_, value) => value)
+	$clientBin.on(clientBinChanged, (_, value) => value)
 
-	$clientSearchType.on(clientSearchTypeChanged, (state) => (state === 'name' ? 'bin' : 'name'))
+	$searchType.on(searchTypeChanged, (type) => (type === 'name' ? 'bin' : 'name'))
 
 	debounce({
-		source: $clientNameField as any,
+		source: $clientName as any,
 		timeout: 500,
-		target: getClientSearchHintsByNameFx,
+		target: getClientHintsByNameFx,
 	})
 
 	debounce({
-		source: $clientBinField as any,
+		source: $clientBin as any,
 		timeout: 500,
-		target: getClientSearchHintsByBinFx,
+		target: getClientHintsByBinFx,
 	})
 
-	$clientSearchHintsPending.on(
-		[getClientSearchHintsByNameFx.pending, getClientSearchHintsByBinFx.pending],
-		(state, pending) => pending,
-	)
-	$clientSearchHints.on(
-		[getClientSearchHintsByNameFx.doneData, getClientSearchHintsByBinFx.doneData],
+	$clientHintsPending.on([getClientHintsByNameFx.pending, getClientHintsByBinFx.pending], (_, pending) => pending)
+	$clientHints.on(
+		[getClientHintsByNameFx.doneData, getClientHintsByBinFx.doneData],
 		(_, clientSearchHints) => clientSearchHints,
 	)
-	$clientSearchHints.reset(getClientSearchHintsByNameFx, getClientSearchHintsByBinFx, $clientSearchType)
-	$clientNameField.reset($clientSearchType)
-	$clientBinField.reset($clientSearchType)
+	$clientHints.reset(getClientHintsByNameFx, getClientHintsByBinFx, $searchType)
+	$clientName.reset($searchType)
+	$clientBin.reset($searchType)
 
 	sample({
 		clock: clientHintClicked,
-		source: $clientSearchHints,
-		fn: (clientSearchHints, clientId) =>
-			clientSearchHints.find((clientSearchHint) => clientSearchHint.clientId === clientId) ?? null,
+		source: $clientHints,
+		fn: (clientHints, clientId) =>
+			clientHints.find((clientSearchHint) => clientSearchHint.clientId === clientId) ?? null,
 		target: $currentClientHint,
 	})
 
 	return {
-		clientSearchTypeChanged,
-		clientNameFieldChanged,
-		clientBinFieldChanged,
+		searchTypeChanged,
+		clientNameChanged,
+		clientBinChanged,
 		clientHintClicked,
-		$clientSearchType,
-		$clientNameField,
-		$clientBinField,
-		$clientSearchHints,
-		$clientSearchNameOptions,
-		$clientSearchBinOptions,
-		$clientSearchHintsPending,
+		$searchType,
+		$clientName,
+		$clientBin,
+		$clientHints,
+		$clientNameOptions,
+		$clientBinOptions,
+		$clientHintsPending,
 		$districtId: districtId,
 		$currentClientHint,
-		$currentClientHintNameOption,
-		$currentClientHintBinOption,
+		$clientHintNameOption,
+		$clientHintBinOption,
 	}
 })

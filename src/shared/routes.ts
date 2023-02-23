@@ -4,8 +4,10 @@ export const paths = {
 	map: '/map',
 	error: '/error',
 	favoriteClientCart: '/favorite-client-cart',
-	userPublicProfile: '/user/:userId',
-	userSettingsProfile: '/settings/profile',
+	userProfile: '/user/:userId',
+	userSettings: '/settings/profile',
+	mapPlayGround: '/map-play-ground',
+	clientProfile: '/client/:clientId',
 }
 
 export const routes = {
@@ -13,7 +15,9 @@ export const routes = {
 	signIn: () => paths.signIn,
 	map: () => paths.map,
 	favoriteClientCart: () => paths.favoriteClientCart,
-	userPublicProfile: (userId: string) => paths.userPublicProfile.replace(':userId', userId),
-	userSettingsProfile: () => paths.userSettingsProfile,
+	userProfile: ({ userId }: { userId: string }) => paths.userProfile.replace(':userId', userId),
+	userSettings: () => paths.userSettings,
+	clientProfile: ({ clientId }: { clientId: string }) => paths.clientProfile.replace(':clientId', clientId),
+	mapPlayGround: () => paths.mapPlayGround,
 	error: () => paths.error,
 }

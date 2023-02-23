@@ -1,6 +1,6 @@
 import React from 'react'
 
-export interface Column<T, K> {
+export interface Column<T = {}, K = {}> {
 	header: (params: { data: T[]; item: T; rowIndex: number; columnIndex: number; tableState: K }) => React.ReactNode
 	cell: (params: { data: T[]; item: T; rowIndex: number; columnIndex: number; tableState: K }) => React.ReactNode
 }

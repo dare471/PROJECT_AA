@@ -45,7 +45,7 @@ specifiers:
   leaflet-draw: ^1.0.4
   leaflet-routing-machine: ^3.2.12
   lint-staged: ^13.1.1
-  patronum: ^1.14.2
+  patronum: ^1.15.0
   prettier: ^2.8.4
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -57,7 +57,7 @@ specifiers:
   react-router-dom: ^6.8.1
   react-select: ^5.7.0
   sass: ^1.58.0
-  typescript: ^4.9.3
+  typescript: ^4.9.5
   vite: ^4.1.0
   vite-plugin-checker: ^0.5.5
   vite-plugin-pwa: ^0.14.3
@@ -81,7 +81,7 @@ dependencies:
   leaflet: 1.9.3
   leaflet-draw: 1.0.4
   leaflet-routing-machine: 3.2.12
-  patronum: 1.14.2_effector@22.5.0
+  patronum: 1.15.0_effector@22.5.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
@@ -6985,8 +6985,8 @@ packages:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
     dev: true
 
-  /patronum/1.14.2_effector@22.5.0:
-    resolution: {integrity: sha512-n8rfgTHbtv7bBba7W0QqJvSRVPsIFiAMTvj4uZ8UaDhw0amT/eOV6sPPz9LQf0jnqhEot/6Ja6ghQ0D+WPDo1g==}
+  /patronum/1.15.0_effector@22.5.0:
+    resolution: {integrity: sha512-80nQt3xdPjxM4e/DS/hY4+R02E4Tu336wWUembFWLgwh7y4i0+KjJV1XU0LCtpXN5qN0QSiPVWeUOfh5N6adOQ==}
     peerDependencies:
       effector: ^22.1.2
     dependencies:

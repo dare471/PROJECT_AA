@@ -3,13 +3,13 @@ import { createEffect } from 'effector'
 
 import { envVars } from '~src/shared/config'
 
-import type { CultureReference } from './types'
+import type { CultureRef } from './types'
 
 const instance = axios.create({
 	baseURL: `${envVars.API_URL}/api`,
 })
 
-export const cultureReferencesQuery = createEffect<{ regionId: number }, CultureReference[]>(async ({ regionId }) => {
+export const culturesRefQuery = createEffect<{ regionId: number }, CultureRef[]>(async ({ regionId }) => {
 	const req = await instance({
 		method: 'POST',
 		url: '/mainquery',

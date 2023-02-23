@@ -1,6 +1,4 @@
 import {
-	ArrowDownIcon,
-	ArrowRightIcon,
 	ChevronDownIcon,
 	ChevronRightIcon,
 	DeleteIcon,
@@ -35,16 +33,20 @@ import 'leaflet-routing-machine'
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'
 import React from 'react'
 import { Polygon } from 'react-leaflet'
+import { useNavigate } from 'react-router'
 
 import { Header } from '~src/widgets/header'
 
 import { ClientInformalPointFactory } from '~src/features/client-informal-point'
-import { ClientOfficeCreate } from '~src/features/client-office'
-import { ClientPlotsFactory } from '~src/features/client-plots'
+import { ClientOfficeFactory } from '~src/features/client-office'
+import { LandsToLandFactory } from '~src/features/lands-to-land'
 
 import { MapFactory } from '~src/entities/map'
+import { sessionModel } from '~src/entities/session'
 
 import { type FavoriteClientInfo, type PlannedMeeting } from '~src/shared/api'
+import { zIndices } from '~src/shared/lib'
+import { routes } from '~src/shared/routes'
 import { type Column, TableFactory, type TableState, useTable } from '~src/shared/ui'
 
 import * as model from './model'
@@ -106,13 +108,17 @@ function ClientsTable() {
 		model.$favoriteClientsInfoPending,
 	])
 	const [tableState, handleRowSelect, handleAllRowSelect, handleMeetingTypeSelect, handleMeetingPlaceSelect] = useUnit([
-		model.favoriteClientsTableModel.$tableState,
-		model.favoriteClientsTableModel.rowSelected,
-		model.favoriteClientsTableModel.allRowSelected,
-		model.favoriteClientsTableModel.rowMeetingTypeSelected,
-		model.favoriteClientsTableModel.rowMeetingPlaceSelected,
+		model.$$favoriteClientsTable.$tableState,
+		model.$$favoriteClientsTable.rowSelected,
+		model.$$favoriteClientsTable.allRowSelected,
+		model.$$favoriteClientsTable.rowMeetingTypeSelected,
+		model.$$favoriteClientsTable.rowMeetingPlaceSelected,
 	])
-	const [editCurrentMeetingPlaceClick] = useUnit([model.editCurrentMeetingPlaceClicked])
+	const [editCurrentMeetingPlaceClick, handleDeleteFavoriteClient] = useUnit([
+		model.editCurrentMeetingPlaceClicked,
+		model.deleteFavoriteClientClicked,
+	])
+	const navigate = useNavigate()
 
 	const columns = React.useMemo<Array<Column<FavoriteClientInfo, model.FavoriteClientsTableState>>>(
 		() => [
@@ -279,9 +285,9 @@ function ClientsTable() {
 						&nbsp;
 					</TableFactory.Th>
 				),
-				cell: () => (
+				cell: ({ item }) => (
 					<TableFactory.Td borderInlineEndWidth='1px' borderColor='blackAlpha.300'>
-						<Button colorScheme='red'>
+						<Button colorScheme='red' onClick={() => handleDeleteFavoriteClient(item.clientId)}>
 							<DeleteIcon />
 						</Button>
 					</TableFactory.Td>
@@ -289,9 +295,9 @@ function ClientsTable() {
 			},
 			{
 				header: () => <TableFactory.Th color='white'>&nbsp;</TableFactory.Th>,
-				cell: () => (
+				cell: ({ item }) => (
 					<TableFactory.Td>
-						<Button>
+						<Button onClick={() => navigate(routes.clientProfile({ clientId: item.clientId.toString() }))}>
 							<ExternalLinkIcon />
 						</Button>
 					</TableFactory.Td>
@@ -350,8 +356,8 @@ function ClientsTable() {
 function PlannedMeetingsTable() {
 	const [plannedMeetings, plannedMeetingsPending] = useUnit([model.$plannedMeetings, model.$plannedMeetingsPending])
 	const [tableState, handleRowExtend] = useUnit([
-		model.plannedMeetingsTableModel.$tableState,
-		model.plannedMeetingsTableModel.rowExtended,
+		model.$$plannedMeetingsTable.$tableState,
+		model.$$plannedMeetingsTable.rowExtended,
 	])
 
 	const columns = React.useMemo<Column<PlannedMeeting, Pick<TableState, 'rowExtend'>>[]>(
@@ -374,7 +380,7 @@ function PlannedMeetingsTable() {
 					return (
 						<TableFactory.Td>
 							<Stack direction='row' align='center'>
-								<Text>{item.dateToVisit}</Text>
+								<Text>{item.date}</Text>
 								<Button variant='ghost' onClick={() => handleRowExtend({ rowIndex })}>
 									{tableState.rowExtend[rowIndex] ? <ChevronDownIcon /> : <ChevronRightIcon />}
 								</Button>
@@ -414,19 +420,19 @@ function PlannedMeetingsTable() {
 											</TableFactory.Tr>
 										</TableFactory.THead>
 										<TableFactory.TBody columnLength={4} empty={{ empty: false }}>
-											{item.clients.map((client, index) => (
+											{item.meetingClients.map((client, index) => (
 												<TableFactory.Tr key={index}>
 													<TableFactory.Td borderInlineEndWidth='1px' borderColor='blackAlpha.300'>
-														{client.clientName}
+														{client.name}
 													</TableFactory.Td>
 													<TableFactory.Td borderInlineEndWidth='1px' borderColor='blackAlpha.300'>
-														{client.clientAddress}
+														{client.address}
 													</TableFactory.Td>
 													<TableFactory.Td borderInlineEndWidth='1px' borderColor='blackAlpha.300'>
-														{client.clientIin}
+														{client.iin}
 													</TableFactory.Td>
 													<TableFactory.Td borderInlineEndWidth='1px' borderColor='blackAlpha.300'>
-														{client.visitName}
+														{client.meetingName}
 													</TableFactory.Td>
 													<TableFactory.Td>{client.meetingName}</TableFactory.Td>
 												</TableFactory.Tr>
@@ -489,8 +495,8 @@ function PlannedMeetingsTable() {
 
 function PlannedMeetingsCreateModal() {
 	const [modalsState, handleModalClose] = useUnit([
-		model.favoriteClientsPageModalsModel.$modalsState,
-		model.favoriteClientsPageModalsModel.modalCloseClicked,
+		model.$$favoriteClientsPageModals.$modalsState,
+		model.$$favoriteClientsPageModals.modalCloseClicked,
 	])
 
 	const [plannedMeetingsDate, handlePlannedMeetingsDataChange] = useUnit([
@@ -536,10 +542,10 @@ function PlannedMeetingsCreateModal() {
 
 function SelectClientPlotMeetingPlaceModal() {
 	const [modalsState, handleModalClose] = useUnit([
-		model.favoriteClientsPageModalsModel.$modalsState,
-		model.favoriteClientsPageModalsModel.modalCloseClicked,
+		model.$$favoriteClientsPageModals.$modalsState,
+		model.$$favoriteClientsPageModals.modalCloseClicked,
 	])
-	const [clientPlotsPending] = useUnit([model.favoriteClientPlotsModel.$clientPlotsPending])
+	const [clientPlotsPending] = useUnit([model.$$favoriteClientPlots.$clientPlotsPending])
 	const [setButtonAccess, handleSetClick] = useUnit([model.$clientPlotAccess, model.clientPlotSettled])
 
 	return (
@@ -554,31 +560,38 @@ function SelectClientPlotMeetingPlaceModal() {
 				<ModalHeader>Встретиться на поле</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody position='relative' minH='600px'>
-					<Box as={MapFactory.Map} model={model.mapModel} isDetect minH='inherit'>
-						<ClientPlotsFactory.ClientPlots
-							model={model.favoriteClientPlotsModel}
-							renderPlots={({ item, onClick }) => (
-								<Polygon
-									positions={item.geometry_rings as any}
-									pathOptions={{ color: 'blue' }}
-									eventHandlers={{
-										click: () => {
-											onClick(item.plotId)
-										},
-									}}
-								/>
-							)}
-							renderPlot={({ data }) => (
-								<Polygon positions={data.geometry_rings as any} pathOptions={{ color: 'white' }} />
-							)}
-						/>
-					</Box>
+					<>
+						<MapFactory.Map
+							model={model.mapModel}
+							containerProps={{ w: 'full', h: 'full', minH: 'inherit', zIndex: zIndices.map }}
+							style={{ width: '100%', height: '100%', minHeight: 'inherit' }}
+						>
+							<LandsToLandFactory.Lands model={model.$$favoriteClientPlotsToClientPlot}>
+								{({ land: clientPlot, onClick }) => (
+									<Polygon
+										positions={clientPlot.geometryRings as any}
+										pathOptions={{ color: 'blue' }}
+										eventHandlers={{
+											click: () => {
+												onClick(clientPlot.plotId)
+											},
+										}}
+									/>
+								)}
+							</LandsToLandFactory.Lands>
+							<LandsToLandFactory.Land model={model.$$favoriteClientPlotsToClientPlot}>
+								{({ land: clientPlot }) => (
+									<Polygon positions={clientPlot.geometryRings as any} pathOptions={{ color: 'white' }} />
+								)}
+							</LandsToLandFactory.Land>
+						</MapFactory.Map>
 
-					{clientPlotsPending && (
-						<Center position='absolute' top='50%' left='50%'>
-							<Spinner colorScheme='blue' />
-						</Center>
-					)}
+						{clientPlotsPending && (
+							<Center position='absolute' top='50%' left='50%' zIndex='sticky'>
+								<Spinner colorScheme='blue' />
+							</Center>
+						)}
+					</>
 				</ModalBody>
 				<ModalFooter>
 					<Button colorScheme='blue' isDisabled={!setButtonAccess} onClick={() => handleSetClick()}>
@@ -592,12 +605,12 @@ function SelectClientPlotMeetingPlaceModal() {
 
 function SelectClientOfficeMeetingPlaceModal() {
 	const [modalsState, handleModalClose] = useUnit([
-		model.favoriteClientsPageModalsModel.$modalsState,
-		model.favoriteClientsPageModalsModel.modalCloseClicked,
+		model.$$favoriteClientsPageModals.$modalsState,
+		model.$$favoriteClientsPageModals.modalCloseClicked,
 	])
 	const [clientOffice, clientOfficePending] = useUnit([
-		model.favoriteClientOfficeModel.$clientOffice,
-		model.favoriteClientOfficeModel.$clientOfficePending,
+		model.$$favoriteClientOffice.$clientOffice,
+		model.$$favoriteClientOffice.$clientOfficePending,
 	])
 	const [setButtonAccess, handleSetClick] = useUnit([model.$clientOfficeAccess, model.clientOfficeSettled])
 
@@ -621,32 +634,23 @@ function SelectClientOfficeMeetingPlaceModal() {
 							<Badge colorScheme='blue'>{clientOffice?.directionMatrix?.rows[0]?.elements[0]?.distance.value}</Badge>
 						</Stack>
 
-						<Box as={MapFactory.Map} model={model.mapModel} isDetect minH='inherit'>
-							<ClientPlotsFactory.ClientPlots
-								model={model.favoriteClientPlotsModel}
-								renderPlots={({ item, onClick }) => (
-									<Polygon
-										positions={item.geometry_rings as any}
-										pathOptions={{ color: 'blue' }}
-										eventHandlers={{
-											click: () => {
-												onClick(item.clientId)
-											},
-										}}
-									/>
+						<MapFactory.Map
+							model={model.mapModel}
+							containerProps={{ w: 'full', h: 'full', minH: 'inherit', zIndex: zIndices.map }}
+							style={{ width: '100%', height: '100%', minHeight: 'inherit' }}
+						>
+							<LandsToLandFactory.Lands model={model.$$favoriteClientPlotsToClientPlot}>
+								{({ land: clientPlot }) => (
+									<Polygon positions={clientPlot.geometryRings as any} pathOptions={{ color: 'blue' }} />
 								)}
-								renderPlot={({ data }) => (
-									<Polygon positions={data.geometry_rings as any} pathOptions={{ color: 'white' }} />
-								)}
-								fitBounds={false}
-							/>
+							</LandsToLandFactory.Lands>
 
-							<ClientOfficeCreate.ClientOffice model={model.favoriteClientOfficeModel} />
-						</Box>
+							<ClientOfficeFactory.ClientOffice model={model.$$favoriteClientOffice} />
+						</MapFactory.Map>
 					</Stack>
 
 					{clientOfficePending && (
-						<Center position='absolute' top='50%' left='50%'>
+						<Center position='absolute' top='50%' left='50%' zIndex='sticky'>
 							<Spinner colorScheme='blue' />
 						</Center>
 					)}
@@ -663,10 +667,10 @@ function SelectClientOfficeMeetingPlaceModal() {
 
 function SelectClientInformalMeetingPlaceModal() {
 	const [modalsState, handleModalClose] = useUnit([
-		model.favoriteClientsPageModalsModel.$modalsState,
-		model.favoriteClientsPageModalsModel.modalCloseClicked,
+		model.$$favoriteClientsPageModals.$modalsState,
+		model.$$favoriteClientsPageModals.modalCloseClicked,
 	])
-	const [clientInformalRefsPending] = useUnit([model.favoriteClientInformalPointModel.$refsPending])
+	const [clientInformalRefsPending] = useUnit([model.$$favoriteClientInformalPoint.$refsPending])
 	const [setButtonAccess, handleSetClick] = useUnit([
 		model.$clientInformalPointAccess,
 		model.clientInformalPointSettled,
@@ -685,39 +689,33 @@ function SelectClientInformalMeetingPlaceModal() {
 				<ModalCloseButton />
 				<ModalBody position='relative' minH='600px'>
 					<Stack minH='inherit'>
-						<Box as={MapFactory.Map} model={model.mapModel} isDetect minH='inherit'>
-							<ClientPlotsFactory.ClientPlots
-								model={model.favoriteClientPlotsModel}
-								renderPlots={({ item, onClick }) => (
-									<Polygon
-										positions={item.geometry_rings as any}
-										pathOptions={{ color: 'blue' }}
-										eventHandlers={{
-											click: () => {
-												onClick(item.clientId)
-											},
-										}}
-									/>
+						<MapFactory.Map
+							model={model.mapModel}
+							containerProps={{ w: 'full', h: 'full', minH: 'inherit', zIndex: zIndices.map }}
+							style={{ width: '100%', height: '100%', minHeight: 'inherit' }}
+						>
+							<LandsToLandFactory.Lands model={model.$$favoriteClientPlotsToClientPlot}>
+								{({ land: clientPlot }) => (
+									<Polygon positions={clientPlot.geometryRings as any} pathOptions={{ color: 'blue' }} />
 								)}
-								renderPlot={({ data }) => null}
-							/>
+							</LandsToLandFactory.Lands>
 
-							<ClientInformalPointFactory.ClientInformalPointMarker model={model.favoriteClientInformalPointModel} />
-						</Box>
+							<ClientInformalPointFactory.ClientInformalPointMarker model={model.$$favoriteClientInformalPoint} />
+						</MapFactory.Map>
 						<ClientInformalPointFactory.ClientInformalPointMarkerErrorMessages
-							model={model.favoriteClientInformalPointModel}
+							model={model.$$favoriteClientInformalPoint}
 						/>
 
 						<Stack>
-							<ClientInformalPointFactory.ClientInformalPointRefSelect model={model.favoriteClientInformalPointModel} />
+							<ClientInformalPointFactory.ClientInformalPointRefSelect model={model.$$favoriteClientInformalPoint} />
 							<ClientInformalPointFactory.ClientInformalPointDescriptionInput
-								model={model.favoriteClientInformalPointModel}
+								model={model.$$favoriteClientInformalPoint}
 							/>
 						</Stack>
 					</Stack>
 
 					{clientInformalRefsPending && (
-						<Center position='absolute' top='50%' left='50%'>
+						<Center position='absolute' top='50%' left='50%' zIndex='sticky'>
 							<Spinner colorScheme='blue' />
 						</Center>
 					)}

@@ -1,7 +1,8 @@
-export type DistrictLand = {
-	id: string // number
+export type District = {
+	type: 'district'
+	id: number
 	name: string
 	klkod: string
 	vnaim: string
-	geometry_rings: number[][][]
+	geometryRings: number[][][]
 }

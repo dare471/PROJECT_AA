@@ -3,14 +3,14 @@ import { createEffect } from 'effector'
 
 import { envVars } from '~src/shared/config'
 
-import { regionsAdapter } from '../../adapters'
-import type { RegionAnalytic, RegionLand } from './types'
+import { regionsAdapter } from './adapter'
+import type { Region, RegionAnalytic } from './types'
 
 const instance = axios.create({
 	baseURL: `${envVars.API_URL}/api`,
 })
 
-export const regionsOverlayQuery = createEffect<void, RegionLand[]>(async () => {
+export const regionsOverlayQuery = createEffect<void, Region[]>(async () => {
 	const req = await instance({
 		url: '/country',
 		method: 'POST',
@@ -26,7 +26,7 @@ export const regionsOverlayQuery = createEffect<void, RegionLand[]>(async () => 
 	throw new Error('status is not 200')
 })
 
-export const regionsQuery = createEffect<{ regionBilling: number[] }, RegionLand[]>(async ({ regionBilling }) => {
+export const regionsQuery = createEffect<{ regionBilling: number[] }, Region[]>(async ({ regionBilling }) => {
 	const req = await instance({
 		method: 'POST',
 		url: '/country',

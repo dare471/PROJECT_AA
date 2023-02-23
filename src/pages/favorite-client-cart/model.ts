@@ -1,18 +1,20 @@
 import { attach, createEvent, createStore, sample, type Store } from 'effector'
 
 import { ClientInformalPointFactory } from '~src/features/client-informal-point'
-import { ClientOfficeCreate } from '~src/features/client-office'
-import { ClientPlotsFactory } from '~src/features/client-plots'
+import { ClientOfficeFactory } from '~src/features/client-office'
+import { getLandsPositions, LandsToLandFactory } from '~src/features/lands-to-land'
 
+import { ClientPlotsFactory } from '~src/entities/client'
 import { MapFactory } from '~src/entities/map'
 import { sessionModel } from '~src/entities/session'
 
 import {
+	type AddPlannedMeeting,
 	clientApi,
+	favoriteClientApi,
 	type FavoriteClientInfo,
 	meetingApi,
 	type PlannedMeeting,
-	type PlannedMeetingMockup,
 } from '~src/shared/api'
 import { ModalsFactory, TableFactory } from '~src/shared/ui'
 
@@ -26,6 +28,7 @@ export const favoriteClientCartPageMounted = createEvent<void>()
 export const favoriteClientCartPageUnmounted = createEvent<void>()
 
 export const editCurrentMeetingPlaceClicked = createEvent<void>()
+export const deleteFavoriteClientClicked = createEvent<number>()
 
 export const clientPlotSettled = createEvent<void>()
 export const clientOfficeSettled = createEvent<void>()
@@ -53,10 +56,10 @@ export const $plannedMeetingsDate = createStore<Date>(new Date())
 export const $plannedMeetings = createStore<PlannedMeeting[]>([])
 export const $plannedMeetingsPending = createStore<boolean>(false)
 
-export const favoriteClientsTableModel = createFavoriteClientsTable({
+export const $$favoriteClientsTable = createFavoriteClientsTable({
 	data: $favoriteClientsInfo,
 })
-export const plannedMeetingsTableModel = TableFactory.createTable({
+export const $$plannedMeetingsTable = TableFactory.createTable({
 	data: $plannedMeetings,
 	tableGenerateCb: () => ({
 		rowExtend: {},
@@ -64,7 +67,7 @@ export const plannedMeetingsTableModel = TableFactory.createTable({
 	isExtend: true,
 })
 
-export const favoriteClientsPageModalsModel = ModalsFactory.createModals({
+export const $$favoriteClientsPageModals = ModalsFactory.createModals({
 	defaultModalsState: {
 		plannedMeetingsCreate: false,
 		selectClientPlotMeetingPlaceModal: false,
@@ -75,16 +78,19 @@ export const favoriteClientsPageModalsModel = ModalsFactory.createModals({
 
 export const mapModel = MapFactory.createMap()
 
-export const favoriteClientPlotsModel = ClientPlotsFactory.createClientPlots({
-	map: mapModel.$map,
+export const $$favoriteClientPlots = ClientPlotsFactory.createClientPlots()
+export const $$favoriteClientPlotsToClientPlot = LandsToLandFactory.createLandsToLand({
+	lands: $$favoriteClientPlots.$clientPlots.map((clientPlots) =>
+		clientPlots.map((clientPlot) => ({ ...clientPlot, id: clientPlot.plotId })),
+	),
 })
 
-export const favoriteClientOfficeModel = ClientOfficeCreate.createClientOffice()
+export const $$favoriteClientOffice = ClientOfficeFactory.createClientOffice({ map: mapModel.$map })
 
-export const favoriteClientInformalPointModel = ClientInformalPointFactory.createClientInformalPoint.createModel({})
+export const $$favoriteClientInformalPoint = ClientInformalPointFactory.createClientInformalPoint.createModel({})
 
 const getFavoriteClientsInfoFx = attach({
-	effect: clientApi.favoriteClientsQuery,
+	effect: favoriteClientApi.favoriteClientsQuery,
 	source: sessionModel.$session,
 	mapParams: (params: void, session) => {
 		if (!session) throw new Error('Session is not defined')
@@ -95,7 +101,7 @@ const addClientInformalPointFx = attach({ effect: clientApi.addClientInformalPoi
 const addPlannedMeetingsFx = attach({
 	effect: meetingApi.addPlannedMeetingsMutation,
 	source: sessionModel.$session,
-	mapParams: (params: { meetingsDate: string; meetings: PlannedMeetingMockup[] }, session) => {
+	mapParams: (params: { meetingsDate: string; meetings: AddPlannedMeeting[] }, session) => {
 		const { meetingsDate, meetings } = params
 		if (!session) throw new Error('Session is not defined')
 		return { userId: session.id, meetingsDate, meetings }
@@ -111,9 +117,29 @@ const getPlannedMeetingsFx = attach({
 	},
 })
 
+const fitClientPlotsFx = attach({
+	effect: MapFactory.fitBoundsFx,
+	source: { map: mapModel.$map, clientPlots: $$favoriteClientPlots.$clientPlots },
+	mapParams: (params: void, { map, clientPlots }) => ({
+		map,
+		positions: getLandsPositions(clientPlots.map((clientPlot) => ({ ...clientPlot, id: clientPlot.plotId }))),
+	}),
+})
+const fitClientPlotFx = attach({
+	effect: MapFactory.fitBoundsFx,
+	source: { map: mapModel.$map, clientPlot: $$favoriteClientPlotsToClientPlot.$land },
+	mapParams: (params: void, { map, clientPlot }) => ({ map, positions: clientPlot?.geometryRings ?? [] }),
+})
+
 sample({
 	clock: favoriteClientCartPageMounted,
 	target: [getFavoriteClientsInfoFx, getPlannedMeetingsFx],
+})
+
+sample({
+	clock: deleteFavoriteClientClicked,
+	fn: (clientId) => [clientId],
+	target: [sessionModel.favoriteClientsDeleted, getFavoriteClientsInfoFx],
 })
 
 $favoriteClientsInfoPending.on(getFavoriteClientsInfoFx.pending, (state, pending) => pending)
@@ -123,7 +149,7 @@ $plannedMeetingsPending.on(getPlannedMeetingsFx.pending, (state, pending) => pen
 $plannedMeetings.on(getPlannedMeetingsFx.doneData, (state, plannedMeetings) => plannedMeetings)
 
 const rowMeetingPlaceWillChange = sample({
-	clock: favoriteClientsTableModel.rowMeetingPlaceSelected,
+	clock: $$favoriteClientsTable.rowMeetingPlaceSelected,
 	fn: ({ id }) => {
 		if (id === MEETING_PLACE_TYPE.clientPlot) {
 			return { modalName: 'selectClientPlotMeetingPlaceModal' } as const
@@ -141,19 +167,19 @@ const rowMeetingPlaceWillChange = sample({
 sample({
 	clock: rowMeetingPlaceWillChange,
 	target: [
-		favoriteClientPlotsModel.$clientPlotId.reinit!,
-		favoriteClientPlotsModel.$clientPlots.reinit!,
-		favoriteClientOfficeModel.$clientOffice.reinit!,
-		favoriteClientInformalPointModel.$description.reinit!,
-		favoriteClientInformalPointModel.$marker.reinit!,
-		favoriteClientInformalPointModel.$selectRef.reinit!,
-		favoriteClientInformalPointModel.$refs.reinit!,
+		$$favoriteClientPlotsToClientPlot.$landId.reinit!,
+		$$favoriteClientPlots.$clientPlots.reinit!,
+		$$favoriteClientOffice.$clientOffice.reinit!,
+		$$favoriteClientInformalPoint.$description.reinit!,
+		$$favoriteClientInformalPoint.$marker.reinit!,
+		$$favoriteClientInformalPoint.$selectRef.reinit!,
+		$$favoriteClientInformalPoint.$refs.reinit!,
 	],
 })
 
 const meetingPlaceModalWillOpen = sample({
 	clock: rowMeetingPlaceWillChange,
-	source: { currentRow: favoriteClientsTableModel.$currentRow, favoriteClientsInfo: $favoriteClientsInfo },
+	source: { currentRow: $$favoriteClientsTable.$currentRow, favoriteClientsInfo: $favoriteClientsInfo },
 	filter: (_, modal) => Boolean(modal),
 	fn: ({ currentRow, favoriteClientsInfo }, modal) => {
 		const { modalName } = modal!
@@ -164,7 +190,7 @@ const meetingPlaceModalWillOpen = sample({
 
 sample({
 	clock: editCurrentMeetingPlaceClicked,
-	source: { currentRow: favoriteClientsTableModel.$currentRow, tableState: favoriteClientsTableModel.$tableState },
+	source: { currentRow: $$favoriteClientsTable.$currentRow, tableState: $$favoriteClientsTable.$tableState },
 	fn: ({ currentRow, tableState }) => {
 		const currentMeetingPlaceRow = tableState.rowMeetingPlace[currentRow!]
 		if (currentMeetingPlaceRow.id === MEETING_PLACE_TYPE.clientPlot) {
@@ -176,22 +202,22 @@ sample({
 
 		return { modalName: 'selectInformalMeetingPlaceModal' } as const
 	},
-	target: favoriteClientsPageModalsModel.modalOpenClicked,
+	target: $$favoriteClientsPageModals.modalOpenClicked,
 })
 
 sample({
 	clock: meetingPlaceModalWillOpen,
 	filter: ({ modalName }) => modalName === 'selectClientPlotMeetingPlaceModal',
-	target: [favoriteClientsPageModalsModel.modalOpenClicked, favoriteClientPlotsModel.getClientPlotsFx],
+	target: [$$favoriteClientsPageModals.modalOpenClicked, $$favoriteClientPlots.getClientPlotsFx],
 })
 
 sample({
 	clock: meetingPlaceModalWillOpen,
 	filter: ({ modalName }) => modalName === 'selectOfficeMeetingPlaceModal',
 	target: [
-		favoriteClientsPageModalsModel.modalOpenClicked,
-		favoriteClientOfficeModel.getClientOfficeFx,
-		favoriteClientPlotsModel.getClientPlotsFx,
+		$$favoriteClientsPageModals.modalOpenClicked,
+		$$favoriteClientOffice.getClientOfficeFx,
+		$$favoriteClientPlots.getClientPlotsFx,
 	],
 })
 
@@ -199,9 +225,9 @@ sample({
 	clock: meetingPlaceModalWillOpen,
 	filter: ({ modalName }) => modalName === 'selectInformalMeetingPlaceModal',
 	target: [
-		favoriteClientsPageModalsModel.modalOpenClicked,
-		favoriteClientInformalPointModel.getRefsFx,
-		favoriteClientPlotsModel.getClientPlotsFx,
+		$$favoriteClientsPageModals.modalOpenClicked,
+		$$favoriteClientInformalPoint.getRefsFx,
+		$$favoriteClientPlots.getClientPlotsFx,
 	],
 })
 
@@ -211,7 +237,7 @@ sample({
 	fn: (map) => {
 		map.addEventListener('click', (e) => {
 			const { lat, lng } = e.latlng
-			favoriteClientInformalPointModel.markerSettled([lat, lng])
+			$$favoriteClientInformalPoint.markerSettled([lat, lng])
 		})
 	},
 })
@@ -219,9 +245,9 @@ sample({
 sample({
 	clock: clientPlotSettled,
 	source: {
-		currentRow: favoriteClientsTableModel.$currentRow,
-		tableState: favoriteClientsTableModel.$tableState,
-		clientPlotId: favoriteClientPlotsModel.$clientPlotId,
+		currentRow: $$favoriteClientsTable.$currentRow,
+		tableState: $$favoriteClientsTable.$tableState,
+		clientPlotId: $$favoriteClientPlotsToClientPlot.$landId,
 	},
 	fn: ({ currentRow, tableState, clientPlotId }) => {
 		if (!clientPlotId) return tableState
@@ -234,8 +260,8 @@ sample({
 		}
 	},
 	target: [
-		favoriteClientsTableModel.$tableState,
-		favoriteClientsPageModalsModel.modalCloseClicked.prepend(() => ({
+		$$favoriteClientsTable.$tableState,
+		$$favoriteClientsPageModals.modalCloseClicked.prepend(() => ({
 			modalName: 'selectClientPlotMeetingPlaceModal',
 		})),
 	],
@@ -244,9 +270,9 @@ sample({
 sample({
 	clock: clientOfficeSettled,
 	source: {
-		currentRow: favoriteClientsTableModel.$currentRow,
-		tableState: favoriteClientsTableModel.$tableState,
-		clientOffice: favoriteClientOfficeModel.$clientOffice,
+		currentRow: $$favoriteClientsTable.$currentRow,
+		tableState: $$favoriteClientsTable.$tableState,
+		clientOffice: $$favoriteClientOffice.$clientOffice,
 	},
 	fn: ({ currentRow, tableState, clientOffice }) => {
 		if (!clientOffice) return tableState
@@ -267,19 +293,36 @@ sample({
 		}
 	},
 	target: [
-		favoriteClientsTableModel.$tableState,
-		favoriteClientsPageModalsModel.modalCloseClicked.prepend(() => ({ modalName: 'selectOfficeMeetingPlaceModal' })),
+		$$favoriteClientsTable.$tableState,
+		$$favoriteClientsPageModals.modalCloseClicked.prepend(() => ({ modalName: 'selectOfficeMeetingPlaceModal' })),
 	],
+})
+
+sample({
+	clock: $$favoriteClientPlots.getClientPlotsFx.doneData,
+	source: { tableState: $$favoriteClientsTable.$tableState, currentRow: $$favoriteClientsTable.$currentRow },
+	filter: ({ tableState, currentRow }) => {
+		const meetingPlace = tableState.rowMeetingPlace[currentRow!]!
+		if (meetingPlace.id === MEETING_PLACE_TYPE.office) return false
+		return true
+	},
+
+	target: fitClientPlotsFx,
+})
+
+sample({
+	clock: $$favoriteClientPlotsToClientPlot.landClicked,
+	target: fitClientPlotFx,
 })
 
 sample({
 	clock: clientInformalPointSettled,
 	source: {
-		currentRow: favoriteClientsTableModel.$currentRow,
-		tableState: favoriteClientsTableModel.$tableState,
-		clientInformalPointMarker: favoriteClientInformalPointModel.$marker,
-		clientInformalPointRef: favoriteClientInformalPointModel.$selectRef,
-		clientInformalPointDescription: favoriteClientInformalPointModel.$description,
+		currentRow: $$favoriteClientsTable.$currentRow,
+		tableState: $$favoriteClientsTable.$tableState,
+		clientInformalPointMarker: $$favoriteClientInformalPoint.$marker,
+		clientInformalPointRef: $$favoriteClientInformalPoint.$selectRef,
+		clientInformalPointDescription: $$favoriteClientInformalPoint.$description,
 	},
 	fn: ({
 		currentRow,
@@ -305,8 +348,8 @@ sample({
 		}
 	},
 	target: [
-		favoriteClientsTableModel.$tableState,
-		favoriteClientsPageModalsModel.modalCloseClicked.prepend(() => ({ modalName: 'selectInformalMeetingPlaceModal' })),
+		$$favoriteClientsTable.$tableState,
+		$$favoriteClientsPageModals.modalCloseClicked.prepend(() => ({ modalName: 'selectInformalMeetingPlaceModal' })),
 	],
 })
 
@@ -314,10 +357,10 @@ sample({
 	clock: clientInformalPointSettled,
 	source: {
 		favoriteClientsInfo: $favoriteClientsInfo,
-		currentRow: favoriteClientsTableModel.$currentRow,
-		clientInformalPointMarker: favoriteClientInformalPointModel.$marker,
-		clientInformalPointRef: favoriteClientInformalPointModel.$selectRef,
-		clientInformalPointDescription: favoriteClientInformalPointModel.$description,
+		currentRow: $$favoriteClientsTable.$currentRow,
+		clientInformalPointMarker: $$favoriteClientInformalPoint.$marker,
+		clientInformalPointRef: $$favoriteClientInformalPoint.$selectRef,
+		clientInformalPointDescription: $$favoriteClientInformalPoint.$description,
 	},
 	fn: ({
 		currentRow,
@@ -337,22 +380,22 @@ sample({
 })
 
 sample({
-	source: favoriteClientPlotsModel.$clientPlotId,
+	source: $$favoriteClientPlotsToClientPlot.$landId,
 	fn: (clientPlotId) => clientPlotId !== null,
 	target: $clientPlotAccess,
 })
 
 sample({
 	source: {
-		marker: favoriteClientInformalPointModel.$marker,
-		description: favoriteClientInformalPointModel.$description,
-		ref: favoriteClientInformalPointModel.$selectRef,
+		marker: $$favoriteClientInformalPoint.$marker,
+		description: $$favoriteClientInformalPoint.$description,
+		ref: $$favoriteClientInformalPoint.$selectRef,
 	},
 	fn: ({ marker, description, ref }) => marker !== null && description !== '' && ref !== null,
 	target: $clientInformalPointAccess,
 })
 
-$hasPlannedMeetings.on(favoriteClientsTableModel.$tableState, (state, tableState) => {
+$hasPlannedMeetings.on($$favoriteClientsTable.$tableState, (state, tableState) => {
 	let isAccess = false
 	for (const rowIndex of Object.keys(tableState.rowSelect)) {
 		if (
@@ -380,7 +423,7 @@ $hasPlannedMeetings.on(favoriteClientsTableModel.$tableState, (state, tableState
 sample({
 	clock: plannedMeetingsCreateClicked,
 	fn: () => ({ modalName: 'plannedMeetingsCreate' } as const),
-	target: favoriteClientsPageModalsModel.modalOpenClicked,
+	target: $$favoriteClientsPageModals.modalOpenClicked,
 })
 
 $plannedMeetingsDate.on(plannedMeetingsDateChanged, (state, date) => date)
@@ -388,12 +431,12 @@ $plannedMeetingsDate.on(plannedMeetingsDateChanged, (state, date) => date)
 sample({
 	clock: plannedMeetingsCreated,
 	source: {
-		tableState: favoriteClientsTableModel.$tableState,
+		tableState: $$favoriteClientsTable.$tableState,
 		plannedMeetingsDate: $plannedMeetingsDate,
 		favoriteClientsInfo: $favoriteClientsInfo,
 	},
 	fn: ({ tableState, favoriteClientsInfo, plannedMeetingsDate }) => {
-		const plannedMeetings: PlannedMeetingMockup[] = []
+		const plannedMeetings: AddPlannedMeeting[] = []
 
 		for (const rowIndex of Object.keys(tableState.rowSelect)) {
 			if (
@@ -457,11 +500,7 @@ sample({
 sample({
 	clock: addPlannedMeetingsFx.done,
 	fn: () => ({ modalName: 'plannedMeetingsCreate' } as const),
-	target: [
-		favoriteClientsPageModalsModel.modalCloseClicked,
-		favoriteClientsTableModel.tableReset,
-		getPlannedMeetingsFx,
-	],
+	target: [$$favoriteClientsPageModals.modalCloseClicked, $$favoriteClientsTable.tableReset, getPlannedMeetingsFx],
 })
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -492,7 +531,10 @@ function createFavoriteClientsTable(options: CreateFavoriteClientsTableOptions) 
 		tableGenerateCb: (favoriteClientsInfo) => ({
 			rowSelect: favoriteClientsInfo.reduce((acc, _, index) => ({ ...acc, [index]: false }), {}),
 			rowExtend: favoriteClientsInfo.reduce((acc, _, index) => ({ ...acc, [index]: false }), {}),
-			rowMeetingPlace: {},
+			rowMeetingPlace: favoriteClientsInfo.reduce(
+				(acc, _, index) => ({ ...acc, [index]: { id: MEETING_PLACE_TYPE.office, name: 'По его Юридическому адресу' } }),
+				{},
+			),
 			rowMeetingType: {},
 			rowClientPlot: {},
 			rowClientOfficePoint: {},

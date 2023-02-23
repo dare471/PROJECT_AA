@@ -9,7 +9,7 @@ import { type createMap } from './model'
 
 interface MapProps extends Omit<MapContainerProps, 'center' | 'zoom'> {
 	model: ReturnType<typeof createMap>
-	isDetect: boolean
+	isResize?: boolean
 	center?: L.LatLngTuple
 	zoom?: number
 	containerProps?: BoxProps
@@ -26,7 +26,7 @@ export const MAP_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z
 export function Map(props: MapProps) {
 	const {
 		model,
-		isDetect,
+		isResize = false,
 		center = CENTER,
 		zoom = ZOOM,
 		attribution = MAP_ATTRIBUTION,
@@ -36,7 +36,7 @@ export function Map(props: MapProps) {
 	} = props
 	const [map, handleMount] = useUnit([model.$map, model.mapMounted])
 
-	if (isDetect) {
+	if (isResize) {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const { width, height, ref } = useResizeDetector()
 
@@ -44,18 +44,26 @@ export function Map(props: MapProps) {
 		React.useEffect(() => {
 			if (!map) return
 			map.invalidateSize()
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [width, height])
 
 		return (
-			<Box w='full' minH='inherit' position='relative' ref={ref} {...containerProps}>
-				<MapContainer ref={handleMount} center={center} zoom={zoom} style={{ width, height }} {...props}>
+			<Box ref={ref} {...containerProps}>
+				<MapContainer
+					ref={handleMount}
+					center={center}
+					zoom={zoom}
+					style={{ width, height, ...props.style }}
+					{...props}
+				>
+					<TileLayer attribution={attribution} url={url} />
 					{children}
 				</MapContainer>
 			</Box>
 		)
 	} else {
 		return (
-			<Box w='full' minH='inherit' position='relative' {...containerProps}>
+			<Box {...containerProps}>
 				<MapContainer ref={handleMount} center={center} zoom={zoom} {...props}>
 					<TileLayer attribution={attribution} url={url} />
 					{children}

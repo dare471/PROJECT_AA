@@ -1,1 +1,0 @@
-export { UserPublicProfilePage } from './page'

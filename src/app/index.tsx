@@ -9,6 +9,8 @@ import { Pages } from '~src/pages'
 
 import { sessionModel } from '~src/entities/session'
 
+import './index.scss'
+
 const appMounted = createEvent<void>()
 const appUnmounted = createEvent<void>()
 
