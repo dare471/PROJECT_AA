@@ -1,7 +1,5 @@
 import { attach, createStore } from 'effector'
 
-import { sessionModel } from '~src/entities/session'
-
 import { userApi, type UserMapHistory } from '~src/shared/api'
 
 export function createUserMapHistories() {
@@ -10,11 +8,6 @@ export function createUserMapHistories() {
 
 	const getUserMapHistoriesFx = attach({
 		effect: userApi.userMapHistoriesQuery,
-		source: sessionModel.$session,
-		mapParams: (params: void, session) => {
-			if (!session) throw new Error('Session is not defined')
-			return { userId: session.id }
-		},
 	})
 
 	$userMapHistoriesPending.on(getUserMapHistoriesFx.pending, (_, pending) => pending)

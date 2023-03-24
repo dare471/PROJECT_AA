@@ -1,2 +1,2 @@
 export * as cultureApi from './api'
-export * from './types'
+export * from './types.api'

@@ -3,7 +3,7 @@ import { createEffect } from 'effector'
 
 import { envVars } from '~src/shared/config'
 
-import { regionsAdapter } from './adapter'
+import { RegionAdapter } from './adapter/index'
 import type { Region, RegionAnalytic } from './types'
 
 const instance = axios.create({
@@ -20,7 +20,7 @@ export const regionsOverlayQuery = createEffect<void, Region[]>(async () => {
 	})
 
 	if (req.status === 200) {
-		return regionsAdapter(req.data)
+		return RegionAdapter.fromApiToRegions(req.data)
 	}
 
 	throw new Error('status is not 200')
@@ -37,7 +37,7 @@ export const regionsQuery = createEffect<{ regionBilling: number[] }, Region[]>(
 	})
 
 	if (req.status === 200) {
-		return regionsAdapter(req.data)
+		return RegionAdapter.fromApiToRegions(req.data)
 	}
 
 	throw new Error('status is not 200')

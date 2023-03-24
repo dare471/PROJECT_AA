@@ -1,6 +1,7 @@
 import {
 	Accordion,
 	AccordionButton,
+	AccordionIcon,
 	AccordionItem,
 	AccordionPanel,
 	type AccordionProps,
@@ -43,7 +44,10 @@ export function ClientAnalyticsByYear(props: ClientAnalyticsByYearProps) {
 				<Accordion {...otherProps}>
 					{Object.keys(analyticsByYear).map((year, index) => (
 						<AccordionItem key={index}>
-							<AccordionButton>{year}</AccordionButton>
+							<AccordionButton justifyContent='space-between'>
+								<Text>{year}</Text>
+								<AccordionIcon />
+							</AccordionButton>
 							<AccordionPanel>
 								<Stack>
 									{analyticsByYear[year]!.map((analytic, index) => (

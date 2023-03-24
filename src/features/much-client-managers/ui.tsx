@@ -2,7 +2,7 @@ import { useUnit } from 'effector-react'
 
 import { ClientManagerCard, type createClientManagers } from '~src/entities/new-client'
 
-import { ErrorMessage, Spin } from '~src/shared/ui'
+import { Empty, Spin } from '~src/shared/ui'
 
 interface ClientManagersProps {
 	model: ReturnType<typeof createClientManagers>
@@ -10,14 +10,14 @@ interface ClientManagersProps {
 
 export function ClientManagers(props: ClientManagersProps) {
 	const { model } = props
-	const [clientManagers, clientManagersStatus] = useUnit([model.$clientManagers, model.$clientManagersStatus])
+	const [clientManagers, clientManagersPending] = useUnit([model.$clientManagers, model.$clientManagersPending])
 
-	if (clientManagersStatus === 'pending') {
+	if (clientManagersPending) {
 		return <Spin />
 	}
 
-	if (clientManagersStatus === 'fail') {
-		return <ErrorMessage>Произошла ошибка</ErrorMessage>
+	if (!clientManagers.length) {
+		return <Empty>Нет менеджеров</Empty>
 	}
 
 	return (

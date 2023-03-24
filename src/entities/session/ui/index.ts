@@ -1,5 +1,6 @@
 export { SessionPanel } from './session-panel'
 export { SignInButton } from './sign-in-button'
 export { ShowOnly } from './show-only'
-export { AuthProvider } from './auth-provider'
+export { AuthProtect } from './auth-protect'
 export { GuestProvider } from './guest-provider'
+export { RoleProtect } from './role-protect'

@@ -1,57 +1,69 @@
-import { attach, combine, createEvent, createStore, guard, sample } from 'effector'
-import { reset } from 'patronum'
+import { combine, createEvent, createStore, guard, merge, sample } from 'effector'
 
+import { ClientAnalyticsByYearFactory } from '~src/features/client-analytics-by-year'
 import { ClientSearchFactory } from '~src/features/client-search'
 import { createClientsPlotsInCircle } from '~src/features/clients-plots-in-circle'
+import { ClientsSelectFactory } from '~src/features/clients-select-cards'
 import { CulturesSelectFactory } from '~src/features/cultures-select'
 import { getLandsPositions, LandsToLandFactory } from '~src/features/lands-to-land'
+import { MuchClientPlotsFactory } from '~src/features/much-client-plots'
+import { MuchClientsLandFactory } from '~src/features/much-clients-land'
 import { RegionSelectFactory } from '~src/features/region-select'
 import { RegionsTreeViewFactory } from '~src/features/regions-tree-view'
 
-import {
-	ClientAnalyticsByYearFactory,
-	ClientPlotsFactory,
-	createClientPoints,
-	createClientsLand,
-	filterClientsPlotsInCircleFx,
-} from '~src/entities/client'
+import { filterClientsPlotsInCircleFx } from '~src/entities/client'
+import { CulturesFactory } from '~src/entities/culture'
 import { createDistricts } from '~src/entities/district'
-import { MapFactory } from '~src/entities/map'
+import { clearAllCircles } from '~src/entities/map'
+import { fitBounds, MapFactory } from '~src/entities/map'
+import { createClientPoints } from '~src/entities/new-client'
 import { createRegions, createRegionsOverlay, RegionsAnalyticsByYearFactory } from '~src/entities/region'
+import { $$session } from '~src/entities/session'
 
-import { type District, type Region } from '~src/shared/api'
+import { type District } from '~src/shared/api'
 import { createTabs, type Option } from '~src/shared/ui'
 
 export const mapPageMounted = createEvent<void>()
 export const mapPageUnmounted = createEvent<void>()
 
+const resetRegion = createEvent<void>()
+const resetDistrict = createEvent<void>()
+const resetClientLand = createEvent<void>()
+const resetClientPlot = createEvent<void>()
+
 export const sidebarToggled = createEvent<void>()
 export const toolbarToggled = createEvent<void>()
 export const clientsSeparateToggled = createEvent<void>()
+export const showAfterRegionToggled = createEvent<void>()
+
+export const culturesLegendToggled = createEvent<void>()
+
+export const addClientsToFavorite = createEvent<void>()
 
 export const $mapShow = createStore<'region' | 'district' | 'clientsLand' | 'clientPlots' | 'clientPlot'>('region')
 export const $showAfterRegion = createStore<'districts' | 'clientsLand'>('clientsLand')
 
 export const $isSidebarOpen = createStore<boolean>(false)
 export const $isToolbarOpen = createStore<boolean>(false)
+export const $isCulturesLegendOpen = createStore<boolean>(false)
 
 export const $isClientsSeparate = createStore<boolean>(false)
 
-export const $$tabs = createTabs({
-	defaultTab: 1,
-	tabs: {
-		list: 0,
-		analytic: 1,
-		information: 2,
-	},
+export const $$sidebarTabs = createTabs({
+	defaultTab: 'list',
+	tabs: ['list', 'analytic', 'information'],
+})
+export const $$informationTabs = createTabs({
+	defaultTab: 'clientPlots',
+	tabs: ['clientPlots', 'clientsLand'],
 })
 
 export const $$map = MapFactory.createMap()
 export const $$regionsOverlay = createRegionsOverlay()
 export const $$regions = createRegions()
 export const $$districts = createDistricts()
-export const $$clientsLand = createClientsLand()
-export const $$clientPlots = ClientPlotsFactory.createClientPlots()
+export const $$clientsLand = MuchClientsLandFactory.createMuchClientsLand()
+export const $$clientPlots = MuchClientPlotsFactory.createClientPlots()
 export const $$clientPoints = createClientPoints()
 
 export const $$regionsToRegion = LandsToLandFactory.createLandsToLand({
@@ -65,7 +77,8 @@ export const $$clientsLandToClientLand = LandsToLandFactory.createLandsToLand({
 		clientsLand.map((clientLand) => ({ ...clientLand, id: clientLand.clientId })),
 	),
 	landCb: ({ lands, landId }) => {
-		const clientPlots = lands.filter((land) => land.id === landId) ?? []
+		const clientPlots = lands.filter((land) => land.id === landId)
+		if (clientPlots.length === 0) return null
 		return {
 			...clientPlots[0]!,
 			geometryRings: clientPlots.map((clientPlot) => clientPlot.geometryRings[0]) as number[][][],
@@ -91,12 +104,15 @@ export const $$culturesSelect = CulturesSelectFactory.createCulturesSelect()
 export const $$regionSelect = RegionSelectFactory.createRegionSelect({
 	regions: $$regions.$regions,
 })
+export const $$cultures = CulturesFactory.createCultures()
 export const $$clientsPlotsInCircle = createClientsPlotsInCircle({
 	isMulti: true,
 })
-
 export const $$clientSearch = ClientSearchFactory.createClientSearch.createModel({
 	districtId: $$regionsToRegion.$landId,
+})
+export const $$clientsSelect = ClientsSelectFactory.createClientsSelect({
+	clients: $$clientsPlotsInCircle.$circlesClients,
 })
 
 export const $mapPending = combine(
@@ -108,55 +124,21 @@ export const $mapPending = combine(
 	(...pendings) => pendings.some((pending) => pending),
 )
 
-const clearAllCirclesFx = attach({
-	effect: MapFactory.clearAllCirclesFx,
-	source: $$map.$map,
-	mapParams: (params: void, map) => ({ map }),
+const fitBound = fitBounds({
+	map: $$map.$map,
+	layer: {
+		regions: $$regions.$regions.map((regions) => ({ positions: getLandsPositions(regions) })),
+		region: $$regionsToRegion.$land.map((region) => ({ positions: region?.geometryRings ?? [] })),
+		districts: $$districts.$districts.map((districts) => ({ positions: getLandsPositions(districts) })),
+		district: $$districtsToDistrict.$land.map((district) => ({ positions: district?.geometryRings ?? [] })),
+		clientsLand: $$clientsLand.$clientsLand.map((clientsLand) => ({ positions: getLandsPositions(clientsLand) })),
+		clientLand: $$clientsLandToClientLand.$land.map((clientLand) => ({ positions: clientLand?.geometryRings ?? [] })),
+		clientPlots: $$clientPlots.$clientPlots.map((clientPlots) => ({ positions: getLandsPositions(clientPlots) })),
+		clientPlot: $$clientPlotsToClientPlot.$land.map((clientPlot) => ({ positions: clientPlot?.geometryRings ?? [] })),
+	},
 })
-const fitRegionsFx = attach({
-	source: { map: $$map.$map, regions: $$regions.$regions },
-	effect: MapFactory.fitBoundsFx,
-	mapParams: (params: void, { map, regions }) => ({ map, positions: getLandsPositions(regions) }),
-})
-const fitRegionFx = attach({
-	effect: MapFactory.fitBoundsFx,
-	source: { map: $$map.$map, region: $$regionsToRegion.$land },
-	mapParams: (params: void, { map, region }) => ({ map, positions: region?.geometryRings ?? [] }),
-})
-const fitDistrictsFx = attach({
-	source: $$map.$map,
-	effect: (map, districts: District[]) => ({ map, positions: getLandsPositions(districts) }),
-})
-const fitDistrictFx = attach({
-	effect: MapFactory.fitBoundsFx,
-	source: { map: $$map.$map, district: $$districtsToDistrict.$land },
-	mapParams: (params: void, { map, district }) => ({ map, positions: district?.geometryRings ?? [] }),
-})
-const fitClientsLandFx = attach({
-	effect: MapFactory.fitBoundsFx,
-	source: { map: $$map.$map, clientsLand: $$clientsLand.$clientsLand },
-	mapParams: (params: void, { map, clientsLand }) => ({
-		map,
-		positions: getLandsPositions(clientsLand.map((clientLand) => ({ ...clientLand, id: clientLand.clientId }))),
-	}),
-})
-const fitClientLandFx = attach({
-	effect: MapFactory.fitBoundsFx,
-	source: { map: $$map.$map, clientLand: $$clientsLandToClientLand.$land },
-	mapParams: (params: void, { map, clientLand }) => ({ map, positions: clientLand?.geometryRings ?? [] }),
-})
-const fitClientPlotsFx = attach({
-	effect: MapFactory.fitBoundsFx,
-	source: { map: $$map.$map, clientPlots: $$clientPlots.$clientPlots },
-	mapParams: (params: void, { map, clientPlots }) => ({
-		map,
-		positions: getLandsPositions(clientPlots.map((clientPlot) => ({ ...clientPlot, id: clientPlot.plotId }))),
-	}),
-})
-const fitClientPlotFx = attach({
-	effect: MapFactory.fitBoundsFx,
-	source: { map: $$map.$map, clientPlot: $$clientPlotsToClientPlot.$land },
-	mapParams: (params: void, { map, clientPlot }) => ({ map, positions: clientPlot?.geometryRings ?? [] }),
+const clearAllCirclesFx = clearAllCircles({
+	map: $$map.$map,
 })
 
 sample({
@@ -170,8 +152,11 @@ sample({
 
 $isSidebarOpen.on(sidebarToggled, (isOpen) => !isOpen)
 $isToolbarOpen.on(toolbarToggled, (isOpen) => !isOpen)
-
 $isClientsSeparate.on(clientsSeparateToggled, (isSeparate) => !isSeparate)
+$isCulturesLegendOpen.on(culturesLegendToggled, (isOpen) => !isOpen)
+$showAfterRegion.on(showAfterRegionToggled, (showAfterRegion) =>
+	showAfterRegion === 'districts' ? 'clientsLand' : 'districts',
+)
 
 sample({
 	clock: $$regionSelect.selectModel.$selectOption,
@@ -179,11 +164,11 @@ sample({
 	fn: (option) => option.value as number,
 	target: $$regionsToRegion.landClicked,
 })
-
 sample({
-	source: $$regionsToRegion.$land,
-	filter: (region: Region | null): region is Region => region !== null,
-	target: fitRegionFx,
+	source: $$regionsToRegion.$landId,
+	filter: (region: number | null): region is number => region !== null,
+	fn: (regionId) => ({ regionId }),
+	target: [fitBound.region, $$culturesSelect.getCulturesRefFx, $$cultures.getCulturesRefFx],
 })
 
 const districtsWillShow = guard({
@@ -197,14 +182,16 @@ const districtsWillShow = guard({
 
 sample({
 	clock: districtsWillShow,
-	target: [$$districts.getDistrictsFx, $$culturesSelect.getCulturesRefFx],
+	target: [$$districts.getDistrictsFx, $$clientsLand.resetClientsLand, resetClientLand, fitBound.region],
 })
+
+$$clientsLand.$clientsLand.watch(console.log)
 
 sample({
 	clock: $$districtsToDistrict.landClicked,
 	source: $$districtsToDistrict.$land,
 	filter: (district: District | null): district is District => district !== null,
-	target: fitDistrictFx,
+	target: fitBound.district,
 })
 
 const clientsLandWillShow = guard({
@@ -218,7 +205,13 @@ const clientsLandWillShow = guard({
 
 sample({
 	clock: clientsLandWillShow,
-	target: [$$clientsLand.getClientsLandByRegionFx, $$culturesSelect.getCulturesRefFx],
+	target: [
+		$$clientsLand.$$clientsLandByRegion.getClientsLandFx,
+		$$districts.$districts.reinit!,
+		$$districtsToDistrict.$landId.reinit!,
+		resetDistrict,
+		fitBound.region,
+	],
 })
 
 sample({
@@ -229,10 +222,20 @@ sample({
 
 sample({
 	clock: $$clientsLandToClientLand.landClicked,
-	source: $$clientsLandToClientLand.$land,
-	filter: (clientLand) => clientLand !== null,
-	target: fitClientLandFx,
+	source: { clientLand: $$clientsLandToClientLand.$land, clientPlots: $$clientPlots.$clientPlots },
+	filter: ({ clientLand, clientPlots }) => clientLand !== null && clientPlots.length === 0,
+	target: fitBound.clientLand,
 })
+
+sample({
+	clock: $$clientPlots.$clientPlots,
+	source: { clientLand: $$clientsLandToClientLand.$land, clientPlots: $$clientPlots.$clientPlots },
+	filter: ({ clientLand, clientPlots }) => clientLand === null && clientPlots.length !== 0,
+	target: fitBound.clientPlots,
+})
+
+$$clientPlots.$clientPlots.watch((clientPlots) => console.log(clientPlots, 'plots'))
+$$clientsLandToClientLand.$land.watch((clientLand) => console.log(clientLand, 'land'))
 
 sample({
 	clock: $$clientsLandToClientLand.$landId,
@@ -249,10 +252,15 @@ sample({
 	clock: $$clientsLandToClientLand.$landId,
 	filter: (clientId: number | null): clientId is number => clientId !== null,
 	fn: () => true,
-	target: [$isSidebarOpen, $$tabs.tabChanged.prepend(() => 'analytic')],
+	target: [
+		$isSidebarOpen,
+		$$sidebarTabs.tabChanged.prepend(() => 'information'),
+		$$informationTabs.tabChanged.prepend(() => 'clientPlots'),
+	],
 })
 
 const culturesWillChange = guard({
+	clock: $$culturesSelect.$$select.$selectOptions,
 	source: { regionId: $$regionsToRegion.$landId, options: $$culturesSelect.$$select.$selectOptions },
 	filter: (source: { regionId: number | null; options: Option[] }): source is { regionId: number; options: Option[] } =>
 		source.regionId !== null,
@@ -262,14 +270,14 @@ sample({
 	clock: culturesWillChange,
 	filter: ({ options }) => options.length !== 0,
 	fn: ({ regionId, options }) => ({ regionId, cultureIds: options.map((culture) => Number(culture.value)) }),
-	target: $$clientsLand.getClientsLandByCulturesFx,
+	target: $$clientsLand.$$clientsLandByCultures.getClientsLandFx,
 })
 
 sample({
 	clock: culturesWillChange,
 	filter: ({ options }) => options.length === 0,
 	fn: ({ regionId }) => ({ regionId }),
-	target: $$clientsLand.getClientsLandByRegionFx,
+	target: $$clientsLand.$$clientsLandByRegion.getClientsLandFx,
 })
 
 sample({
@@ -287,11 +295,21 @@ sample({
 	target: $$clientsPlotsInCircle.circleDrawn,
 })
 
+// FIXME: fix this
 $isSidebarOpen.on($$clientsPlotsInCircle.circleDrawn, () => true)
 sample({
 	clock: $$clientsPlotsInCircle.circleDrawn,
-	fn: () => 'information' as const,
-	target: $$tabs.tabChanged,
+	target: [
+		$$sidebarTabs.tabChanged.prepend(() => 'information'),
+		$$informationTabs.tabChanged.prepend(() => 'clientsLand'),
+	],
+})
+
+sample({
+	clock: addClientsToFavorite,
+	source: $$clientsSelect.$selectClientIds,
+	fn: (clientIds) => ({ clientIds: clientIds.map((clientId) => Number(clientId)) }),
+	target: [$$session.addFavoriteClientsFx, $$clientsSelect.$selectClientIds.reinit!],
 })
 
 $$clientsPlotsInCircle.$circles.on($$clientsPlotsInCircle.handleCircleRemove, (circles, event) => {
@@ -303,42 +321,78 @@ sample({
 	clock: $$clientPlotsToClientPlot.landClicked,
 	source: $$clientPlotsToClientPlot.$land,
 	filter: (clientPlot) => clientPlot !== null,
-	target: fitClientPlotFx,
+	target: fitBound.clientPlot,
 })
 
-reset({
-	clock: [mapPageUnmounted, $$regionsToRegion.$landId],
+sample({
+	clock: mapPageUnmounted,
+	target: [$$regions.$regions.reinit!, $$regionsToRegion.$landId.reinit!, resetRegion],
+})
+
+$isSidebarOpen.on(mapPageUnmounted, () => false)
+$isToolbarOpen.on(mapPageUnmounted, () => false)
+
+sample({
+	clock: $$regionsToRegion.$landId,
+	target: resetRegion,
+})
+
+sample({
+	clock: $$districtsToDistrict.$landId,
+	target: resetDistrict,
+})
+
+sample({
+	clock: $$clientsLandToClientLand.$landId,
+	target: resetClientLand,
+})
+
+sample({
+	clock: resetRegion,
 	target: [
-		$$regionsToRegion.$landId,
-		$$districts.$districts,
-		$$clientsLand.$clientsLandByRegion,
-		$$clientsLand.$clientsLandByCultures,
-		$$clientsLandToClientLand.$landId,
-		$$clientPlots.$clientPlots,
-		$$clientPlotsToClientPlot.$landId,
-		$$culturesSelect.$culturesRef,
-		$$culturesSelect.$$select.$selectOptions,
-		$$clientsPlotsInCircle.$circles,
+		$$districts.$districts.reinit!,
+		$$districtsToDistrict.$landId.reinit!,
+		$$clientsLand.resetClientsLand,
+		$$clientsLandToClientLand.$landId.reinit!,
+		$$clientPlots.resetClientPlots,
+		$$clientPlotsToClientPlot.$landId.reinit!,
+		$$clientPoints.resetClientPoints,
+		$$clientsPlotsInCircle.$circles.reinit!,
+		$$culturesSelect.$culturesRef.reinit!,
+		$$culturesSelect.$$select.$selectOptions.reinit!,
+		clearAllCirclesFx,
 	],
 })
 
 sample({
-	clock: [mapPageUnmounted, $$regionsToRegion.$landId],
-	target: clearAllCirclesFx,
-})
-
-reset({
-	clock: [$$districtsToDistrict.$landId],
+	clock: resetDistrict,
 	target: [
-		$$clientsLand.$clientsLandByRegion,
-		$$clientsLand.$clientsLandByCultures,
-		$$clientsLandToClientLand.$landId,
-		$$clientPlots.$clientPlots,
-		$$clientPlotsToClientPlot.$landId,
+		$$clientsLand.resetClientsLand,
+		$$clientsLandToClientLand.$landId.reinit!,
+		$$clientPlots.resetClientPlots,
+		$$clientPlotsToClientPlot.$landId.reinit!,
+		$$clientPoints.resetClientPoints,
+		$$clientsPlotsInCircle.$circles.reinit!,
+		// $$culturesSelect.$culturesRef.reinit!,
+		// $$culturesSelect.$$select.$selectOptions.reinit!,
+		clearAllCirclesFx,
 	],
 })
 
-reset({
-	clock: [$$clientsLandToClientLand.$landId],
-	target: [$$clientPlots.$clientPlots, $$clientPlotsToClientPlot.$landId],
+sample({
+	clock: resetClientLand,
+	target: [
+		$$clientPlots.resetClientPlots,
+		$$clientPlotsToClientPlot.$landId.reinit!,
+		$$clientPoints.resetClientPoints,
+		$$clientsPlotsInCircle.$circles.reinit!,
+		// $$culturesSelect.$culturesRef.reinit!,
+		// $$culturesSelect.$$select.$selectOptions.reinit!,
+		clearAllCirclesFx,
+	],
+})
+
+sample({
+	clock: resetClientPlot,
+	target: [$$clientPlotsToClientPlot.$landId.reinit!],
 })

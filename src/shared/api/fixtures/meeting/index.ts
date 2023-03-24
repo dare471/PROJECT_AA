@@ -1,2 +1,2 @@
 export * as meetingApi from './api'
-export * from './types'
+export * from './types.api'

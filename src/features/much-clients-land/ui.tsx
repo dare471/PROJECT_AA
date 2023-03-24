@@ -2,7 +2,7 @@ import { useUnit } from 'effector-react'
 
 import { ClientCard } from '~src/entities/new-client'
 
-import { ErrorMessage, Spin } from '~src/shared/ui'
+import { Empty, Spin } from '~src/shared/ui'
 
 import { type createMuchClientsLand } from './model'
 
@@ -12,25 +12,21 @@ interface MuchClientsLandProps {
 
 export function MuchClientsLand(props: MuchClientsLandProps) {
 	const { model } = props
-	const [clientsLand, clientsLandStatus] = useUnit([model.$clientsLand, model.$clientsLandStatus])
+	const [clientsLand, clientsLandPending] = useUnit([model.$clientsLand, model.$clientsLandPending])
 
-	if (clientsLandStatus === 'pending') {
+	if (clientsLandPending) {
 		return <Spin />
 	}
 
-	if (clientsLandStatus === 'fail') {
-		return <ErrorMessage>Произошла ошибка</ErrorMessage>
+	if (clientsLand.length === 0) {
+		return <Empty>Нету данных</Empty>
 	}
 
 	return (
 		<>
-			{clientsLandStatus === 'done' && (
-				<>
-					{clientsLand.map((clientLand, index) => (
-						<ClientCard key={index} {...clientLand} />
-					))}
-				</>
-			)}
+			{clientsLand.map((clientLand, index) => (
+				<ClientCard key={index} {...clientLand} />
+			))}
 		</>
 	)
 }

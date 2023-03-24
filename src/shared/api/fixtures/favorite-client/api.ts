@@ -3,7 +3,7 @@ import { createEffect } from 'effector'
 
 import { envVars } from '~src/shared/config'
 
-import type { FavoriteClientInfo } from './types'
+import type { FavoriteClientInfo } from './types.api'
 
 const instance = axios.create({
 	baseURL: `${envVars.API_URL}/api`,

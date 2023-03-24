@@ -1,25 +1,17 @@
-export const kek = ''
-// import { createStore } from 'effector'
+import { attach, createStore } from 'effector'
 
-// export function createUserContracts() {
-// 	const $userContracts = createStore<UserContract[] | null>(null)
-// 	const $userContractsPending = createStore<boolean>(false)
+import { userApi, type UserContract } from '~src/shared/api'
 
-// 	const getUserContractsFx = attach({ effect: userContractsApi.userContractsQuery })
+export function createUserContracts() {
+	const $userContracts = createStore<UserContract[]>([])
+	const $userContractsPending = createStore<boolean>(false)
 
-// 	$userContractsPending.on(getUserContractsFx.pending, (_, pending) => pending)
-// 	$userContracts.on(getUserContractsFx.doneData, (_, userContracts) => userContracts)
+	const getUserContractsFx = attach({
+		effect: userApi.userContractsQuery,
+	})
 
-// 	return { $userContracts, $userContractsPending, getUserContractsFx }
-// }
+	$userContractsPending.on(getUserContractsFx.pending, (_, pending) => pending)
+	$userContracts.on(getUserContractsFx.doneData, (_, userContracts) => userContracts)
 
-// // const req = await instance({
-// // 			method: 'POST',
-// // 			url: '/api/manager/workspace',
-// // 			data: {
-// // 				type: 'managerContracts',
-// // 				userId
-// // 			}
-// // 		})
-
-// // 		return req.data
+	return { $userContracts, $userContractsPending, getUserContractsFx }
+}

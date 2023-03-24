@@ -1,10 +1,13 @@
-import { ArrowLeftIcon, ArrowRightIcon, DeleteIcon, StarIcon } from '@chakra-ui/icons'
+import { ArrowLeftIcon, ArrowRightIcon, ExternalLinkIcon, StarIcon } from '@chakra-ui/icons'
 import {
+	Accordion,
+	AccordionButton,
+	AccordionIcon,
+	AccordionItem,
+	AccordionPanel,
 	Box,
 	type BoxProps,
 	Button,
-	Center,
-	Checkbox,
 	Flex,
 	Icon,
 	Stack,
@@ -14,19 +17,25 @@ import {
 	TabPanels,
 	Tabs,
 	Text,
-	useCheckbox,
 } from '@chakra-ui/react'
 import { useUnit } from 'effector-react'
 import React from 'react'
 import { BsListUl } from 'react-icons/bs'
 import { GrCircleInformation } from 'react-icons/gr'
 import { TbPresentationAnalytics } from 'react-icons/tb'
+import { useNavigate } from 'react-router'
 
+import { ClientAnalyticsByYearFactory } from '~src/features/client-analytics-by-year'
+import { ClientsSelectFactory } from '~src/features/clients-select-cards'
+import { MuchClientPlotsFactory } from '~src/features/much-client-plots'
 import { RegionsTreeViewFactory } from '~src/features/regions-tree-view'
 
-import { ClientAnalyticsByYearFactory, ClientPlotsFactory, ClientShortCard } from '~src/entities/client'
+import { ClientCard } from '~src/entities/new-client'
 import { RegionsAnalyticsByYearFactory } from '~src/entities/region'
-import { sessionModel } from '~src/entities/session'
+import { $$session } from '~src/entities/session'
+
+import { routes } from '~src/shared/routes'
+import { Empty, Spin } from '~src/shared/ui'
 
 import * as model from './model'
 
@@ -34,7 +43,7 @@ type MapSidebarProps = BoxProps
 
 export function MapSidebar(props: MapSidebarProps) {
 	const [isSidebarOpen, handleSidebarToggle] = useUnit([model.$isSidebarOpen, model.sidebarToggled])
-	const [tabIndex, handleTabChange] = useUnit([model.$$tabs.$tab, model.$$tabs.tabChanged])
+	const [tab, handleTabChange] = useUnit([model.$$sidebarTabs.$tab, model.$$sidebarTabs.tabChanged])
 
 	return (
 		<>
@@ -54,7 +63,7 @@ export function MapSidebar(props: MapSidebarProps) {
 				{...props}
 			>
 				<Tabs
-					index={tabIndex}
+					index={tab.index}
 					onChange={handleTabChange}
 					isLazy
 					isFitted
@@ -141,136 +150,116 @@ function AnalyticTabPanel() {
 }
 
 function InformationTabPanel() {
-	const [handleClientLandClick, handleClientPlotClick] = useUnit([
-		model.$$clientsLandToClientLand.landClicked,
+	const [client, clientPlotId, handleClientPlotClick] = useUnit([
+		model.$$clientPlots.$client,
+		model.$$clientPlotsToClientPlot.$landId,
 		model.$$clientPlotsToClientPlot.landClicked,
 	])
-	const [clients] = useUnit([model.$$clientsPlotsInCircle.$circlesClients])
-	const [favoriteClients] = useUnit([sessionModel.$session.map((session) => (session ? session.favoriteClients : []))])
-	const [selectClients, setSelectClients] = React.useState<number[]>([])
+	const navigate = useNavigate()
 
-	const handleClientClick = (clientId: number) => {
-		if (selectClients.includes(clientId)) {
-			setSelectClients(selectClients.filter((id) => id !== clientId))
-		} else {
-			setSelectClients([...selectClients, clientId])
-		}
-	}
-
-	const handleAddClick = () => {
-		sessionModel.favoriteClientsAdded(selectClients)
-		setSelectClients([])
-	}
+	const [tab, handleTabChange] = useUnit([model.$$informationTabs.$tab, model.$$informationTabs.tabChanged])
 
 	return (
-		<Tabs>
+		<Tabs index={tab.index} onChange={handleTabChange}>
 			<TabList>
 				<Tab>Клиент</Tab>
-				<Tab>Отфильтрованные клиенты</Tab>
+				<Tab>Фильтровнные</Tab>
 			</TabList>
 			<TabPanels position='relative' h='full'>
 				<TabPanel>
-					<ClientPlotsFactory.ClientPlots
-						model={model.$$clientPlots}
-						onPlotClick={({ plotId }) => handleClientPlotClick(plotId)}
-						h='full'
-					/>
+					<Stack position='relative'>
+						<Box position='sticky' top='0' zIndex='1' bgColor='white' shadow='md'>
+							<Accordion allowToggle>
+								<AccordionItem>
+									<AccordionButton>
+										<AccordionIcon />
+										<Text>Клиент</Text>
+									</AccordionButton>
+									<AccordionPanel>
+										<ClientCard variant='filled' {...client}>
+											<Button onClick={() => navigate(routes.clientProfile({ clientId: client!.clientId.toString() }))}>
+												<ExternalLinkIcon />
+											</Button>
+										</ClientCard>
+									</AccordionPanel>
+								</AccordionItem>
+							</Accordion>
+						</Box>
+						<MuchClientPlotsFactory.MuchClientPlots
+							model={model.$$clientPlots}
+							onClick={({ plotId }) => handleClientPlotClick(plotId)}
+							plotId={clientPlotId}
+						/>
+					</Stack>
 				</TabPanel>
 				<TabPanel>
-					<Box>
-						<Stack gap='2' my='2'>
-							{clients.length !== 0 ? (
-								<>
-									<Box
-										w='full'
-										position='sticky'
-										top='-10px'
-										zIndex='1'
-										bgColor='blue.500'
-										boxShadow='md'
-										rounded='md'
-										px='4'
-										py='2'
-									>
-										<Stack direction='row' color='white'>
-											<Text fontSize='md' fontWeight='medium'>
-												Отфильтрованных клиентов:
-											</Text>
-											<b>{clients.length}</b>
-										</Stack>
-									</Box>
-
-									{clients.map((client, index) => (
-										<React.Fragment key={index}>
-											<ClientShortCard client={client} onClick={() => handleClientLandClick(client.clientId)}>
-												<Stack
-													direction='row'
-													justify='space-between'
-													align='center'
-													bgColor='yellow.500'
-													color='white'
-													rounded='md'
-													px='4'
-													py='1'
-												>
-													<Text>Добавить в избранное</Text>
-													<Checkbox
-														onChange={() => handleClientClick(client.clientId)}
-														colorScheme='whiteAlpha'
-														isChecked={
-															favoriteClients.includes(client.clientId) || selectClients.includes(client.clientId)
-														}
-														isDisabled={favoriteClients.includes(client.clientId)}
-													/>
-												</Stack>
-											</ClientShortCard>
-										</React.Fragment>
-									))}
-									<Box
-										w='full'
-										position='sticky'
-										bottom='-10px'
-										zIndex='1'
-										bgColor='blue.500'
-										boxShadow='md'
-										rounded='md'
-										px='4'
-										py='2'
-									>
-										<Stack direction='row' justify='space-between' align='center'>
-											<Stack>
-												<Stack direction='row' color='white'>
-													<Text fontSize='md' fontWeight='medium'>
-														Выбранно клиентов:
-													</Text>
-													<Text>{selectClients.length}</Text>
-												</Stack>
-												<Stack direction='row' color='white'>
-													<Text>Добавить всех:</Text>
-													<Checkbox
-														isChecked={selectClients.length === clients.length}
-														onChange={(e) =>
-															e.target.checked
-																? setSelectClients(clients.map((client) => client.clientId))
-																: setSelectClients([])
-														}
-														colorScheme='whiteAlpha'
-													/>
-												</Stack>
-											</Stack>
-											<Button size='sm' colorScheme='yellow' color='white' onClick={handleAddClick}>
-												<StarIcon />
-											</Button>
-										</Stack>
-									</Box>
-								</>
-							) : (
-								<Center>Пусто</Center>
-							)}
-						</Stack>
-					</Box>
+					<ClientsSelect />
 				</TabPanel>
 			</TabPanels>
 		</Tabs>
+	)
+}
+
+function ClientsSelect() {
+	const [clients, clientsPending, handleClientLandClick, handleAddClientsToFavorite] = useUnit([
+		model.$$clientsPlotsInCircle.$circlesClients,
+		model.$$clientsPlotsInCircle.$circlesClientsPending,
+		model.$$clientsLandToClientLand.landClicked,
+		model.addClientsToFavorite,
+	])
+	const [favoriteClientIds] = useUnit([$$session.$session.map((session) => session?.favoriteClients ?? [])])
+
+	return (
+		<Box>
+			<Stack gap='2' my='2'>
+				<>
+					<Box
+						w='full'
+						position='sticky'
+						top='-10px'
+						zIndex='1'
+						bgColor='blue.500'
+						boxShadow='md'
+						rounded='md'
+						px='4'
+						py='2'
+					>
+						<Stack direction='row' color='white'>
+							<Text fontSize='md' fontWeight='medium'>
+								Отфильтрованно клиентов:
+							</Text>
+							<Text fontSize='md'>{clients.length}</Text>
+						</Stack>
+					</Box>
+
+					<ClientsSelectFactory.ClientSelectCard
+						model={model.$$clientsSelect}
+						favoriteClientIds={favoriteClientIds}
+						onSeeClick={({ clientId }) => handleClientLandClick(clientId)}
+					/>
+					<Box
+						w='full'
+						position='sticky'
+						bottom='-10px'
+						zIndex='1'
+						bgColor='blue.500'
+						boxShadow='md'
+						rounded='md'
+						px='4'
+						py='2'
+					>
+						<Stack direction='row' justify='space-between' align='center'>
+							<ClientsSelectFactory.AllClientsSelect model={model.$$clientsSelect} />
+							<Button size='sm' colorScheme='yellow' color='white' onClick={handleAddClientsToFavorite}>
+								<StarIcon />
+							</Button>
+						</Stack>
+					</Box>
+				</>
+			</Stack>
+
+			{clientsPending && <Spin />}
+			{clients.length === 0 && !clientsPending && <Empty>Пусто</Empty>}
+		</Box>
 	)
 }

@@ -35,7 +35,7 @@ import { cultureColors } from '../map/lib'
 
 export function ClientProfilePage() {
 	const [handleMount, handleUnmount] = useUnit([model.clientProfilePageMounted, model.clientProfilePageUnmounted])
-	const [tabIndex, handleTabChange] = useUnit([model.$$tabs.$tab, model.$$tabs.tabChanged])
+	const [tab, handleTabChange] = useUnit([model.$$tabs.$tab, model.$$tabs.tabChanged])
 	const { clientId } = useParams()
 
 	React.useEffect(() => {
@@ -50,7 +50,7 @@ export function ClientProfilePage() {
 			<Container maxW='container.xl' py='10'>
 				<Stack direction={{ base: 'column', md: 'row' }} spacing='2'>
 					<StackItem w={{ base: '100%', md: '75%' }} minH='0'>
-						<Tabs index={tabIndex} onChange={handleTabChange} isFitted shadow='md' rounded='md'>
+						<Tabs index={tab.index} onChange={handleTabChange} isFitted shadow='md' rounded='md'>
 							<TabList>
 								<Tab>Основная</Tab>
 								<Tab>Субсидий</Tab>

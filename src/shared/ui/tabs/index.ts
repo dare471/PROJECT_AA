@@ -1,1 +1,1 @@
-export { createTabs } from './model'
+export { createTabs, type Tab } from './model'

@@ -1,16 +1,17 @@
 import { attach, createStore } from 'effector'
-import { reset, status } from 'patronum'
+import { reset } from 'patronum'
 
 import { clientApi, type ClientSubsidy } from '~src/shared/api'
 
 export function createClientSubsidies() {
+	const $clientSubsidies = createStore<ClientSubsidy[]>([])
+	const $clientSubsidiesPending = createStore<boolean>(false)
+
 	const getClientSubsidiesFx = attach({
 		effect: clientApi.clientSubsidiesQuery,
 	})
 
-	const $clientSubsidies = createStore<ClientSubsidy[]>([])
-	const $clientSubsidiesStatus = status({ effect: getClientSubsidiesFx })
-
+	$clientSubsidiesPending.on(getClientSubsidiesFx.pending, (_, pending) => pending)
 	$clientSubsidies.on(getClientSubsidiesFx.doneData, (_, clientSubsidies) => clientSubsidies)
 	const resetClientSubsidies = reset({ target: [$clientSubsidies] })
 
@@ -18,6 +19,6 @@ export function createClientSubsidies() {
 		getClientSubsidiesFx,
 		resetClientSubsidies,
 		$clientSubsidies,
-		$clientSubsidiesStatus,
+		$clientSubsidiesPending,
 	}
 }

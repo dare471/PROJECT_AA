@@ -1,0 +1,1 @@
+export { SettingsContractsPage } from './page'

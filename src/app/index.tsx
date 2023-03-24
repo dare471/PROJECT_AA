@@ -7,7 +7,7 @@ import { withProviders } from '~src/app/providers'
 
 import { Pages } from '~src/pages'
 
-import { sessionModel } from '~src/entities/session'
+import { $$session } from '~src/entities/session'
 
 import './index.scss'
 
@@ -22,7 +22,7 @@ const { tick } = interval({
 
 sample({
 	clock: tick,
-	target: sessionModel.getSessionHookFx,
+	target: $$session.getSessionHookFx,
 })
 
 export function App() {

@@ -1,22 +1,31 @@
 import { createEvent, createStore } from 'effector'
 
-interface CreateTabsOptions<T extends Record<string, number>> {
-	defaultTab: number
-	tabs: T
+export interface Tab {
+	index: number
+	value: string
 }
 
-export function createTabs<T extends Record<string, number>>(options: CreateTabsOptions<T>) {
+interface CreateTabsOptions<T extends string> {
+	defaultTab: T | number
+	tabs: T[]
+}
+
+export function createTabs<T extends string>(options: CreateTabsOptions<T>) {
 	const { defaultTab, tabs } = options
 
-	const tabChanged = createEvent<number | keyof T>()
+	const tabChanged = createEvent<number | T>()
 
-	const $tab = createStore<number>(defaultTab)
+	const $tab = createStore<{ index: number; value: T }>(
+		typeof defaultTab === 'number'
+			? { index: defaultTab, value: tabs[defaultTab]! }
+			: { index: tabs.indexOf(defaultTab), value: defaultTab },
+	)
 
 	$tab.on(tabChanged, (_, tab) => {
 		if (typeof tab === 'number') {
-			return tab
+			return { index: tab, value: tabs[tab]! }
 		} else {
-			return tabs[tab]
+			return { index: tabs.indexOf(tab), value: tab }
 		}
 	})
 

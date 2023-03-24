@@ -3,7 +3,7 @@ import { useUnit } from 'effector-react'
 
 import { ClientAnalyticCard } from '~src/entities/new-client'
 
-import { ErrorMessage, Spin } from '~src/shared/ui'
+import { Empty, Spin } from '~src/shared/ui'
 
 import { type createClientAnalyticsByYear } from './model'
 
@@ -13,14 +13,17 @@ interface ClientAnalyticsByYearProps extends AccordionProps {
 
 export function ClientAnalyticsByYear(props: ClientAnalyticsByYearProps) {
 	const { model, ...otherProps } = props
-	const [analyticsByYear, analyticsByYearStatus] = useUnit([model.$clientAnalyticsByYear, model.$clientAnalyticsStatus])
+	const [analyticsByYear, analyticsByYearPending] = useUnit([
+		model.$clientAnalyticsByYear,
+		model.$clientAnalyticsPending,
+	])
 
-	if (analyticsByYearStatus === 'pending') {
+	if (analyticsByYearPending) {
 		return <Spin />
 	}
 
-	if (analyticsByYearStatus === 'fail') {
-		return <ErrorMessage>Произошла ошибка</ErrorMessage>
+	if (Object.keys(analyticsByYear).length === 0) {
+		return <Empty>Нету данных</Empty>
 	}
 
 	return (

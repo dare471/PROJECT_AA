@@ -7,5 +7,5 @@ interface ClientBadgeProps {
 export function ClientBadge(props: ClientBadgeProps) {
 	const { hasGuid } = props
 
-	return <>{hasGuid ? <Badge>Постоянный</Badge> : <Badge>Новый</Badge>}</>
+	return <>{hasGuid ? <Badge colorScheme='green'>Постоянный</Badge> : <Badge colorScheme='red'>Новый</Badge>}</>
 }

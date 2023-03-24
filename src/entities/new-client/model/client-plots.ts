@@ -1,16 +1,31 @@
 import { attach, createStore } from 'effector'
-import { reset, status } from 'patronum'
+import { reset } from 'patronum'
 
-import { clientApi, type ClientPlot } from '~src/shared/api'
+import { type Client, clientApi, type ClientPlot } from '~src/shared/api'
 
 export function createClientPlots() {
+	const $clientPlots = createStore<ClientPlot[]>([])
+	const $client = $clientPlots.map<Omit<Client, 'clientContacts' | 'clientCato'> | null>((clientPlots) =>
+		clientPlots[0]
+			? {
+					guid: clientPlots[0].guid,
+					clientId: clientPlots[0].clientId,
+					clientName: clientPlots[0].clientName,
+					clientBin: Number(clientPlots[0].clientBin),
+					clientAddress: clientPlots[0].clientAddress,
+					clientActivity: clientPlots[0].clientActivity,
+					regionId: clientPlots[0].regionId,
+					districtId: clientPlots[0].districtId,
+			  }
+			: null,
+	)
+	const $clientPlotsPending = createStore<boolean>(false)
+
 	const getClientPlotsFx = attach({
 		effect: clientApi.clientPlotsQuery,
 	})
 
-	const $clientPlots = createStore<ClientPlot[]>([])
-	const $clientPlotsStatus = status({ effect: getClientPlotsFx })
-
+	$clientPlotsPending.on(getClientPlotsFx.pending, (_, pending) => pending)
 	$clientPlots.on(getClientPlotsFx.doneData, (_, clientPlots) => clientPlots)
 	const resetClientPlots = reset({ target: $clientPlots })
 
@@ -18,6 +33,7 @@ export function createClientPlots() {
 		getClientPlotsFx,
 		resetClientPlots,
 		$clientPlots,
-		$clientPlotsStatus,
+		$client,
+		$clientPlotsPending,
 	}
 }

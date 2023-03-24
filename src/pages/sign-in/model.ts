@@ -2,7 +2,7 @@ import { createEvent, sample } from 'effector'
 
 import { SignInFormFactory } from '~src/features/sign-in-form'
 
-import { sessionModel } from '~src/entities/session'
+import { $$session } from '~src/entities/session'
 
 export const signInPageMounted = createEvent<void>()
 export const signInPageUnmounted = createEvent<void>()
@@ -18,17 +18,17 @@ sample({
 		passwordError: signInFormModel.$passwordFieldError,
 	},
 	filter: ({ emailError, passwordError }) => !emailError && !passwordError,
-	target: [sessionModel.signInFx],
+	target: [$$session.signInFx],
 })
 
 sample({
-	clock: sessionModel.signInFx.fail,
+	clock: $$session.signInFx.fail,
 	fn: () => 'Неправильный email',
 	target: signInFormModel.$emailFieldError,
 })
 
 sample({
-	clock: sessionModel.signInFx.fail,
+	clock: $$session.signInFx.fail,
 	fn: () => 'Неправильный пароль',
 	target: signInFormModel.$passwordFieldError,
 })

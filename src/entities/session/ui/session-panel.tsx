@@ -8,9 +8,7 @@ import { routes } from '~src/shared/routes'
 
 import * as model from '../model'
 
-interface SessionPanelProps extends Omit<MenuProps, 'children'> {
-	[key: string]: any
-}
+type SessionPanelProps = Omit<MenuProps, 'children'>
 
 export function SessionPanel(props: SessionPanelProps) {
 	const [handleSignOut] = useUnit([model.signedOut])
@@ -26,11 +24,11 @@ export function SessionPanel(props: SessionPanelProps) {
 				<MenuGroup>
 					<MenuItem
 						icon={<AiOutlineUser />}
-						onClick={() => navigate(routes.userProfile({ userId: session!.id.toString() }))}
+						onClick={() => navigate(routes.profile({ userId: session!.id.toString() }))}
 					>
 						Профиль
 					</MenuItem>
-					<MenuItem icon={<AiFillSetting />} onClick={() => navigate(routes.userSettings())}>
+					<MenuItem icon={<AiFillSetting />} onClick={() => navigate(routes.settingsProfile())}>
 						Настройкий
 					</MenuItem>
 				</MenuGroup>

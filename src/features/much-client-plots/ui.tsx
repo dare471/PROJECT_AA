@@ -2,28 +2,36 @@ import { useUnit } from 'effector-react'
 
 import { ClientPlotCard, type createClientPlots } from '~src/entities/new-client'
 
-import { ErrorMessage, Spin } from '~src/shared/ui'
+import { Empty } from '~src/shared/ui'
+import { Spin } from '~src/shared/ui'
 
 interface MuchClientPlotsProps {
 	model: ReturnType<typeof createClientPlots>
+	onClick: (args: { event: any; clientId: number; plotCultId: number | undefined; plotId: number }) => void
+	plotId?: number | null
 }
 
 export function MuchClientPlots(props: MuchClientPlotsProps) {
-	const { model } = props
-	const [clientPlots, clientPlotsStatus] = useUnit([model.$clientPlots, model.$clientPlotsStatus])
+	const { model, onClick, plotId } = props
+	const [clientPlots, clientPlotsPending] = useUnit([model.$clientPlots, model.$clientPlotsPending])
 
-	if (clientPlotsStatus === 'pending') {
+	if (clientPlotsPending) {
 		return <Spin />
 	}
 
-	if (clientPlotsStatus === 'fail') {
-		return <ErrorMessage>Произошла ошибка</ErrorMessage>
+	if (clientPlots.length === 0) {
+		return <Empty>Нет клиентов</Empty>
 	}
 
 	return (
 		<>
 			{clientPlots.map((clientPlot, index) => (
-				<ClientPlotCard key={index} {...clientPlot} />
+				<ClientPlotCard
+					key={index}
+					onClick={onClick}
+					bgColor={clientPlot.plotId === plotId ? 'blue.500' : 'unset'}
+					{...clientPlot}
+				/>
 			))}
 		</>
 	)

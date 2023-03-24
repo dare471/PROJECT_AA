@@ -1,16 +1,16 @@
-import { Card, CardBody, type CardProps, Stack, Text } from '@chakra-ui/react'
-import { type EffectState } from 'patronum/status'
+import { Box, Card, CardBody, CardFooter, CardHeader, type CardProps, Stack, Text } from '@chakra-ui/react'
 
 import { type Client } from '~src/shared/api'
-import { DescriptionText, ErrorMessage, Spin } from '~src/shared/ui'
+import { DescriptionText, Spin } from '~src/shared/ui'
 
 import { ClientBadge } from './client-badge'
 
 interface ClientCardProps extends Omit<Partial<Client>, 'clientContacts'>, Omit<CardProps, 'onClick'> {
-	status?: EffectState
-	loader?: React.ReactNode
-	error?: { icon?: React.ReactNode; message?: string }
+	children?: React.ReactNode
+	load?: { loading: boolean; loader?: React.ReactNode }
 	onClick?: (args: { event: any; clientId: number }) => void
+	header?: React.ReactNode
+	footer?: React.ReactNode
 }
 
 export function ClientCard(props: ClientCardProps) {
@@ -22,10 +22,11 @@ export function ClientCard(props: ClientCardProps) {
 		clientAddress,
 		clientActivity,
 		clientCato,
-		status = 'initial',
-		loader,
-		error,
+		load,
 		onClick,
+		header,
+		footer,
+		children,
 		...otherProps
 	} = props
 
@@ -37,34 +38,29 @@ export function ClientCard(props: ClientCardProps) {
 
 	return (
 		<Card onClick={handleClick} {...otherProps}>
-			{status === 'done' && (
-				<CardBody>
-					<Stack>
-						{clientName && (
-							<Text fontSize='xl' fontWeight='bold'>
-								{clientName}
-							</Text>
-						)}
-						{guid && <ClientBadge hasGuid={guid} />}
-						{clientBin && <DescriptionText title='Иин/Бин:'>{clientBin}</DescriptionText>}
-						{clientAddress && <DescriptionText title='Адрес:'>{clientAddress}</DescriptionText>}
-						{clientActivity && <DescriptionText title='Вид деятельности:'>{clientActivity}</DescriptionText>}
-						{clientCato && <DescriptionText title='Като:'>{clientCato}</DescriptionText>}
-					</Stack>
-				</CardBody>
-			)}
-
-			{status === 'pending' && <>{loader ? <Spin /> : { loader }}</>}
-
-			{status === 'fail' && (
-				<>
-					{error && !error.icon ? (
-						<ErrorMessage>{error.message ? error.message : 'Произошла ошибка'}</ErrorMessage>
-					) : (
-						<>{error?.icon}</>
+			{header && <CardHeader>{header}</CardHeader>}
+			<CardBody>
+				<Stack>
+					{clientName && (
+						<Text fontSize='xl' fontWeight='bold'>
+							{clientName}
+						</Text>
 					)}
-				</>
-			)}
+					{typeof guid === 'boolean' && (
+						<Box>
+							<ClientBadge hasGuid={guid} />
+						</Box>
+					)}
+					{!!clientBin && <DescriptionText title='Иин/Бин:'>{clientBin}</DescriptionText>}
+					{!!clientAddress && <DescriptionText title='Адрес:'>{clientAddress}</DescriptionText>}
+					{!!clientActivity && <DescriptionText title='Вид деятельности:'>{clientActivity}</DescriptionText>}
+					{!!clientCato && <DescriptionText title='Като:'>{clientCato}</DescriptionText>}
+					{children}
+				</Stack>
+			</CardBody>
+			{footer && <CardFooter>{footer}</CardFooter>}
+
+			{load && load.loading && <>{load.loader ? <>{load.loader}</> : <Spin />}</>}
 		</Card>
 	)
 }

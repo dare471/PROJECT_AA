@@ -1,0 +1,1 @@
+export { SettingsSubscribesRegionsPage } from './page'

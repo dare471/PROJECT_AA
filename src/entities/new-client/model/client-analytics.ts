@@ -1,16 +1,17 @@
 import { attach, createStore } from 'effector'
-import { reset, status } from 'patronum'
+import { reset } from 'patronum'
 
 import { type ClientAnalytic, clientApi } from '~src/shared/api'
 
 export function createClientAnalytics() {
+	const $clientAnalytics = createStore<ClientAnalytic[]>([])
+	const $clientAnalyticsPending = createStore<boolean>(false)
+
 	const getClientAnalyticsFx = attach({
 		effect: clientApi.clientAnalyticsQuery,
 	})
 
-	const $clientAnalytics = createStore<ClientAnalytic[]>([])
-	const $clientAnalyticsStatus = status({ effect: getClientAnalyticsFx })
-
+	$clientAnalyticsPending.on(getClientAnalyticsFx.pending, (_, pending) => pending)
 	$clientAnalytics.on(getClientAnalyticsFx.doneData, (_, clientAnalytics) => clientAnalytics)
 	const resetClientAnalytics = reset({ target: $clientAnalytics })
 
@@ -18,6 +19,6 @@ export function createClientAnalytics() {
 		getClientAnalyticsFx,
 		resetClientAnalytics,
 		$clientAnalytics,
-		$clientAnalyticsStatus,
+		$clientAnalyticsPending,
 	}
 }

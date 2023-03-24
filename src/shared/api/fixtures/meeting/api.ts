@@ -3,8 +3,16 @@ import { createEffect } from 'effector'
 
 import { envVars } from '~src/shared/config'
 
-import { plannedMeetingsAdapter } from './adapter'
-import type { AddPlannedMeeting, PlannedMeeting } from './types'
+import { MeetingAdapter } from './adapter'
+import type {
+	AddPlannedMeeting,
+	MeetingContractComplicationRef,
+	MeetingDetails,
+	MeetingPlotInspectRef,
+	MeetingRecommendRef,
+	MeetingServiceRef,
+	PlannedMeeting,
+} from './types.api'
 
 const instance = axios.create({
 	baseURL: `${envVars.API_URL}/api`,
@@ -47,8 +55,113 @@ export const plannedMeetingsQuery = createEffect<{ userId: number }, PlannedMeet
 	})
 
 	if (req.status === 200) {
-		return plannedMeetingsAdapter(req.data)
+		return MeetingAdapter.fromApiToPlannedMeetings(req.data)
 	}
 
 	throw new Error('status is not 200')
+})
+
+export const plannedMeetingDetailsQuery = createEffect<{ meetingId: number }, MeetingDetails>(async ({ meetingId }) => {
+	const req = await instance({
+		method: 'POST',
+		url: '/manager/workspace',
+		data: {
+			type: 'plannedMeetingMob',
+			action: 'getDetailMeeting',
+			visitId: meetingId,
+		},
+	})
+
+	if (req.status === 200) return MeetingAdapter.fromApiToPlannedMeetingDetails(req.data)
+
+	throw new Error('status is not 200')
+})
+
+export const meetingServicesQuery = createEffect<void, MeetingServiceRef[]>(async () => {
+	const req = await instance({
+		method: 'POST',
+		url: '/manager/workspace',
+		data: {
+			type: 'meetingSurvey',
+			action: 'getHandBookWorkDone',
+		},
+	})
+
+	if (req.status === 200) return req.data
+
+	throw new Error('status is not 200')
+})
+
+export const meetingPlotInspectsRefsQuery = createEffect<void, MeetingPlotInspectRef[][]>(async () => {
+	const req = await instance({
+		method: 'POST',
+		url: '/manager/workspace',
+		data: {
+			type: 'meetingSurvey',
+			action: 'getHandBookFieldInsp',
+		},
+	})
+
+	if (req.status === 200) return MeetingAdapter.fromApiToMeetingPlotInspectsRefs(req.data)
+
+	throw new Error('status is not 200')
+})
+
+export const meetingContractComplicationsRefsQuery = createEffect<void, MeetingContractComplicationRef[]>(async () => {
+	const req = await instance({
+		method: 'POST',
+		url: '/manager/workspace',
+		data: {
+			type: 'meetingSurvey',
+			action: 'getHandBookContractComplications',
+		},
+	})
+
+	if (req.status === 200) return req.data
+
+	throw new Error('status is not 200')
+})
+
+export const meetingRecommendsRefsQuery = createEffect<void, MeetingRecommendRef[]>(async () => {
+	const req = await instance({
+		method: 'POST',
+		url: '/manager/workspace',
+		data: {
+			type: 'meetingSurvey',
+			action: 'getHandBookMeetingRecommendations',
+		},
+	})
+
+	if (req.status === 200) return req.data
+
+	throw new Error('status is not 200')
+})
+
+export const meetingSurveyMutation = createEffect<
+	{
+		visitId: number
+		providedServices: number[]
+		plotInspects: { inspectionTypeId: number; id: number }[]
+		contractComplications: number[]
+		recommends: { recomendationTypeId: number; description: string }[]
+	},
+	boolean
+>(async ({ visitId, providedServices, plotInspects, contractComplications, recommends }) => {
+	const req = await instance({
+		method: 'POST',
+		url: 'http://10.200.100.17/api/manager/workspace',
+		data: {
+			type: 'meetingSurvey',
+			action: 'fixedSurvey',
+			visitId: visitId,
+			workDone: providedServices,
+			fieldInspection: plotInspects,
+			contractComplication: contractComplications,
+			recomendation: recommends,
+		},
+	})
+
+	if (req.status === 200) return true
+
+	return false
 })

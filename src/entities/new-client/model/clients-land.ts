@@ -1,32 +1,39 @@
 import { attach, createStore } from 'effector'
-import { reset, status } from 'patronum'
+
+import { $$session } from '~src/entities/session'
 
 import { clientApi, type ClientPlotByCultures, type ClientPlotByRegion } from '~src/shared/api'
 
 export function createClientsLandByCultures() {
+	const $clientsLand = createStore<ClientPlotByCultures[]>([])
+	const $clientsLandPending = createStore<boolean>(false)
+
 	const getClientsLandFx = attach({
 		effect: clientApi.clientsLandByCulturesQuery,
 	})
 
-	const $clientsLand = createStore<ClientPlotByCultures[]>([])
-	const $clientsLandStatus = status({ effect: getClientsLandFx })
-
+	$clientsLandPending.on(getClientsLandFx.pending, (_, pending) => pending)
 	$clientsLand.on(getClientsLandFx.doneData, (_, clients) => clients)
-	const resetClientsLand = reset({ target: $clientsLand })
 
-	return { getClientsLandFx, resetClientsLand, $clientsLand, $clientsLandStatus }
+	return { getClientsLandFx, $clientsLand, $clientsLandPending }
 }
 
 export function createClientsLandByRegion() {
+	const $clientsLand = createStore<ClientPlotByRegion[]>([])
+	const $clientsLandPending = createStore<boolean>(false)
+
 	const getClientsLandFx = attach({
 		effect: clientApi.clientsLandByRegionQuery,
+		source: $$session.$session,
+		mapParams: (params: { regionId: number }, session) => {
+			const { regionId } = params
+			if (!session) throw new Error('Session is not defined')
+			return { regionId, unFollowClients: session.unSubscribeClients }
+		},
 	})
 
-	const $clientsLand = createStore<ClientPlotByRegion[]>([])
-	const $clientsLandStatus = status({ effect: getClientsLandFx })
-
+	$clientsLandPending.on(getClientsLandFx.pending, (_, pending) => pending)
 	$clientsLand.on(getClientsLandFx.doneData, (_, clients) => clients)
-	const resetClientsLand = reset({ target: $clientsLand })
 
-	return { getClientsLandFx, resetClientsLand, $clientsLand, $clientsLandStatus }
+	return { getClientsLandFx, $clientsLand, $clientsLandPending }
 }

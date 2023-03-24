@@ -1,7 +1,7 @@
 import { attach, createStore } from 'effector'
 import { reset } from 'patronum'
 
-import { sessionModel } from '~src/entities/session'
+import { $$session } from '~src/entities/session'
 
 import { clientApi, type ClientPlot, type ClientPlotByCultures, type ClientPlotByRegion } from '~src/shared/api'
 
@@ -15,11 +15,11 @@ export function createClientsLand() {
 
 	const getClientsLandByRegionFx = attach({
 		effect: clientApi.clientsLandByRegionQuery,
-		source: sessionModel.$session,
+		source: $$session.$session,
 		mapParams: (params: { regionId: number }, session) => {
 			const { regionId } = params
 			if (!session) throw new Error('Session is not defined')
-			return { regionId, unFollowClients: session.subscribeClients }
+			return { regionId, unFollowClients: session.unSubscribeClients }
 		},
 	})
 	const getClientsLandByCulturesFx = attach({

@@ -1,15 +1,29 @@
-import { Navigate, Route, Routes } from 'react-router'
+import { Route, Routes } from 'react-router'
 
-import { AuthProvider, GuestProvider } from '~src/entities/session'
+import { AuthProtect, GuestProvider, RoleProtect } from '~src/entities/session'
 
 import { lazy } from '~src/shared/lib'
-import { paths, routes } from '~src/shared/routes'
+import { paths } from '~src/shared/routes'
 
 const HomePage = lazy(() => import('./home'), 'HomePage')
 const SignInPage = lazy(() => import('./sign-in'), 'SignInPage')
 const MapPage = lazy(() => import('./map'), 'MapPage')
-const FavoriteClientCartPage = lazy(() => import('./favorite-client-cart'), 'FavoriteClientCartPage')
-const UserProfilePage = lazy(() => import('./user-profile'), 'UserProfilePage')
+const FavoriteClientsPage = lazy(() => import('./favorite-clients'), 'FavoriteClientsPage')
+const SettingsPage = lazy(() => import('./settings'), 'SettingsPage')
+const SettingsProfilePage = lazy(() => import('./settings-profile'), 'SettingsProfilePage')
+const SettingsContractsPage = lazy(() => import('./settings-contracts'), 'SettingsContractsPage')
+const SettingsSubscribesRegionsPage = lazy(
+	() => import('./settings-subscribes-regions'),
+	'SettingsSubscribesRegionsPage',
+)
+const ProfilePage = lazy(() => import('./profile'), 'ProfilePage')
+const SettingsSubscribesClientsPage = lazy(
+	() => import('./settings-subscribes-clients'),
+	'SettingsSubscribesClientsPage',
+)
+const MeetingDetailsPage = lazy(() => import('./meeting-details'), 'MeetingDetailsPage')
+const MeetingDetailsMobilePage = lazy(() => import('./meeting-details-mobile'), 'MeetingDetailsMobilePage')
+
 // const MapPlayGroundPage = lazy(() => import('./map-play-ground'), 'MapPlayGroundPage')
 const ClientProfilePage = lazy(() => import('./client-profile'), 'ClientProfilePage')
 const ErrorPage = lazy(() => import('./error'), 'ErrorPage')
@@ -29,51 +43,69 @@ export function Pages() {
 			<Route
 				path={paths.map}
 				element={
-					<AuthProvider>
+					<AuthProtect>
 						<MapPage />
-					</AuthProvider>
+					</AuthProtect>
 				}
 			/>
-
 			<Route
-				path={paths.favoriteClientCart}
+				path={paths.favoriteClients}
 				element={
-					<AuthProvider>
-						<FavoriteClientCartPage />
-					</AuthProvider>
+					<AuthProtect>
+						<RoleProtect whenRole='director'>
+							<FavoriteClientsPage />
+						</RoleProtect>
+					</AuthProtect>
 				}
 			/>
-
+			<Route path={paths.profile} element={<ProfilePage />} />
 			<Route
-				path={paths.userProfile}
 				element={
-					<AuthProvider>
-						<UserProfilePage />
-					</AuthProvider>
+					<AuthProtect>
+						<SettingsPage />
+					</AuthProtect>
 				}
-			/>
-
-			{/* <Route
-				path={paths.mapPlayGround}
-				element={
-					<AuthProvider>
-						<MapPlayGroundPage />
-					</AuthProvider>
-				}
-			/> */}
+			>
+				<Route path={paths.settingsProfile} element={<SettingsProfilePage />} />
+				<Route path={paths.settingsContracts} element={<SettingsContractsPage />} />
+				<Route
+					path={paths.settingsSubscribesRegions}
+					element={
+						<RoleProtect whenRole='director'>
+							<SettingsSubscribesRegionsPage />
+						</RoleProtect>
+					}
+				/>
+				<Route
+					path={paths.settingsSubscribesClients}
+					element={
+						<RoleProtect whenRole='director'>
+							<SettingsSubscribesClientsPage />
+						</RoleProtect>
+					}
+				/>
+			</Route>
 			<Route
 				path={paths.clientProfile}
 				element={
-					<AuthProvider>
+					<AuthProtect>
 						<ClientProfilePage />
-					</AuthProvider>
+					</AuthProtect>
 				}
 			/>
 
-			<Route path={paths.userSettings} element={<AuthProvider>{/* <UserSettingsProfile /> */}</AuthProvider>} />
+			<Route
+				path={paths.meetingDetails}
+				element={
+					<AuthProtect>
+						<MeetingDetailsPage />
+					</AuthProtect>
+				}
+			/>
 
-			<Route path='error' element={<ErrorPage />} />
-			<Route path='*' element={<Navigate to={routes.error()} />} />
+			<Route path={paths.meetingDetailsMobile} element={<MeetingDetailsMobilePage />} />
+
+			<Route path={paths.noMatch} element={<ErrorPage />} />
 		</Routes>
 	)
 }

@@ -1,20 +1,19 @@
 import { attach, createStore } from 'effector'
-import { reset, status } from 'patronum'
+import { reset } from 'patronum'
 
 import { clientApi, type ClientManager } from '~src/shared/api'
 
 export function createClientManagers() {
+	const $clientManagers = createStore<ClientManager[]>([])
+	const $clientManagersPending = createStore<boolean>(false)
+
 	const getClientManagersFx = attach({
 		effect: clientApi.clientManagersQuery,
 	})
 
-	const $clientManagers = createStore<ClientManager[]>([])
-	const $clientManagersStatus = status({
-		effect: getClientManagersFx,
-	})
-
+	$clientManagersPending.on(getClientManagersFx.pending, (_, pending) => pending)
 	$clientManagers.on(getClientManagersFx.doneData, (_, clientManagers) => clientManagers)
-	const resetClientManagers = reset({ target: $clientManagers })
+	const resetClientManagers = reset({ target: [$clientManagers] })
 
-	return { getClientManagersFx, resetClientManagers, $clientManagers, $clientManagersStatus }
+	return { getClientManagersFx, resetClientManagers, $clientManagers, $clientManagersPending }
 }

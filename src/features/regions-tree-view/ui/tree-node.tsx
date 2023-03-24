@@ -48,8 +48,8 @@ export function RegionsTreeNode(props: RegionsTreeNodeProps) {
 				{node.name}
 			</Button>
 			<Stack>
-				{node.childNodes.map((childNode) => (
-					<RegionsTreeNode key={childNode.id} node={childNode} onClick={onClick} />
+				{node.childNodes.map((childNode, index) => (
+					<RegionsTreeNode key={index} node={childNode} onClick={onClick} />
 				))}
 			</Stack>
 		</Box>

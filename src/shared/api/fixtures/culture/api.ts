@@ -3,7 +3,7 @@ import { createEffect } from 'effector'
 
 import { envVars } from '~src/shared/config'
 
-import type { CultureRef } from './types'
+import type { CultureRef } from './types.api'
 
 const instance = axios.create({
 	baseURL: `${envVars.API_URL}/api`,

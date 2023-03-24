@@ -1,0 +1,1 @@
+export { MeetingDetailsMobilePage } from './page'

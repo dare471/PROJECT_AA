@@ -1,0 +1,1 @@
+export { FavoriteClientsPage } from './page'

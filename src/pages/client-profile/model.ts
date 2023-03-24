@@ -1,4 +1,4 @@
-import { attach, createEvent, createStore, sample } from 'effector'
+import { createEvent, createStore, sample } from 'effector'
 import { reset } from 'patronum'
 
 import { getLandsPositions, LandsToLandFactory } from '~src/features/lands-to-land'
@@ -12,12 +12,10 @@ import {
 	createClientPoints,
 	createClientSubsidies,
 } from '~src/entities/client'
-import { MapFactory } from '~src/entities/map'
+import { fitBounds, MapFactory } from '~src/entities/map'
 
 import { type ClientPlot } from '~src/shared/api'
-import { createTabs, TableFactory } from '~src/shared/ui'
-
-const TABS = { main: 0, subsidies: 1, contracts: 2 }
+import { createTabs, type Tab, TableFactory } from '~src/shared/ui'
 
 export const clientProfilePageMounted = createEvent<{ clientId: number }>()
 export const clientProfilePageUnmounted = createEvent<void>()
@@ -25,8 +23,8 @@ export const clientProfilePageUnmounted = createEvent<void>()
 export const $clientId = createStore<number | null>(null)
 
 export const $$tabs = createTabs({
-	defaultTab: TABS.main,
-	tabs: TABS,
+	defaultTab: 'main',
+	tabs: ['main', 'subsidies', 'contracts'],
 })
 
 export const $$map = MapFactory.createMap()
@@ -51,18 +49,12 @@ export const $$clientContractsTable = TableFactory.createTable({
 	tableGenerateCb: () => ({}),
 })
 
-const fitClientPlotsFx = attach({
-	effect: MapFactory.fitBoundsFx,
-	source: { map: $$map.$map, clientPlots: $$clientPlots.$clientPlots },
-	mapParams: (params: void, { map, clientPlots }) => ({
-		map,
-		positions: getLandsPositions(getValidClientPlots(clientPlots)),
-	}),
-})
-const fitClientPlot = attach({
-	effect: MapFactory.fitBoundsFx,
-	source: { map: $$map.$map, clientPlot: $$clientPlotsToPlot.$land },
-	mapParams: (params: void, { map, clientPlot }) => ({ map, positions: clientPlot?.geometryRings ?? [] }),
+const fitBound = fitBounds({
+	map: $$map.$map,
+	layer: {
+		clientPlots: $$clientPlots.$clientPlots.map((clientPlots) => ({ positions: getLandsPositions(clientPlots) })),
+		clientPlot: $$clientPlotsToPlot.$land.map((land) => ({ positions: land?.geometryRings ?? [] })),
+	},
 })
 
 sample({
@@ -80,34 +72,36 @@ sample({
 
 const clientIdOrTabIsMainWillChange = sample({
 	clock: [$$tabs.$tab, $clientId],
-	source: { tabIndex: $$tabs.$tab, clientId: $clientId },
-	filter: (source: { tabIndex: number; clientId: number | null }): source is { tabIndex: number; clientId: number } =>
+	source: { tab: $$tabs.$tab, clientId: $clientId },
+	filter: (source: { tab: Tab; clientId: number | null }): source is { tab: Tab; clientId: number } =>
 		source.clientId !== null,
 })
 
-clientIdOrTabIsMainWillChange.watch(({ tabIndex, clientId }) => {
+clientIdOrTabIsMainWillChange.watch(({ tab, clientId }) => {
 	if (!clientId) return
 
-	if (tabIndex === TABS.main) {
+	if (tab.index === 0) {
 		$$clientPlots.getClientPlotsFx({ clientId })
 		$$clientPoints.getClientPointsFx({ clientId })
 	}
-	if (tabIndex === TABS.subsidies) {
+	if (tab.index === 1) {
 		$$clientSubsidies.getClientSubsidies({ clientId })
 	}
-	if (tabIndex === TABS.contracts) {
+	if (tab.index === 2) {
 		$$clientContracts.getClientContractsFx({ clientId })
 	}
 })
 
 sample({
 	clock: $$clientPlots.$clientPlots,
-	target: fitClientPlotsFx,
+	filter: (clientPlots) => clientPlots.length > 0,
+	target: fitBound.clientPlots,
 })
 
 sample({
 	clock: $$clientPlotsToPlot.landClicked,
-	target: fitClientPlot,
+	filter: (clientPlot) => clientPlot !== null,
+	target: fitBound.clientPlot,
 })
 
 reset({

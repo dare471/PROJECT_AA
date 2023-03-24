@@ -1,19 +1,17 @@
 import { attach, combine, createEvent, createStore, sample } from 'effector'
 import { persist } from 'effector-storage/local'
 
-import { authApi, favoriteClientApi, type Session, type SessionHook, type UserCredentials } from '~src/shared/api'
+import {
+	authApi,
+	favoriteClientApi,
+	type Session,
+	type SessionHook,
+	userApi,
+	type UserCredentials,
+} from '~src/shared/api'
 
 export const signedIn = createEvent<void>()
 export const signedOut = createEvent<void>()
-
-export const favoriteClientsAdded = createEvent<number[]>()
-export const favoriteClientsDeleted = createEvent<number[]>()
-
-export const subscribeRegionsAdded = createEvent<number[]>()
-export const subscribeRegionsDeleted = createEvent<number[]>()
-
-export const subscribeClientsAdded = createEvent<number[]>()
-export const subscribeClientsDeleted = createEvent<number[]>()
 
 export const $session = createStore<Session | null>(null)
 export const $sessionPending = createStore<boolean>(false)
@@ -30,7 +28,7 @@ export const getSessionHookFx = attach({
 		return { userId: session.id }
 	},
 })
-const addFavoriteClientsFx = attach({
+export const addFavoriteClientsFx = attach({
 	effect: favoriteClientApi.addClientFavoriteMutation,
 	source: $session,
 	mapParams: (params: { clientIds: number[] }, session) => {
@@ -38,12 +36,46 @@ const addFavoriteClientsFx = attach({
 		return { userId: session.id, clientIds: params.clientIds }
 	},
 })
-const deleteFavoriteClientsFx = attach({
+export const deleteFavoriteClientsFx = attach({
 	effect: favoriteClientApi.deleteClientFavoriteMutation,
 	source: $session,
 	mapParams: (params: { clientIds: number[] }, session) => {
 		if (!session) throw new Error('Session is not defined')
 		return { userId: session.id, clientIds: params.clientIds }
+	},
+})
+
+export const subscribesRegionsFx = attach({
+	effect: userApi.addUserSubscribeRegionsMutation,
+	source: $session,
+	mapParams: (params: { regionIds: number[] }, session) => {
+		if (!session) throw new Error('Session is not defined')
+		return { userId: session.id, regionIds: [...session.subscribeRegions, ...params.regionIds] }
+	},
+})
+export const unSubscribesRegionsFx = attach({
+	effect: userApi.addUserSubscribeRegionsMutation,
+	source: $session,
+	mapParams: (params: { regionIds: number[] }, session) => {
+		if (!session) throw new Error('Session is not defined')
+		return { userId: session.id, regionIds: session.subscribeRegions.filter((id) => !params.regionIds.includes(id)) }
+	},
+})
+
+export const subscribesClientsFx = attach({
+	effect: userApi.addUserUnSubscribeClientsMutation,
+	source: $session,
+	mapParams: (params: { clientIds: number[] }, session) => {
+		if (!session) throw new Error('Session is not defined')
+		return { userId: session.id, clientIds: session.unSubscribeClients.filter((id) => !params.clientIds.includes(id)) }
+	},
+})
+export const unSubscribesClientsFx = attach({
+	effect: userApi.addUserUnSubscribeClientsMutation,
+	source: $session,
+	mapParams: (params: { clientIds: number[] }, session) => {
+		if (!session) throw new Error('Session is not defined')
+		return { userId: session.id, clientIds: [...session.unSubscribeClients, ...params.clientIds] }
 	},
 })
 
@@ -60,11 +92,6 @@ $session.on(getSessionHookFx.doneData, (session, sessionHook) => {
 	}
 })
 
-sample({
-	clock: favoriteClientsAdded,
-	fn: (clientIds) => ({ clientIds }),
-	target: addFavoriteClientsFx,
-})
 $session.on(addFavoriteClientsFx.done, (session, { params }) => {
 	if (!session) return null
 	return {
@@ -73,11 +100,6 @@ $session.on(addFavoriteClientsFx.done, (session, { params }) => {
 	}
 })
 
-sample({
-	clock: favoriteClientsDeleted,
-	fn: (clientIds) => ({ clientIds }),
-	target: deleteFavoriteClientsFx,
-})
 $session.on(deleteFavoriteClientsFx.done, (session, { params }) => {
 	if (!session) return null
 	return {
@@ -86,35 +108,33 @@ $session.on(deleteFavoriteClientsFx.done, (session, { params }) => {
 	}
 })
 
-$session.on(subscribeRegionsAdded, (session, regionIds) => {
+$session.on(subscribesRegionsFx.done, (session, { params }) => {
 	if (!session) return null
 	return {
 		...session,
-		subscribeRegions: [...session.subscribeRegions, ...regionIds],
+		subscribeRegions: [...session.subscribeRegions, ...params.regionIds],
+	}
+})
+$session.on(unSubscribesRegionsFx.done, (session, { params }) => {
+	if (!session) return null
+	return {
+		...session,
+		subscribeRegions: session.subscribeRegions.filter((id) => !params.regionIds.includes(id)),
 	}
 })
 
-$session.on(subscribeRegionsDeleted, (session, regionIds) => {
+$session.on(subscribesClientsFx.done, (session, { params }) => {
 	if (!session) return null
 	return {
 		...session,
-		subscribeRegions: session.subscribeRegions.filter((id) => !regionIds.includes(id)),
+		unSubscribeClients: session.unSubscribeClients.filter((id) => !params.clientIds.includes(id)),
 	}
 })
-
-$session.on(subscribeClientsAdded, (session, clientIds) => {
+$session.on(unSubscribesClientsFx.done, (session, { params }) => {
 	if (!session) return null
 	return {
 		...session,
-		subscribeClients: [...session.subscribeClients, ...clientIds],
-	}
-})
-
-$session.on(subscribeClientsDeleted, (session, clientIds) => {
-	if (!session) return null
-	return {
-		...session,
-		subscribeClients: session.subscribeClients.filter((id) => !clientIds.includes(id)),
+		unSubscribeClients: [...session.unSubscribeClients, ...params.clientIds],
 	}
 })
 
@@ -127,7 +147,7 @@ function sessionAdapter(session: UserCredentials): Session {
 		name: session.user.name,
 		email: session.user.email,
 		role: session.user.access_availability,
-		subscribeClients: session.user.unFollowClients,
+		unSubscribeClients: session.user.unFollowClients,
 		subscribeRegions: session.user.subscribesRegion,
 		favoriteClients: session.user.favoriteClients,
 		token: session.token,
@@ -136,11 +156,11 @@ function sessionAdapter(session: UserCredentials): Session {
 
 function sessionHookAdapter(
 	sessionHook: SessionHook,
-): Pick<Session, 'active' | 'subscribeRegions' | 'subscribeClients' | 'favoriteClients'> {
+): Pick<Session, 'active' | 'subscribeRegions' | 'unSubscribeClients' | 'favoriteClients'> {
 	return {
 		active: sessionHook.active === 1 ? true : false,
 		subscribeRegions: sessionHook.subscribesRegion,
-		subscribeClients: sessionHook.unFollowClients,
+		unSubscribeClients: sessionHook.unFollowClients,
 		favoriteClients: sessionHook.favoriteClients,
 	}
 }

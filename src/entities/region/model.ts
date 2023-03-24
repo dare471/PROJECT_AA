@@ -2,7 +2,7 @@ import { attach, createStore } from 'effector'
 
 import { type Region, type RegionAnalytic, regionApi } from '~src/shared/api'
 
-import { sessionModel } from '../session'
+import { $$session } from '../session'
 
 export function createRegionsOverlay() {
 	const $regionsOverlay = createStore<Region[]>([])
@@ -24,7 +24,7 @@ export function createRegions() {
 
 	const getRegionsFx = attach({
 		effect: regionApi.regionsQuery,
-		source: sessionModel.$session,
+		source: $$session.$session,
 		mapParams: (params: void, session) => {
 			if (!session) throw new Error('Session is not defined')
 			return { regionBilling: session.subscribeRegions }
@@ -51,7 +51,7 @@ export function createRegionsAnalyticsByYear() {
 
 	const getRegionsAnalyticsFx = attach({
 		effect: regionApi.regionsAnalyticsQuery,
-		source: sessionModel.$session,
+		source: $$session.$session,
 		mapParams: (params: void, session) => {
 			if (!session) throw new Error('Session is not defined')
 			return { regionIds: session.subscribeRegions }

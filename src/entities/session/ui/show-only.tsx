@@ -4,7 +4,7 @@ import * as model from '../model'
 
 interface ShowOnlyProps {
 	children: React.ReactNode
-	whenRole?: 'admin' | 'user'
+	whenRole?: 'director' | 'manager'
 	when?: 'auth' | 'guest'
 }
 
@@ -17,8 +17,8 @@ export function ShowOnly(props: ShowOnlyProps) {
 	if (when === 'auth' && !isAuth) return null
 	if (when === 'guest' && isAuth) return null
 
-	if (whenRole === 'admin' && !role.includes(1)) return null
-	if (whenRole === 'user' && !role.includes(0)) return null
+	if (whenRole === 'director' && !role.includes(1)) return null
+	if (whenRole === 'manager' && !role.includes(0)) return null
 
 	return <>{props.children}</>
 }

@@ -1,5 +1,5 @@
-import { createStore, merge } from 'effector'
-import { type EffectState } from 'patronum/status'
+import { createStore } from 'effector'
+import { reset } from 'patronum'
 
 import { createClientsLandByCultures, createClientsLandByRegion } from '~src/entities/new-client'
 
@@ -9,26 +9,28 @@ type ClientLand = Pick<ClientPlot, 'guid' | 'clientId' | 'plotId' | 'geometryRin
 
 export function createMuchClientsLand() {
 	const $clientsLand = createStore<ClientLand[]>([])
-	const $clientsLandStatus = createStore<EffectState>('initial')
+	const $clientsLandPending = createStore<boolean>(false)
 
 	const $$clientsLandByRegion = createClientsLandByRegion()
 	const $$clientsLandByCultures = createClientsLandByCultures()
 
+	$clientsLandPending.on(
+		[$$clientsLandByRegion.$clientsLandPending, $$clientsLandByCultures.$clientsLandPending],
+		(_, pending) => pending,
+	)
 	$clientsLand.on(
 		[$$clientsLandByRegion.$clientsLand, $$clientsLandByCultures.$clientsLand],
 		(_, clientsLand) => clientsLand,
 	)
-	$clientsLandStatus.on(
-		[$$clientsLandByRegion.$clientsLandStatus, $$clientsLandByCultures.$clientsLandStatus],
-		(_, status) => status,
-	)
 
-	const resetMuchClientsLand = merge([$$clientsLandByRegion.resetClientsLand, $$clientsLandByCultures.resetClientsLand])
+	const resetClientsLand = reset({
+		target: [$clientsLand, $$clientsLandByRegion.$clientsLand, $$clientsLandByCultures.$clientsLand],
+	})
 
 	return {
-		resetMuchClientsLand,
+		resetClientsLand,
 		$clientsLand,
-		$clientsLandStatus,
+		$clientsLandPending,
 		$$clientsLandByRegion,
 		$$clientsLandByCultures,
 	}

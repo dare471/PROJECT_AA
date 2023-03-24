@@ -2,7 +2,7 @@ import { Box, Center, Container, Flex, Spinner, Stack, Text } from '@chakra-ui/r
 import { useUnit } from 'effector-react'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import React from 'react'
-import { FeatureGroup, Marker, Pane, Polygon, Tooltip } from 'react-leaflet'
+import { FeatureGroup, Marker, Pane, Polygon, Tooltip, ZoomControl } from 'react-leaflet'
 import { EditControl } from 'react-leaflet-draw'
 
 import { Header } from '~src/widgets/header'
@@ -14,6 +14,7 @@ import { MapFactory } from '~src/entities/map'
 import { lazy, zIndices } from '~src/shared/lib'
 
 import * as model from './model'
+import { Legend } from './legend'
 import { cultureColors } from './lib'
 
 const MapSidebar = lazy(() => import('./sidebar'), 'MapSidebar')
@@ -48,6 +49,7 @@ export function MapPage() {
 					<MapFactory.Map
 						model={model.$$map}
 						isResize
+						zoomControl={false}
 						containerProps={{ w: 'full', h: 'full', minH: '0', zIndex: zIndices.map }}
 						style={{ width: '100%', height: '100%' }}
 					>
@@ -59,20 +61,15 @@ export function MapPage() {
 						<ClientsLand />
 						<ClientPlots />
 						<ClientPoints />
+
+						<ZoomControl position='bottomleft' />
 					</MapFactory.Map>
 				</Flex>
 
+				<Legend />
+
 				{mapPending && (
-					<Center
-						w='full'
-						h='full'
-						bg='blackAlpha.300'
-						position='absolute'
-						top='50%'
-						left='50%'
-						zIndex='sticky'
-						transform='translateY(-50%) translateX(-50%)'
-					>
+					<Center w='full' h='full' bg='blackAlpha.300' position='absolute' top='0' left='0' zIndex='sticky'>
 						<Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
 					</Center>
 				)}
@@ -82,26 +79,29 @@ export function MapPage() {
 }
 
 function MapDraw() {
-	const [handleDrawCreate, handleDrawRemove] = useUnit([
+	const [clientsLand, handleDrawCreate, handleDrawRemove] = useUnit([
+		model.$$clientsLand.$clientsLand,
 		model.$$clientsPlotsInCircle.handleCircleDraw,
 		model.$$clientsPlotsInCircle.handleCircleRemove,
 	])
 
 	return (
 		<FeatureGroup>
-			<EditControl
-				position='bottomright'
-				onCreated={handleDrawCreate}
-				onDeleted={handleDrawRemove}
-				draw={{
-					circle: true,
-					circlemarker: false,
-					polyline: false,
-					polygon: false,
-					rectangle: false,
-					marker: false,
-				}}
-			/>
+			{clientsLand.length !== 0 && (
+				<EditControl
+					position='topleft'
+					onCreated={handleDrawCreate}
+					onDeleted={handleDrawRemove}
+					draw={{
+						circle: true,
+						circlemarker: false,
+						polyline: false,
+						polygon: false,
+						rectangle: false,
+						marker: false,
+					}}
+				/>
+			)}
 		</FeatureGroup>
 	)
 }
@@ -138,9 +138,9 @@ function RegionsOverlay() {
 	return (
 		<>
 			<Pane name='regions-overlay' style={{ zIndex: 301 }}>
-				{regionsOverlay.map((region) => (
+				{regionsOverlay.map((region, index) => (
 					<Polygon
-						key={region.id}
+						key={index}
 						pathOptions={{
 							color: 'gray',
 						}}
@@ -199,13 +199,12 @@ function Districts() {
 								},
 							}}
 						>
-							<Tooltip sticky opacity={0.8} direction='bottom'>
-								<Stack direction='row' align='center'>
-									<Text fontSize='sm' fontWeight='bold'>
-										Район:
-									</Text>
-									<Text>{district.name}</Text>
-								</Stack>
+							<Tooltip opacity={0.8} direction='center'>
+								Район:
+								<Text>{district.name}</Text>
+								{/* <Stack direction='row' align='center'>
+									<Text fontSize='sm' fontWeight='bold'></Text>
+								</Stack> */}
 							</Tooltip>
 						</Polygon>
 					)}
@@ -225,7 +224,7 @@ function Districts() {
 function ClientsLand() {
 	const [isSeparate, clientsLandByCultures] = useUnit([
 		model.$isClientsSeparate,
-		model.$$clientsLand.$clientsLandByCultures,
+		model.$$clientsLand.$$clientsLandByCultures.$clientsLand,
 	])
 
 	return (

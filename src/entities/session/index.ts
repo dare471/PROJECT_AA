@@ -1,2 +1,2 @@
 export * from './ui'
-export * as sessionModel from './model'
+export * as $$session from './model'

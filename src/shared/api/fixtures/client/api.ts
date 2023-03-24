@@ -22,12 +22,12 @@ import type {
 	ClientInformalPointRef,
 	ClientLastContract,
 	ClientManager,
-	ClientOffice,
 	ClientPlot,
 	ClientPoint,
 	ClientSearchHint,
 	ClientSubsidy,
-} from './types'
+	ClientToOfficeRoute,
+} from './types.api'
 
 const instance = axios.create({
 	baseURL: `${envVars.API_URL}/api`,
@@ -198,23 +198,25 @@ export const clientSearchHintsQuery = createEffect<
 	throw new Error('status is not 200')
 })
 
-export const clientOfficeQuery = createEffect<{ clientId: number }, ClientOffice>(async ({ clientId }) => {
-	const req = await instance({
-		method: 'POST',
-		url: '/manager/workspace',
-		data: {
-			type: 'choiceMeetingPlace',
-			id: 44,
-			clientId,
-		},
-	})
+export const clientToOfficeRouteQuery = createEffect<{ clientId: number }, ClientToOfficeRoute>(
+	async ({ clientId }) => {
+		const req = await instance({
+			method: 'POST',
+			url: '/manager/workspace',
+			data: {
+				type: 'choiceMeetingPlace',
+				id: 44,
+				clientId,
+			},
+		})
 
-	if (req.status === 200) {
-		return req.data
-	}
+		if (req.status === 200) {
+			return req.data
+		}
 
-	throw new Error('status is not 200')
-})
+		throw new Error('status is not 200')
+	},
+)
 
 export const clientInformalPointRefsQuery = createEffect<{ clientId: number }, ClientInformalPointRef[]>(async () => {
 	const req = await instance({

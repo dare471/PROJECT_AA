@@ -1,0 +1,1 @@
+export { SettingsSubscribesClientsPage } from './page'

@@ -16,7 +16,7 @@ import { AiOutlineShoppingCart } from 'react-icons/ai'
 import { BsMap } from 'react-icons/bs'
 import { useNavigate } from 'react-router'
 
-import { sessionModel, SessionPanel, ShowOnly } from '~src/entities/session'
+import { $$session, SessionPanel, ShowOnly } from '~src/entities/session'
 
 import { LogoImage } from '~src/shared/assets'
 import { routes } from '~src/shared/routes'
@@ -50,7 +50,9 @@ export function Header() {
 									<Icon as={BsMap} />
 								</Button>
 
-								<ClientCardIcon onClick={() => navigate(routes.favoriteClientCart())} />
+								<ShowOnly whenRole='director'>
+									<ClientCardIcon onClick={() => navigate(routes.favoriteClients())} />
+								</ShowOnly>
 								<SessionPanel />
 							</ButtonGroup>
 						</ShowOnly>
@@ -62,7 +64,7 @@ export function Header() {
 }
 
 function ClientCardIcon(props: ButtonProps) {
-	const [session] = useUnit([sessionModel.$session])
+	const [session] = useUnit([$$session.$session])
 
 	if (!session) return null
 

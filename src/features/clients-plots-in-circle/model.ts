@@ -25,12 +25,14 @@ type ClientsPlotsInCircleResultMulti = {
 	$circles: Store<ClientsInCircle[]>
 	$circlesClients: Store<Pick<Client, 'guid' | 'clientId' | 'clientName' | 'clientBin' | 'clientActivity'>[]>
 	$circlesClientsPlots: Store<Pick<ClientPlot, 'guid' | 'clientId' | 'geometryRings'>[]>
+	$circlesClientsPending: Store<boolean>
 } & ClientsPlotsInCircleResult
 
 type ClientsPlotsInCircleResultSingle = {
 	$circle: Store<ClientsInCircle | null>
 	$circleClients: Store<Pick<Client, 'guid' | 'clientId' | 'clientName' | 'clientBin' | 'clientActivity'>[]>
 	$circleClientsPlots: Store<Pick<ClientPlot, 'guid' | 'clientId' | 'geometryRings'>[]>
+	$circleClientsPending: Store<boolean>
 } & ClientsPlotsInCircleResult
 
 export function createClientsPlotsInCircle<T extends true>(options: { isMulti: T }): ClientsPlotsInCircleResultMulti
@@ -51,6 +53,7 @@ export function createClientsPlotsInCircle<T extends boolean>(options: {
 	const handleAllCircleRemove = createEvent<any>()
 
 	const getClientsFx = attach({ effect: clientApi.clientsQuery })
+
 	const createCircleClientsFx = createEffect<
 		{ circleId: number; clientIds: number[] },
 		{ circleId: number; clients: Pick<Client, 'guid' | 'clientId' | 'clientName' | 'clientBin' | 'clientActivity'>[] }
@@ -69,6 +72,7 @@ export function createClientsPlotsInCircle<T extends boolean>(options: {
 				return acc
 			}, [] as Pick<Client, 'guid' | 'clientId' | 'clientName' | 'clientBin' | 'clientActivity'>[])
 		})
+		const $circlesClientsPending = createStore<boolean>(false)
 		const $circlesClientsPlots = $circles.map((circles) => {
 			return circles.reduce((acc, circle) => {
 				if (circle.clientsPlots.length === 0) return acc
@@ -77,6 +81,7 @@ export function createClientsPlotsInCircle<T extends boolean>(options: {
 			}, [] as Pick<ClientPlot, 'guid' | 'clientId' | 'geometryRings'>[])
 		})
 
+		$circlesClientsPending.on(getClientsFx.pending, (_, pending) => pending)
 		$circles.on(circleDrawn, (circles, circle) => [
 			...circles,
 			{ circleId: circle.circleId, clientsPlots: circle.clientsPlots, clients: [] },
@@ -103,6 +108,7 @@ export function createClientsPlotsInCircle<T extends boolean>(options: {
 			allCircleRemoved,
 			handleAllCircleRemove,
 			$circles,
+			$circlesClientsPending,
 			$circlesClients,
 			$circlesClientsPlots,
 			__isMulti: isMulti,
@@ -110,6 +116,7 @@ export function createClientsPlotsInCircle<T extends boolean>(options: {
 	} else {
 		const $circle = createStore<ClientsInCircle | null>(null)
 		const $circleClients = $circle.map((circle) => (circle ? circle.clients : []))
+		const $circleClientsPending = createStore<boolean>(false)
 		const $circleClientsPlots = $circle.map((circle) => (circle ? circle.clientsPlots : []))
 
 		$circle.on(circleDrawn, (_, circle) => ({
@@ -124,6 +131,7 @@ export function createClientsPlotsInCircle<T extends boolean>(options: {
 			target: createCircleClientsFx,
 		})
 
+		$circleClientsPending.on(getClientsFx.pending, (_, pending) => pending)
 		$circle.on(createCircleClientsFx.doneData, (circle, { clients }) =>
 			circle
 				? {
@@ -144,6 +152,7 @@ export function createClientsPlotsInCircle<T extends boolean>(options: {
 			allCircleRemoved,
 			handleAllCircleRemove,
 			$circle,
+			$circleClientsPending,
 			$circleClients,
 			$circleClientsPlots,
 			__isMulti: isMulti,

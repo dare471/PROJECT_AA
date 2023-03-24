@@ -2,34 +2,26 @@ import { useUnit } from 'effector-react'
 
 import { ClientContractCard, type createClientLastContract } from '~src/entities/new-client'
 
+import { Empty, Spin } from '~src/shared/ui'
+
 interface ClientLastContractProps {
 	model: ReturnType<typeof createClientLastContract>
 }
 
 export function ClientLastContract(props: ClientLastContractProps) {
 	const { model } = props
-	const [clientLastContract, clientLastContractStatus] = useUnit([
+	const [clientLastContract, clientLastContractPending] = useUnit([
 		model.$clientLastContract,
-		model.$clientLastContractStatus,
+		model.$clientLastContractPending,
 	])
 
-	return (
-		<>
-			{clientLastContract && (
-				<ClientContractCard
-					status={clientLastContractStatus}
-					name={clientLastContract.name}
-					number={clientLastContract.number}
-					contractStatus={clientLastContract.status}
-					season={clientLastContract.season}
-					dateStart={clientLastContract.dateStart}
-					dateEnd={clientLastContract.dateEnd}
-					manager={clientLastContract.manager}
-					sum={clientLastContract.sum}
-					deliveryAddress={clientLastContract.deliveryAddress}
-					id={clientLastContract.id}
-				/>
-			)}
-		</>
-	)
+	if (clientLastContractPending) {
+		return <Spin />
+	}
+
+	if (clientLastContract === null) {
+		return <Empty>Нету данных</Empty>
+	}
+
+	return <>{clientLastContract && <ClientContractCard {...clientLastContract} />}</>
 }

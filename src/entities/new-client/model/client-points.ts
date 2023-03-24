@@ -1,18 +1,17 @@
 import { attach, createStore } from 'effector'
-import { reset, status } from 'patronum'
+import { reset } from 'patronum'
 
 import { clientApi, type ClientPoint } from '~src/shared/api'
 
 export function createClientPoints() {
+	const $clientPoints = createStore<ClientPoint[]>([])
+	const $clientPointsPending = createStore<boolean>(false)
+
 	const getClientPointsFx = attach({
 		effect: clientApi.clientPointsQuery,
 	})
 
-	const $clientPoints = createStore<ClientPoint[]>([])
-	const $clientPointsStatus = status({
-		effect: getClientPointsFx,
-	})
-
+	$clientPointsPending.on(getClientPointsFx.pending, (_, pending) => pending)
 	$clientPoints.on(getClientPointsFx.doneData, (_, clientPoint) => clientPoint)
 	const resetClientPoints = reset({ target: $clientPoints })
 
@@ -20,6 +19,6 @@ export function createClientPoints() {
 		getClientPointsFx,
 		resetClientPoints,
 		$clientPoints,
-		$clientPointsStatus,
+		$clientPointsPending,
 	}
 }

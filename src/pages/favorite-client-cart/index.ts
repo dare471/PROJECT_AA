@@ -1,1 +1,0 @@
-export { FavoriteClientCartPage } from './page'

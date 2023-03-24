@@ -1,13 +1,10 @@
-import { Card, CardBody, Stack, Text } from '@chakra-ui/react'
-import { type EffectState } from 'patronum/status'
+import { Card, CardBody, type CardProps, Stack, Text } from '@chakra-ui/react'
 
 import { type ClientPlot } from '~src/shared/api'
-import { DescriptionText, ErrorMessage, Spin } from '~src/shared/ui'
+import { DescriptionText, Spin } from '~src/shared/ui'
 
-interface ClientPlotCardProps extends Partial<ClientPlot> {
-	status?: EffectState
-	loader?: React.ReactNode
-	error?: { icon?: React.ReactNode; message?: string }
+interface ClientPlotCardProps extends Partial<ClientPlot>, Omit<CardProps, 'onClick'> {
+	load?: { loading: boolean; loader?: React.ReactNode }
 	onClick?: (args: { event: any; clientId: number; plotCultId: number | undefined; plotId: number }) => void
 }
 
@@ -23,9 +20,7 @@ export function ClientPlotCard(props: ClientPlotCardProps) {
 		clientBin,
 		clientAddress,
 		clientActivity,
-		status = 'initial',
-		loader,
-		error,
+		load,
 		onClick,
 		...otherProps
 	} = props
@@ -38,35 +33,23 @@ export function ClientPlotCard(props: ClientPlotCardProps) {
 
 	return (
 		<Card onClick={handleClick} {...otherProps}>
-			{status === 'done' && (
-				<CardBody>
-					<Stack>
-						{plotName && (
-							<Text fontSize='xl' fontWeight='medium'>
-								{plotName}
-							</Text>
-						)}
-						{plotArea && <DescriptionText title='Площадь:'>{plotArea}</DescriptionText>}
-						{plotCultName && <DescriptionText title='Культура:'>{plotCultName}</DescriptionText>}
-						{clientName && <DescriptionText title='Клиент:'>{clientName}</DescriptionText>}
-						{clientBin && <DescriptionText title='Иин/Бин:'>{clientBin}</DescriptionText>}
-						{clientAddress && <DescriptionText title='Адрес:'>{clientAddress}</DescriptionText>}
-						{clientActivity && <DescriptionText title='Вид деятельности:'>{clientActivity}</DescriptionText>}
-					</Stack>
-				</CardBody>
-			)}
-
-			{status === 'pending' && <>{loader ? <Spin /> : { loader }}</>}
-
-			{status === 'fail' && (
-				<>
-					{error && !error.icon ? (
-						<ErrorMessage>{error.message ? error.message : 'Произошла ошибка'}</ErrorMessage>
-					) : (
-						<>{error?.icon}</>
+			<CardBody>
+				<Stack>
+					{plotName && (
+						<Text fontSize='xl' fontWeight='medium'>
+							{plotName}
+						</Text>
 					)}
-				</>
-			)}
+					{plotArea && <DescriptionText title='Площадь:'>{plotArea}</DescriptionText>}
+					{plotCultName && <DescriptionText title='Культура:'>{plotCultName}</DescriptionText>}
+					{clientName && <DescriptionText title='Клиент:'>{clientName}</DescriptionText>}
+					{clientBin && <DescriptionText title='Иин/Бин:'>{clientBin}</DescriptionText>}
+					{clientAddress && <DescriptionText title='Адрес:'>{clientAddress}</DescriptionText>}
+					{clientActivity && <DescriptionText title='Вид деятельности:'>{clientActivity}</DescriptionText>}
+				</Stack>
+			</CardBody>
+
+			{load && load.loading && <>{load.loader ? <>{load.loader}</> : <Spin />}</>}
 		</Card>
 	)
 }
