@@ -20,6 +20,7 @@ export const regionsOverlayQuery = createEffect<void, Region[]>(async () => {
 	})
 
 	if (req.status === 200) {
+		console.log(req.data)
 		return RegionAdapter.fromApiToRegions(req.data)
 	}
 

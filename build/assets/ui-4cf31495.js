@@ -1,2 +1,0 @@
-import{j as a,E as s,a as l,I as n}from"./index-01e3cde2.js";import{e as o}from"./index.esm-6f403ff8.js";function i(r){const{children:e}=r;return a(s,{w:"full",h:"full",p:{base:10,md:20},flexGrow:"1",alignItems:"center",gap:"2",children:[l(n,{as:o,w:"2rem",h:"2rem",color:"gray.500"}),e]})}export{i as E};
-//# sourceMappingURL=ui-4cf31495.js.map

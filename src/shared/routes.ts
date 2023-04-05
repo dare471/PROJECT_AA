@@ -12,6 +12,7 @@ export const paths = {
 	mapPlayGround: '/map-play-ground',
 	meetingDetails: '/meeting-details/:meetingId',
 	meetingDetailsMobile: '/meeting-details-mobile',
+	clientBusinessPointMobile: '/client-business-point-mobile/:clientId',
 	error: '/error',
 	noMatch: '*',
 }
@@ -29,6 +30,8 @@ export const routes = {
 	clientProfile: ({ clientId }: { clientId: string }) => paths.clientProfile.replace(':clientId', clientId),
 	meetingDetails: ({ meetingId }: { meetingId: string }) => paths.meetingDetails.replace(':meetingId', meetingId),
 	meetingDetailsMobile: ({ meetingId, userId }: { meetingId: string; userId: string }) => paths.meetingDetails,
+	clientBusinessPointMobile: ({ clientId }: { clientId: string }) =>
+		paths.clientBusinessPointMobile.replace(':clientId', clientId),
 	error: () => paths.error,
 	mapPlayGround: () => paths.mapPlayGround,
 }

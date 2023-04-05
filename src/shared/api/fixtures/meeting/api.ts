@@ -50,6 +50,7 @@ export const plannedMeetingsQuery = createEffect<{ userId: number }, PlannedMeet
 		url: '/manager/workspace',
 		data: {
 			type: 'plannedMeeting',
+			action: 'getMeeting',
 			userId,
 		},
 	})

@@ -1,0 +1,1 @@
+export { ClientBusinessPointMobilePage } from './page'

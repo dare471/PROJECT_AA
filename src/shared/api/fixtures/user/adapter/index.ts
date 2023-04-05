@@ -28,4 +28,7 @@ export class UserAdapter {
 			plotId: item.clientPlotId,
 		}))
 	}
+
+	// public static formApiToUserSubscribesRegions(data: _UserMapHistory[]): UserMapHistory[] {
+		
 }

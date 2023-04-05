@@ -10,11 +10,12 @@ export interface _MeetingClient {
 	clientName: string
 	clientIin: number
 	clientAddress: string
-	visitName: string
 	visitId: number
-	meetingId: number
+	visitTypeName: string
+	visitTypeId: number
+	meetingTypeId: number
 	meetingTime: string | null
-	meetingName: string
+	meetingTypeName: string
 	plotId: number
 }
 

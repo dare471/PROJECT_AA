@@ -434,21 +434,22 @@ sample({
 	},
 	fn: ({ tableState, favoriteClientsInfo, plannedMeetingsDate }) => {
 		const plannedMeetings: AddPlannedMeeting[] = []
+		console.log(tableState)
 
 		for (const rowIndex of Object.keys(tableState.rowSelect)) {
 			if (
-				!tableState.rowSelect[rowIndex] &&
-				!tableState.rowMeetingType[rowIndex] &&
-				!tableState.rowMeetingPlace[rowIndex] &&
-				!tableState.rowClientPlot[rowIndex] &&
-				!tableState.rowClientOfficePoint[rowIndex] &&
-				!tableState.rowClientOfficeDuration[rowIndex] &&
-				!tableState.rowClientOfficeDistance[rowIndex] &&
-				!tableState.rowClientInformalPointMarker[rowIndex] &&
-				!tableState.rowClientInformalPointRef[rowIndex] &&
-				!tableState.rowClientInformalPointDescription[rowIndex] &&
-				!tableState.rowClientInformalPointMarker[rowIndex] &&
-				!tableState.rowClientInformalPointRef[rowIndex]
+				!tableState.rowSelect[rowIndex] ||
+				!tableState.rowMeetingType[rowIndex] ||
+				!tableState.rowMeetingPlace[rowIndex] ||
+				(!tableState.rowClientPlot[rowIndex] &&
+					!tableState.rowClientOfficePoint[rowIndex] &&
+					!tableState.rowClientOfficeDuration[rowIndex] &&
+					!tableState.rowClientOfficeDistance[rowIndex] &&
+					!tableState.rowClientInformalPointMarker[rowIndex] &&
+					!tableState.rowClientInformalPointRef[rowIndex] &&
+					!tableState.rowClientInformalPointDescription[rowIndex] &&
+					!tableState.rowClientInformalPointMarker[rowIndex] &&
+					!tableState.rowClientInformalPointRef[rowIndex])
 			) {
 				continue
 			}
@@ -466,6 +467,7 @@ sample({
 				})
 			}
 			if (rowMeetingPlaceId === MEETING_PLACE_TYPE.office) {
+				console.log(tableState.rowMeetingType, rowIndex)
 				plannedMeetings.push({
 					clientId: favoriteClientsInfo![rowIndex]!.clientId,
 					meetingType: tableState.rowMeetingType[rowIndex].id,
@@ -488,7 +490,7 @@ sample({
 				})
 			}
 		}
-
+		console.log(plannedMeetings)
 		return { meetingsDate: getValueFromDate(plannedMeetingsDate)!, meetings: plannedMeetings }
 	},
 	target: addPlannedMeetingsFx,

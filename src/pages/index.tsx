@@ -23,7 +23,10 @@ const SettingsSubscribesClientsPage = lazy(
 )
 const MeetingDetailsPage = lazy(() => import('./meeting-details'), 'MeetingDetailsPage')
 const MeetingDetailsMobilePage = lazy(() => import('./meeting-details-mobile'), 'MeetingDetailsMobilePage')
-
+const ClientBusinessPointMobilePage = lazy(
+	() => import('./client-business-point-mobile'),
+	'ClientBusinessPointMobilePage',
+)
 // const MapPlayGroundPage = lazy(() => import('./map-play-ground'), 'MapPlayGroundPage')
 const ClientProfilePage = lazy(() => import('./client-profile'), 'ClientProfilePage')
 const ErrorPage = lazy(() => import('./error'), 'ErrorPage')
@@ -93,7 +96,6 @@ export function Pages() {
 					</AuthProtect>
 				}
 			/>
-
 			<Route
 				path={paths.meetingDetails}
 				element={
@@ -102,9 +104,8 @@ export function Pages() {
 					</AuthProtect>
 				}
 			/>
-
 			<Route path={paths.meetingDetailsMobile} element={<MeetingDetailsMobilePage />} />
-
+			<Route path={paths.clientBusinessPointMobile} element={<ClientBusinessPointMobilePage />} />
 			<Route path={paths.noMatch} element={<ErrorPage />} />
 		</Routes>
 	)
