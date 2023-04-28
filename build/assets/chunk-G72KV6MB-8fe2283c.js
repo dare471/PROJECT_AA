@@ -1,0 +1,2 @@
+import{d as u,A as s}from"./index-3984b6ad.js";function i(n,r){if(n!=null){if(typeof n=="function"){n(r);return}try{n.current=r}catch{throw new Error(`Cannot assign value '${r}' to ref '${n}'`)}}}function a(...n){return r=>{n.forEach(t=>{i(t,r)})}}function f(...n){return u.useMemo(()=>a(...n),n)}function o(n,r){return Array.isArray(n)?n.map(t=>t===null?null:r(t)):s(n)?Object.keys(n).reduce((t,e)=>(t[e]=r(n[e]),t),{}):n!=null?r(n):null}export{o as a,a as m,f as u};
+//# sourceMappingURL=chunk-G72KV6MB-8fe2283c.js.map
