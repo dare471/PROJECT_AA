@@ -13,6 +13,7 @@ export const paths = {
 	meetingDetails: '/meeting-details/:meetingId',
 	meetingDetailsMobile: '/meeting-details-mobile',
 	clientBusinessPointMobile: '/client-business-point-mobile/:clientId',
+	managersSales: '/managers-sales',
 	error: '/error',
 	noMatch: '*',
 }
@@ -32,6 +33,7 @@ export const routes = {
 	meetingDetailsMobile: ({ meetingId, userId }: { meetingId: string; userId: string }) => paths.meetingDetails,
 	clientBusinessPointMobile: ({ clientId }: { clientId: string }) =>
 		paths.clientBusinessPointMobile.replace(':clientId', clientId),
+	managerSales: () => paths.managersSales,
 	error: () => paths.error,
 	mapPlayGround: () => paths.mapPlayGround,
 }

@@ -28,6 +28,7 @@ const ClientBusinessPointMobilePage = lazy(
 	'ClientBusinessPointMobilePage',
 )
 // const MapPlayGroundPage = lazy(() => import('./map-play-ground'), 'MapPlayGroundPage')
+const ManagersSalesPage = lazy(() => import('./managers-sales'), 'ManagersSalesPage')
 const ClientProfilePage = lazy(() => import('./client-profile'), 'ClientProfilePage')
 const ErrorPage = lazy(() => import('./error'), 'ErrorPage')
 
@@ -102,6 +103,14 @@ export function Pages() {
 					<AuthProtect>
 						<MeetingDetailsPage />
 					</AuthProtect>
+				}
+			/>
+			<Route
+				path={paths.managersSales}
+				element={
+					// <AuthProtect>
+					<ManagersSalesPage />
+					// </AuthProtect>
 				}
 			/>
 			<Route path={paths.meetingDetailsMobile} element={<MeetingDetailsMobilePage />} />

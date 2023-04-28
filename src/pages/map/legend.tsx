@@ -1,6 +1,5 @@
 import { Button, Stack, type StackProps } from '@chakra-ui/react'
 import { useUnit } from 'effector-react'
-import { motion } from 'framer-motion'
 import { MdAgriculture } from 'react-icons/md'
 
 import { CulturesFactory } from '~src/entities/culture'

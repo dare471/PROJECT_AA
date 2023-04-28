@@ -29,7 +29,7 @@ export function SessionPanel(props: SessionPanelProps) {
 						Профиль
 					</MenuItem>
 					<MenuItem icon={<AiFillSetting />} onClick={() => navigate(routes.settingsProfile())}>
-						Настройкий
+						Настроикий
 					</MenuItem>
 				</MenuGroup>
 				<MenuItem icon={<AiOutlineLogout />} onClick={() => handleSignOut()}>
