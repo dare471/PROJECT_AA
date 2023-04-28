@@ -1,2 +1,0 @@
-import{j as S,F as d,a as e,T as o}from"./index-30d26e58.js";function F(t){const{title:i,titleProps:n,textProps:r,flexWrap:s="wrap",align:l="center",gap:a="1",children:x}=t,{fontSize:c="md",fontWeight:f="bold",...h}=n??{},{fontSize:p="sm",...z}=r??{};return S(d,{flexWrap:s,align:l,gap:a,...t,children:[e(o,{fontSize:c,fontWeight:f,...h,children:i}),e(o,{fontSize:p,...z,children:x})]})}export{F as D};
-//# sourceMappingURL=ui-e2ff4737.js.map
