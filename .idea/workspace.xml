@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4a0b7832-6a09-42b5-9245-8c1c7c62335c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/build/assets/Marker-4a2dd6f1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/Marker-4a2dd6f1.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-B2MGPQRJ-254d026f.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-B2MGPQRJ-254d026f.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-C7CK4LUU-8b85c180.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-C7CK4LUU-8b85c180.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-CJVMJGVA-7450bfa8.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-CJVMJGVA-7450bfa8.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-D5UZ3RNN-f7b5d83f.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-D5UZ3RNN-f7b5d83f.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-G72KV6MB-256ec515.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-G72KV6MB-256ec515.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-GYFRIY2Z-05b4f758.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-GYFRIY2Z-05b4f758.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-HFJCK6H7-62dd493e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-HFJCK6H7-62dd493e.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-JSSKUSQH-a018e0fe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-JSSKUSQH-a018e0fe.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-KRS2VCGE-8510648a.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-KRS2VCGE-8510648a.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-NAA7TEES-8a7107e3.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-NAA7TEES-8a7107e3.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-O5CRURSQ-38cbc667.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-O5CRURSQ-38cbc667.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-PEYICJIL-4eb92d2e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-PEYICJIL-4eb92d2e.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-QAHQKGYV-e4a7b19b.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-QAHQKGYV-e4a7b19b.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-QODHG6BI-a9ac56a7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-QODHG6BI-a9ac56a7.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-RGZJAHFA-a2d8e445.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-RGZJAHFA-a2d8e445.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-S432VF2S-98664443.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-S432VF2S-98664443.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-SRMZVY4F-d66d975b.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-SRMZVY4F-d66d975b.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-TPBRUKW6-ac063972.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-TPBRUKW6-ac063972.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-VJ54TX72-115fd56e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-VJ54TX72-115fd56e.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-YTHZUBYP-81720497.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/chunk-YTHZUBYP-81720497.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/client-plots-9d423b86.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/client-plots-9d423b86.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/defineProperty-02985436.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/defineProperty-02985436.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-0f50e89f.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-0f50e89f.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-17a8f9f7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-17a8f9f7.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-19107a61.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-19107a61.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-19fa5a9d.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-19fa5a9d.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-1bb6426c.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-1bb6426c.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-30d26e58.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-30d26e58.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-48201638.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-48201638.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-5369e537.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-5369e537.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-58cd24a5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-58cd24a5.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-5d3e5218.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-5d3e5218.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-62556672.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-62556672.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-63b42901.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-63b42901.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-7e9f23cc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-7e9f23cc.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-87db371c.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-87db371c.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-94526303.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-94526303.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-9f2fdfea.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-9f2fdfea.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-9f8b5ba7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-9f8b5ba7.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-b17ac102.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-b17ac102.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-d4d7fba7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-d4d7fba7.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-da21f1e9.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-da21f1e9.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-ded39c90.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-ded39c90.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-e3eb4000.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index-e3eb4000.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index.esm-7e580ed2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index.esm-7e580ed2.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index.esm-c8ec29ec.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index.esm-c8ec29ec.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index.esm-e34072c9.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/index.esm-e34072c9.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/lib-aaf14b42.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/lib-aaf14b42.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/model-344376fa.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/model-344376fa.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/model-e8e85faa.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/model-e8e85faa.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/sidebar-e41bf362.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/sidebar-e41bf362.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/toolbar-09ccf2b8.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/toolbar-09ccf2b8.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/ui-2e5a4fa6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/ui-2e5a4fa6.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/ui-5e3e3e3c.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/ui-5e3e3e3c.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/ui-dbec4d5c.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/ui-dbec4d5c.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/ui-e2ff4737.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/ui-e2ff4737.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/use-pagination-a13feed9.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/use-pagination-a13feed9.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/user-contracts-c29eb94b.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/assets/user-contracts-c29eb94b.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sw.js" beforeDir="false" afterPath="$PROJECT_DIR$/build/sw.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sw.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/build/sw.js.map" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2NGdYLR26l3qXTyk2jNpmLkTblK" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/gazizbolat/Documents/work-projects/alemagro_crm&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/gazizbolat/Documents/work-projects/alemagro_crm/node_modules/prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/gazizbolat/Documents/work-projects/alemagro_crm/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4a0b7832-6a09-42b5-9245-8c1c7c62335c" name="Changes" comment="" />
+      <created>1679294398227</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679294398227</updated>
+      <workItem from="1679294399500" duration="2393000" />
+      <workItem from="1679401860395" duration="32000" />
+      <workItem from="1679409510748" duration="412000" />
+      <workItem from="1679416264925" duration="256000" />
+      <workItem from="1679416530824" duration="189000" />
+      <workItem from="1679416726655" duration="101000" />
+      <workItem from="1679417149969" duration="14000" />
+      <workItem from="1680290113276" duration="191000" />
+      <workItem from="1680351262068" duration="22000" />
+      <workItem from="1680685127607" duration="7869000" />
+      <workItem from="1680707672278" duration="661000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

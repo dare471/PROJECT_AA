@@ -1,0 +1,2 @@
+import{u as l,a as f}from"./model-6bef017f.js";import{f as m,d as n,e as u,a as h,c as x}from"./index-18c8bd2a.js";var M=m((a,s)=>{const{className:r,...t}=a,{headerId:d,setHeaderMounted:e}=l();n.useEffect(()=>(e(!0),()=>e(!1)),[e]);const o=u("chakra-modal__header",r),c={flex:0,...f().header};return h(x.header,{ref:s,className:o,id:d,...t,__css:c})});M.displayName="ModalHeader";export{M};
+//# sourceMappingURL=chunk-YBA5A33G-298bf761.js.map

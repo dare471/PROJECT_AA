@@ -1,0 +1,1 @@
+{"version":3,"file":"index-087dfa9a.js","sources":["../../src/shared/ui/modal/index.ts"],"sourcesContent":["import { createModals } from './model'\n\nexport const ModalsFactory = {\n\tcreateModals,\n}\n"],"names":["ModalsFactory","createModals"],"mappings":"wCAEO,MAAMA,EAAgB,CAC5B,aAAAC,CACD"}

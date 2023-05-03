@@ -150,7 +150,7 @@ export const meetingSurveyMutation = createEffect<
 >(async ({ visitId, providedServices, plotInspects, contractComplications, recommends }) => {
 	const req = await instance({
 		method: 'POST',
-		url: 'http://10.200.100.17/api/manager/workspace',
+		url: '/manager/workspace',
 		data: {
 			type: 'meetingSurvey',
 			action: 'fixedSurvey',

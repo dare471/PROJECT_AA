@@ -16,7 +16,7 @@ export const createClientSearch = modelFactory(function createClientSearch(optio
 	const clientNameChanged = createEvent<string>()
 	const clientBinChanged = createEvent<string>()
 
-	const clientHintClicked = createEvent<number>()
+	const clientHintClicked = createEvent<number | null>()
 
 	const $searchType = createStore<'name' | 'bin'>('name')
 

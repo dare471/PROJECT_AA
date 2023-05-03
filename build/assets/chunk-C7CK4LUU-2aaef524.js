@@ -1,0 +1,2 @@
+import{c as r}from"./chunk-QODHG6BI-4b0ebca2.js";import{j as o,a}from"./index-18c8bd2a.js";var n=r({displayName:"ExternalLinkIcon",path:o("g",{fill:"none",stroke:"currentColor",strokeLinecap:"round",strokeWidth:"2",children:[a("path",{d:"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"}),a("path",{d:"M15 3h6v6"}),a("path",{d:"M10 14L21 3"})]})});export{n as E};
+//# sourceMappingURL=chunk-C7CK4LUU-2aaef524.js.map

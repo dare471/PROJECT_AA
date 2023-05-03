@@ -48,7 +48,7 @@ function ClientSearchByName() {
 				action.action === 'input-change' || action.action === 'set-value' ? handleClientNameChange(value) : null
 			}
 			value={clientHintNameOption}
-			onChange={(option) => (option ? handleClientHintClick(option.value) : null)}
+			onChange={(option) => handleClientHintClick(option?.value ?? null)}
 			isLoading={clientHintsPending}
 			isDisabled={districtId === null}
 			noOptionsMessage={() => 'Нет результатов'}
@@ -78,7 +78,7 @@ function ClientSearchByBin() {
 				action.action === 'input-change' || action.action === 'set-value' ? handleClientBinChange(value) : null
 			}
 			value={clientHintBinOption}
-			onChange={(option) => (option ? handleClientHintClick(option.value) : null)}
+			onChange={(option) => handleClientHintClick(option?.value ?? null)}
 			isLoading={clientHintsPending}
 			isDisabled={districtId === null}
 			noOptionsMessage={() => 'Нет результатов'}

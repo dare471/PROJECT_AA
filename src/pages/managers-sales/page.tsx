@@ -230,7 +230,7 @@ function Example() {
 	const [managersFromTo, currentManagerFromTo] = useUnit([model.$managersFromTo, model.$currentManagerFromTo])
 	const [isAirplaneCluster, onAirplaneClusterClick] = useUnit([model.$isAirplaneCluster, model.airplaneClusterClicked])
 	useMapEvent('zoom', (e) => {
-		if (e.target.getZoom() > 5) {
+		if (e.target.getZoom() > 3) {
 			onAirplaneClusterClick(false)
 		} else {
 			onAirplaneClusterClick(true)
@@ -552,7 +552,7 @@ function Example() {
 			) : (
 				<>
 					{currentManagerFromTo &&
-						[...currentManagerFromTo.managers].reverse().map((manager, index) => {
+						[...currentManagerFromTo.managers].map((manager, index) => {
 							const countryFrom = countriesLatLng[currentManagerFromTo.countryFrom]
 							const countryTo = countriesLatLng[currentManagerFromTo.countryTo]
 
@@ -563,8 +563,10 @@ function Example() {
 									((countryTo.longitude - countryFrom.longitude) * currentManagerFromTo.progress!) / 100,
 							]
 							const computePosition = [
-								countryFrom.latitude + ((position[0]! - countryFrom.latitude) * index) / 15,
-								countryFrom.longitude + ((position[1]! - countryFrom.longitude) * index) / 15,
+								(position[0]! * (Math.sqrt(position[0]! ** 2 + position[1]! ** 2) + 0.3 * index)) /
+									Math.sqrt(position[0]! ** 2 + position[1]! ** 2),
+								(position[1]! * (Math.sqrt(position[0]! ** 2 + position[1]! ** 2) - 3 * index)) /
+									Math.sqrt(position[0]! ** 2 + position[1]! ** 2),
 							]
 
 							const airplaneIcon = divIcon({
